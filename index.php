@@ -37,8 +37,34 @@ $posts = [
         'content' => 'www.htmlacademy.ru',
         'user' => 'Владик',
         'avatar' => 'userpic.jpg'
+    ],
+    [
+        'title' => 'Длинный текст',
+        'type' => 'post-text',
+        // 446 символов
+        'content' => 'Повседневная практика показывает, что начало повседневной работы по формированию позиции требуют определения и уточнения соответствующий условий активизации. Идейные соображения высшего порядка, а также начало повседневной работы по формированию позиции позволяет оценить значение модели развития. Равным образом дальнейшее развитие различных форм деятельности играет важную роль в формировании существенных финансовых и административных условий.',
+        'user' => 'Обрезатель текста',
+        'avatar' => 'userpic-larisa-small.jpg'
     ]
 ];
+
+function cut_text($text, $length = 300)
+{
+    if (mb_strlen($text) > $length) {
+        $text_array = explode(' ', $text);
+        $length_sum = 0;
+        $result_array = [];
+        foreach ($text_array as $word) {
+            $length_sum += mb_strlen($word);
+            if ($length_sum < $length) {
+                array_push($result_array, $word);
+            }
+        }
+        return '<p>' . implode(' ', $result_array) . '...' . '</p><a class="post-text__more-link" href="#">Читать далее</a>';
+    }
+    return '<p>' . $text . '</p>';
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -342,7 +368,7 @@ $posts = [
                         <?php endif; ?>
 
                         <?php if ($post['type'] === 'post-text'): ?>
-                            <p><?= $post['content'] ?></p>
+                            <?= cut_text($post['content'], 200) ?>
                         <?php endif; ?>
 
                         <?php if ($post['type'] === 'post-photo'): ?>
