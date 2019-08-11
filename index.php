@@ -1,7 +1,44 @@
 <?php
 $is_auth = rand(0, 1);
-
 $user_name = 'Владимир'; // укажите здесь ваше имя
+
+$posts = [
+    [
+        'title' => 'Цитата',
+        'type' => 'post-quote',
+        'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих',
+        'user' => 'Лариса',
+        'avatar' => 'userpic-larisa-small.jpg'
+    ],
+    [
+        'title' => 'Игра престолов',
+        'type' => 'post-text',
+        'content' => 'Не могу дождаться начала финального сезона своего любимого сериала!',
+        'user' => 'Владик',
+        'avatar' => 'userpic.jpg'
+    ],
+    [
+        'title' => 'Наконец, обработал фотки!',
+        'type' => 'post-photo',
+        'content' => 'rock-medium.jpg',
+        'user' => 'Виктор',
+        'avatar' => 'userpic-mark.jpg'
+    ],
+    [
+        'title' => 'Моя мечта',
+        'type' => 'post-photo',
+        'content' => 'coast-medium.jpg',
+        'user' => 'Лариса',
+        'avatar' => 'userpic-larisa-small.jpg'
+    ],
+    [
+        'title' => 'Лучшие курсы',
+        'type' => 'post-link',
+        'content' => 'www.htmlacademy.ru',
+        'user' => 'Владик',
+        'avatar' => 'userpic.jpg'
+    ]
+];
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -41,74 +78,73 @@ $user_name = 'Владимир'; // укажите здесь ваше имя
         </form>
         <div class="header__nav-wrapper">
             <?php if ($is_auth === 1): ?>
-                <nav class="header__nav">
-                    <ul class="header__my-nav">
-                        <li class="header__my-page header__my-page--popular">
-                            <a class="header__page-link header__page-link--active" title="Популярный контент">
-                                <span class="visually-hidden">Популярный контент</span>
-                            </a>
-                        </li>
-                        <li class="header__my-page header__my-page--feed">
-                            <a class="header__page-link" href="feed.html" title="Моя лента">
-                                <span class="visually-hidden">Моя лента</span>
-                            </a>
-                        </li>
-                        <li class="header__my-page header__my-page--messages">
-                            <a class="header__page-link" href="messages.html" title="Личные сообщения">
-                                <span class="visually-hidden">Личные сообщения</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="header__user-nav">
-                        <li class="header__profile">
-                            <a class="header__profile-link" href="#">
-                                <div class="header__avatar-wrapper">
-                                    <img class="header__profile-avatar" src="img/userpic-medium.jpg" alt="Аватар профиля">
-                                </div>
-                                <div class="header__profile-name">
-                                    <span>
-                                        <?= $user_name ?>
-                                    </span>
-                                    <svg class="header__link-arrow" width="10" height="6">
-                                        <use xlink:href="#icon-arrow-right-ad"></use>
-                                    </svg>
-                                </div>
-                            </a>
-                            <div class="header__tooltip-wrapper">
-                                <div class="header__profile-tooltip">
-                                    <ul class="header__profile-nav">
-                                        <li class="header__profile-nav-item">
-                                            <a class="header__profile-nav-link" href="#">
-                              <span class="header__profile-nav-text">
-                                Мой профиль
-                              </span>
-                                            </a>
-                                        </li>
-                                        <li class="header__profile-nav-item">
-                                            <a class="header__profile-nav-link" href="#">
-                              <span class="header__profile-nav-text">
-                                Сообщения
-                                <i class="header__profile-indicator">2</i>
-                              </span>
-                                            </a>
-                                        </li>
-
-                                        <li class="header__profile-nav-item">
-                                            <a class="header__profile-nav-link" href="#">
-                              <span class="header__profile-nav-text">
-                                Выход
-                              </span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+            <nav class="header__nav">
+                <ul class="header__my-nav">
+                    <li class="header__my-page header__my-page--popular">
+                        <a class="header__page-link header__page-link--active" title="Популярный контент">
+                            <span class="visually-hidden">Популярный контент</span>
+                        </a>
+                    </li>
+                    <li class="header__my-page header__my-page--feed">
+                        <a class="header__page-link" href="feed.html" title="Моя лента">
+                            <span class="visually-hidden">Моя лента</span>
+                        </a>
+                    </li>
+                    <li class="header__my-page header__my-page--messages">
+                        <a class="header__page-link" href="messages.html" title="Личные сообщения">
+                            <span class="visually-hidden">Личные сообщения</span>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="header__user-nav">
+                    <li class="header__profile">
+                        <a class="header__profile-link" href="#">
+                            <div class="header__avatar-wrapper">
+                                <img class="header__profile-avatar" src="img/userpic-medium.jpg" alt="Аватар профиля">
                             </div>
-                        </li>
-                        <li>
-                            <a class="header__post-button button button--transparent" href="adding-post.html">Пост</a>
-                        </li>
-                    </ul>
-                </nav>
+                            <div class="header__profile-name">
+                                <span>
+                                    <?=$user_name ?>
+                                </span>
+                                <svg class="header__link-arrow" width="10" height="6">
+                                    <use xlink:href="#icon-arrow-right-ad"></use>
+                                </svg>
+                            </div>
+                        </a>
+                        <div class="header__tooltip-wrapper">
+                            <div class="header__profile-tooltip">
+                                <ul class="header__profile-nav">
+                                    <li class="header__profile-nav-item">
+                                        <a class="header__profile-nav-link" href="#">
+                                            <span class="header__profile-nav-text">
+                                                Мой профиль
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="header__profile-nav-item">
+                                        <a class="header__profile-nav-link" href="#">
+                                            <span class="header__profile-nav-text">
+                                                Сообщения
+                                                <i class="header__profile-indicator">2</i>
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li class="header__profile-nav-item">
+                                        <a class="header__profile-nav-link" href="#">
+                                            <span class="header__profile-nav-text">
+                                                Выход
+                                            </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="header__post-button button button--transparent" href="adding-post.html">Пост</a>
+                    </li>
+                </ul>
+            </nav>
             <?php endif; ?>
         </div>
     </div>
@@ -201,6 +237,85 @@ $user_name = 'Владимир'; // укажите здесь ваше имя
             </div>
         </div>
         <div class="popular__posts">
+            <?php foreach ($posts as $key => $post): ?>
+            <article class="popular__post post <?=$post['type'] ?>">
+                <header class="post__header">
+                    <h2><?=$post['title'] ?></h2>
+                </header>
+                <div class="post__main">
+
+                <?php if ($post['type'] === 'post-quote'): ?>
+                    <blockquote>
+                        <p>
+                            <?=$post['content'] ?>
+                        </p>
+                        <cite>Неизвестный Автор</cite>
+                    </blockquote>
+                <?php endif; ?>
+
+                <?php if ($post['type'] === 'post-text'): ?>
+                    <p><?=$post['content'] ?></p>
+                <?php endif; ?>
+
+                <?php if ($post['type'] === 'post-photo'): ?>
+                    <div class="post-photo__image-wrapper">
+                        <img src="img/<?=$post['content'] ?>" alt="Фото от пользователя" width="360" height="240">
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($post['type'] === 'post-link'): ?>
+                    <div class="post-link__wrapper">
+                        <a class="post-link__external" href="http://<?=$post['content'] ?>" title="Перейти по ссылке">
+                            <div class="post-link__info-wrapper">
+                                <div class="post-link__icon-wrapper">
+                                    <img src="https://www.google.com/s2/favicons?domain=vitadental.ru" alt="Иконка">
+                                </div>
+                                <div class="post-link__info">
+                                    <h3><?=$post['title'] ?></h3>
+                                </div>
+                            </div>
+                            <span><?=$post['content'] ?></span>
+                        </a>
+                    </div>
+                <?php endif; ?>
+
+                </div>
+                <footer class="post__footer">
+                    <div class="post__author">
+                        <a class="post__author-link" href="#" title="Автор">
+                            <div class="post__avatar-wrapper">
+                                <img class="post__author-avatar" src="img/<?=$post['avatar'] ?>" alt="Аватар пользователя">
+                            </div>
+                            <div class="post__info">
+                                <b class="post__author-name"><?=$post['user'] ?></b>
+                                <time class="post__time" datetime="">дата</time>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="post__indicators">
+                        <div class="post__buttons">
+                            <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
+                                <svg class="post__indicator-icon" width="20" height="17">
+                                    <use xlink:href="#icon-heart"></use>
+                                </svg>
+                                <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
+                                    <use xlink:href="#icon-heart-active"></use>
+                                </svg>
+                                <span>0</span>
+                                <span class="visually-hidden">количество лайков</span>
+                            </a>
+                            <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
+                                <svg class="post__indicator-icon" width="19" height="17">
+                                    <use xlink:href="#icon-comment"></use>
+                                </svg>
+                                <span>0</span>
+                                <span class="visually-hidden">количество комментариев</span>
+                            </a>
+                        </div>
+                    </div>
+                </footer>
+            </article>
+            <?php endforeach; ?>
             <div class="visually-hidden" id="donor">
                 <!--содержимое для поста-цитаты-->
                 <blockquote>
@@ -233,7 +348,7 @@ $user_name = 'Владимир'; // укажите здесь ваше имя
                 <!--содержимое для поста-видео-->
                 <div class="post-video__block">
                     <div class="post-video__preview">
-                        <?=embed_youtube_cover(/* вставьте ссылку на видео */); ?>
+                        <!-- --><?//= embed_youtube_cover(/* вставьте ссылку на видео */) ?><!-- -->
                         <img src="img/coast-medium.jpg" alt="Превью к видео" width="360" height="188">
                     </div>
                     <a href="post-details.html" class="post-video__play-big button">
@@ -247,50 +362,6 @@ $user_name = 'Владимир'; // укажите здесь ваше имя
                 <!--содержимое для поста-текста-->
                 <p><!--здесь текст--></p>
             </div>
-
-            <article class="popular__post post">
-                <header class="post__header">
-                    <h2><!--здесь заголовок--></h2>
-                </header>
-                <div class="post__main">
-                    <!--здесь содержимое карточки-->
-                </div>
-                <footer class="post__footer">
-                    <div class="post__author">
-                        <a class="post__author-link" href="#" title="Автор">
-                            <div class="post__avatar-wrapper">
-                                <!--укажите путь к файлу аватара-->
-                                <img class="post__author-avatar" src="img/" alt="Аватар пользователя">
-                            </div>
-                            <div class="post__info">
-                                <b class="post__author-name"><!--здесь имя пользоателя--></b>
-                                <time class="post__time" datetime="">дата</time>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="post__indicators">
-                        <div class="post__buttons">
-                            <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
-                                <svg class="post__indicator-icon" width="20" height="17">
-                                    <use xlink:href="#icon-heart"></use>
-                                </svg>
-                                <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
-                                    <use xlink:href="#icon-heart-active"></use>
-                                </svg>
-                                <span>0</span>
-                                <span class="visually-hidden">количество лайков</span>
-                            </a>
-                            <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
-                                <svg class="post__indicator-icon" width="19" height="17">
-                                    <use xlink:href="#icon-comment"></use>
-                                </svg>
-                                <span>0</span>
-                                <span class="visually-hidden">количество комментариев</span>
-                            </a>
-                        </div>
-                    </div>
-                </footer>
-            </article>
         </div>
     </div>
 </section>
