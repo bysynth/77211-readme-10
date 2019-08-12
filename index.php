@@ -55,9 +55,9 @@ function cut_text($text, $length = 300)
         $length_sum = 0;
         $result_array = [];
         foreach ($text_array as $word) {
-            $length_sum += mb_strlen($word);
+            $length_sum += mb_strlen($word) + 1;
             if ($length_sum < $length) {
-                array_push($result_array, $word);
+                $result_array[] = $word;
             }
         }
         return '<p>' . implode(' ', $result_array) . '...' . '</p><a class="post-text__more-link" href="#">Читать далее</a>';
@@ -368,7 +368,7 @@ function cut_text($text, $length = 300)
                         <?php endif; ?>
 
                         <?php if ($post['type'] === 'post-text'): ?>
-                            <?= cut_text($post['content'], 200) ?>
+                            <?= cut_text($post['content']) ?>
                         <?php endif; ?>
 
                         <?php if ($post['type'] === 'post-photo'): ?>
