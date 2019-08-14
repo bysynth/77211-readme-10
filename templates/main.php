@@ -89,7 +89,7 @@
             <article class="popular__post post <?= isset($post['type']) ? $post['type'] : '' ?>">
                 <header class="post__header">
                     <?php if (isset($post['title'])): ?>
-                        <h2><?= $post['title'] ?></h2>
+                        <h2><?= clear_input($post['title']) ?></h2>
                     <?php endif; ?>
                 </header>
                 <div class="post__main">
@@ -98,7 +98,7 @@
                         <blockquote>
                             <?php if (isset($post['content'])): ?>
                                 <p>
-                                    <?= $post['content'] ?>
+                                    <?= clear_input($post['content']) ?>
                                 </p>
                             <?php endif; ?>
                             <cite>Неизвестный Автор</cite>
@@ -107,7 +107,7 @@
 
                     <?php if (isset($post['type']) && $post['type'] === 'post-text'): ?>
                         <?php if (isset($post['content'])): ?>
-                            <?= cut_text($post['content']) ?>
+                            <?= cut_text(clear_input($post['content'])) ?>
                         <?php endif; ?>
                     <?php endif; ?>
 
@@ -130,12 +130,12 @@
                                     </div>
                                     <div class="post-link__info">
                                         <?php if (isset($post['title'])): ?>
-                                            <h3><?= $post['title'] ?></h3>
+                                            <h3><?= clear_input($post['title']) ?></h3>
                                         <?php endif; ?>
                                     </div>
                                 </div>
                                 <?php if (isset($post['content'])): ?>
-                                    <span><?= $post['content'] ?></span>
+                                    <span><?= clear_input($post['content']) ?></span>
                                 <?php endif; ?>
                             </a>
                         </div>
@@ -153,7 +153,7 @@
                             </div>
                             <div class="post__info">
                                 <?php if (isset($post['user'])): ?>
-                                    <b class="post__author-name"><?= $post['user'] ?></b>
+                                    <b class="post__author-name"><?= clear_input($post['user']) ?></b>
                                 <?php endif; ?>
                                 <time class="post__time" datetime="">дата</time>
                             </div>
