@@ -114,7 +114,7 @@
                     <?php if (isset($post['type']) && $post['type'] === 'post-photo'): ?>
                         <div class="post-photo__image-wrapper">
                             <?php if (isset($post['content'])): ?>
-                                <img src="img/<?= $post['content'] ?>" alt="Фото от пользователя" width="360"
+                                <img src="img/<?= clear_input($post['content']) ?>" alt="Фото от пользователя" width="360"
                                      height="240">
                             <?php endif; ?>
                         </div>
@@ -147,7 +147,7 @@
                         <a class="post__author-link" href="#" title="Автор">
                             <div class="post__avatar-wrapper">
                                 <?php if (isset($post['avatar'])): ?>
-                                    <img class="post__author-avatar" src="img/<?= $post['avatar'] ?>"
+                                    <img class="post__author-avatar" src="img/<?= clear_input($post['avatar']) ?>"
                                          alt="Аватар пользователя">
                                 <?php endif; ?>
                             </div>
