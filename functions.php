@@ -1,4 +1,5 @@
 <?php
+
 function cut_text($text, $length = 300)
 {
     if (mb_strlen($text) > $length) {
@@ -15,4 +16,9 @@ function cut_text($text, $length = 300)
             '</p><a class="post-text__more-link" href="#">Читать далее</a>';
     }
     return '<p>' . $text . '</p>';
+}
+
+function clear_input($input)
+{
+    return htmlspecialchars($input);
 }
