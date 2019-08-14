@@ -352,33 +352,41 @@ function cut_text($text, $length = 300)
         </div>
         <div class="popular__posts">
             <?php foreach ($posts as $post): ?>
-                <article class="popular__post post <?= $post['type'] ?>">
+                <article class="popular__post post <?= isset($post['type']) ? $post['type'] : '' ?>">
                     <header class="post__header">
-                        <h2><?= $post['title'] ?></h2>
+                        <?php if (isset($post['title'])): ?>
+                            <h2><?= $post['title'] ?></h2>
+                        <?php endif; ?>
                     </header>
                     <div class="post__main">
 
-                        <?php if ($post['type'] === 'post-quote'): ?>
+                        <?php if (isset($post['type']) && $post['type'] === 'post-quote'): ?>
                             <blockquote>
-                                <p>
-                                    <?= $post['content'] ?>
-                                </p>
+                                <?php if (isset($post['content'])): ?>
+                                    <p>
+                                        <?= $post['content'] ?>
+                                    </p>
+                                <?php endif; ?>
                                 <cite>Неизвестный Автор</cite>
                             </blockquote>
                         <?php endif; ?>
 
-                        <?php if ($post['type'] === 'post-text'): ?>
-                            <?= cut_text($post['content']) ?>
+                        <?php if (isset($post['type']) && $post['type'] === 'post-text'): ?>
+                            <?php if (isset($post['content'])): ?>
+                                <?= cut_text($post['content']) ?>
+                            <?php endif; ?>
                         <?php endif; ?>
 
-                        <?php if ($post['type'] === 'post-photo'): ?>
+                        <?php if (isset($post['type']) && $post['type'] === 'post-photo'): ?>
                             <div class="post-photo__image-wrapper">
-                                <img src="img/<?= $post['content'] ?>" alt="Фото от пользователя" width="360"
-                                     height="240">
+                                <?php if (isset($post['content'])): ?>
+                                    <img src="img/<?= $post['content'] ?>" alt="Фото от пользователя" width="360"
+                                         height="240">
+                                <?php endif; ?>
                             </div>
                         <?php endif; ?>
 
-                        <?php if ($post['type'] === 'post-link'): ?>
+                        <?php if (isset($post['type']) && $post['type'] === 'post-link'): ?>
                             <div class="post-link__wrapper">
                                 <a class="post-link__external" href="http://" title="Перейти по ссылке">
                                     <div class="post-link__info-wrapper">
@@ -387,10 +395,14 @@ function cut_text($text, $length = 300)
                                                  alt="Иконка">
                                         </div>
                                         <div class="post-link__info">
-                                            <h3><?= $post['title'] ?></h3>
+                                            <?php if (isset($post['title'])): ?>
+                                                <h3><?= $post['title'] ?></h3>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
-                                    <span><?= $post['content'] ?></span>
+                                    <?php if (isset($post['content'])): ?>
+                                        <span><?= $post['content'] ?></span>
+                                    <?php endif; ?>
                                 </a>
                             </div>
                         <?php endif; ?>
@@ -400,11 +412,15 @@ function cut_text($text, $length = 300)
                         <div class="post__author">
                             <a class="post__author-link" href="#" title="Автор">
                                 <div class="post__avatar-wrapper">
-                                    <img class="post__author-avatar" src="img/<?= $post['avatar'] ?>"
-                                         alt="Аватар пользователя">
+                                    <?php if (isset($post['avatar'])): ?>
+                                        <img class="post__author-avatar" src="img/<?= $post['avatar'] ?>"
+                                             alt="Аватар пользователя">
+                                    <?php endif; ?>
                                 </div>
                                 <div class="post__info">
-                                    <b class="post__author-name"><?= $post['user'] ?></b>
+                                    <?php if (isset($post['user'])): ?>
+                                        <b class="post__author-name"><?= $post['user'] ?></b>
+                                    <?php endif; ?>
                                     <time class="post__time" datetime="">дата</time>
                                 </div>
                             </a>
