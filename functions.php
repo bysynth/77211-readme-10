@@ -22,3 +22,47 @@ function clear_input($input)
 {
     return htmlspecialchars($input);
 }
+
+function get_relative_time_format($time_data)
+{
+    $dt_past = date_create($time_data);
+    $dt_now = date_create('now');
+    $dt_diff = date_diff($dt_now, $dt_past);
+    $diff_minutes_count = (int)date_interval_format($dt_diff, '%i');
+    $diff_hours_count = (int)date_interval_format($dt_diff, '%h');
+    $diff_days_count = (int)date_interval_format($dt_diff, '%a');
+    $diff_month_count = (int)date_interval_format($dt_diff, '%m');
+
+    if ($diff_days_count === 0) {
+        if ($diff_minutes_count < 60 && $diff_hours_count === 0) {
+            return $diff_minutes_count . ' ' . get_noun_plural_form($diff_minutes_count, 'минута', 'минуты',
+                    'минут') . ' назад';
+        }
+
+        if ($diff_hours_count < 24) {
+            return $diff_hours_count . ' ' . get_noun_plural_form($diff_hours_count, 'час', 'часа',
+                    'часов') . ' назад';
+        }
+    }
+
+    if ($diff_days_count > 0 && $diff_days_count < 7) {
+        return $diff_days_count . ' ' . get_noun_plural_form($diff_days_count, 'день', 'дня',
+                'дней') . ' назад';
+    }
+
+    if ($diff_days_count >= 7 && $diff_days_count < 7 * 5) {
+        return round($diff_days_count / 7) . ' ' . get_noun_plural_form(round($diff_days_count / 7),
+                'неделя', 'недели', 'недель') . ' назад';
+    }
+
+
+    return $diff_month_count . ' ' . get_noun_plural_form($diff_month_count, 'месяц',
+            'месяца', 'месяцев') . ' назад';
+
+}
+
+function get_custom_time_format($time_data)
+{
+    $date_and_time = date_create($time_data);
+    return date_format($date_and_time, 'd.m.Y H:i');
+}
