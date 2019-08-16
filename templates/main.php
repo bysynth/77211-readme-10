@@ -85,7 +85,7 @@
         </div>
     </div>
     <div class="popular__posts">
-        <?php foreach ($posts as $post): ?>
+        <?php foreach ($posts as $key => $post): ?>
             <article class="popular__post post <?= isset($post['type']) ? $post['type'] : '' ?>">
                 <header class="post__header">
                     <?php if (isset($post['title'])): ?>
@@ -155,7 +155,9 @@
                                 <?php if (isset($post['user'])): ?>
                                     <b class="post__author-name"><?= clear_input($post['user']) ?></b>
                                 <?php endif; ?>
-                                <time class="post__time" datetime="">дата</time>
+                                <time class="post__time" datetime="<?= $time = generate_random_date($key) ?>"
+                                      title="<?= get_custom_time_format($time) ?>">
+                                    <?= get_relative_time_format($time) ?></time>
                             </div>
                         </a>
                     </div>
