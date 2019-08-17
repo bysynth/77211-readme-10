@@ -155,9 +155,10 @@
                                 <?php if (isset($post['user'])): ?>
                                     <b class="post__author-name"><?= clear_input($post['user']) ?></b>
                                 <?php endif; ?>
-                                <time class="post__time" datetime="<?= $time = generate_random_date($key) ?>"
+                                <time class="post__time" datetime="<?= $time = clear_input(generate_random_date($key)) ?>"
                                       title="<?= get_custom_time_format($time) ?>">
-                                    <?= get_relative_time_format($time) ?></time>
+                                    <?= get_relative_time_format($time) ?>
+                                </time>
                             </div>
                         </a>
                     </div>
