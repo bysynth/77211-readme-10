@@ -61,11 +61,11 @@ CREATE TABLE subscriptions
 
 CREATE TABLE messages
 (
-    id         INT(10) AUTO_INCREMENT PRIMARY KEY,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    message    TEXT                               NOT NULL,
-    sender_id  INT(10)                            NOT NULL,
-    reciver_id INT(10)                            NOT NULL
+    id          INT(10) AUTO_INCREMENT PRIMARY KEY,
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    message     TEXT                               NOT NULL,
+    sender_id   INT(10)                            NOT NULL,
+    receiver_id INT(10)                            NOT NULL
 );
 
 CREATE TABLE hashtags
