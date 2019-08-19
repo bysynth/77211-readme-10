@@ -51,7 +51,7 @@ CREATE TABLE comments
 
 CREATE TABLE likes
 (
-    author_id INT(10) NOT NULL,
+    user_id INT(10) NOT NULL,
     post_id   INT(10) NOT NULL
 );
 
