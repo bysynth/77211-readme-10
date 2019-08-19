@@ -35,7 +35,7 @@ VALUES ('2018-10-29 02:35:41', 'Олег, великолепные слова. �
 
 # Получаю список постов с сортировкой по популярности и вместе с именами авторов и типом контента
 
-SELECT p.id, p.title, u.NAME, t.type_name, p.views_counter
+SELECT p.id, p.title, u.name, t.type_name, p.views_counter
 FROM posts AS p
          JOIN users AS u
               ON u.id = p.author_id
