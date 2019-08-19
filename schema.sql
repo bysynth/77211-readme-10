@@ -25,7 +25,7 @@ CREATE TABLE posts
     image              TEXT                                 NULL,
     video              TEXT                                 NULL,
     link               TEXT                                 NULL,
-    view_tally         INT(12)    DEFAULT 0                 NOT NULL,
+    views_counter      INT(12)    DEFAULT 0                 NOT NULL,
     is_repost          TINYINT(1) DEFAULT 0                 NOT NULL,
     author_id          INT(10)                              NOT NULL,
     original_author_id INT(10)                              NULL,
