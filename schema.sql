@@ -7,7 +7,7 @@ USE readme;
 CREATE TABLE users
 (
     id         INT(10) AUTO_INCREMENT PRIMARY KEY,
-    reg_date   DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     email      VARCHAR(255)                       NOT NULL UNIQUE,
     name       VARCHAR(128)                       NOT NULL,
     password   VARCHAR(255)                       NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE users
 CREATE TABLE posts
 (
     id                 INT(10) AUTO_INCREMENT PRIMARY KEY,
-    create_date        DATETIME   DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    created_at         DATETIME   DEFAULT CURRENT_TIMESTAMP NOT NULL,
     title              VARCHAR(255)                         NOT NULL,
     text_content       TEXT                                 NULL,
     cite_author        VARCHAR(255)                         NULL,
@@ -39,11 +39,11 @@ CREATE TABLE posts
 
 CREATE TABLE comments
 (
-    id          INT(10) AUTO_INCREMENT PRIMARY KEY,
-    create_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    comment     TEXT                               NOT NULL,
-    author_id   INT(10)                            NOT NULL,
-    post_id     INT(10)                            NOT NULL
+    id         INT(10) AUTO_INCREMENT PRIMARY KEY,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    comment    TEXT                               NOT NULL,
+    author_id  INT(10)                            NOT NULL,
+    post_id    INT(10)                            NOT NULL
 );
 
 CREATE TABLE likes
@@ -61,11 +61,11 @@ CREATE TABLE subscriptions
 
 CREATE TABLE messages
 (
-    id          INT(10) AUTO_INCREMENT PRIMARY KEY,
-    create_date DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    message     TEXT                               NOT NULL,
-    sender_id   INT(10)                            NOT NULL,
-    reciver_id  INT(10)                            NOT NULL
+    id         INT(10) AUTO_INCREMENT PRIMARY KEY,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    message    TEXT                               NOT NULL,
+    sender_id  INT(10)                            NOT NULL,
+    reciver_id INT(10)                            NOT NULL
 );
 
 CREATE TABLE hashtags
