@@ -1,9 +1,9 @@
-INSERT INTO content_types (type_name, type_class)
-VALUES ('Текст', 'post-text'),
-       ('Цитата', 'post-quote'),
-       ('Картинка', 'post-photo'),
-       ('Видео', 'post-video'),
-       ('Ссылка', 'post-link');
+INSERT INTO content_types (type_name, type_icon)
+VALUES ('Текст', 'text'),
+       ('Цитата', 'quote'),
+       ('Картинка', 'photo'),
+       ('Видео', 'video'),
+       ('Ссылка', 'link');
 
 INSERT INTO users (created_at, email, name, password)
 VALUES ('2018-04-10 10:32:01', 'oleg@menshikov.ru', 'Олег Меньшиков', 'ilovewatches'),
@@ -12,16 +12,15 @@ VALUES ('2018-04-10 10:32:01', 'oleg@menshikov.ru', 'Олег Меньшиков
        ('2019-03-02 08:06:15', 'anna@semenovich.ru', 'Анна Семенович', 'loveboobs'),
        ('2019-05-08 12:57:16', 'olga@buzova.ru', 'Ольга Бузова', 'dom2forever');
 
-INSERT INTO posts (created_at, title, text_content, cite_author, image, video, link, views_counter, is_repost, author_id,
-                   original_author_id, content_type)
+INSERT INTO posts (created_at, title, content, cite_author, views_counter, is_repost, author_id, original_author_id,
+                   content_type)
 VALUES ('2018-04-10 10:40:00', 'Цитата', 'Мы в жизни любим только раз, а после ищем лишь похожих', 'Сергей Есенин',
-        NULL, NULL, NULL, 35640, 0, 1, NULL, 2),
+        35640, 0, 1, NULL, 2),
        ('2018-10-28 09:10:15', 'Игра престолов', 'Не могу дождаться начала финального сезона своего любимого сериала!',
-        NULL, NULL, NULL, NULL, 26187, 0, 2, NULL, 1),
-       ('2019-01-09 15:01:36', 'Наконец, обработал фотки!', NULL, NULL, 'rock-medium.jpg', NULL, NULL, 16501, 0, 3,
-        NULL, 3),
-       ('2019-03-03 18:46:01', 'Моя мечта', NULL, NULL, 'coast-medium.jpg', NULL, NULL, 12349, 0, 4, NULL, 3),
-       ('2019-05-10 07:02:23', 'Лучшие курсы', NULL, NULL, NULL, NULL, 'www.htmlacademy.ru', 5784, 0, 5, NULL, 5);
+        NULL, 26187, 0, 2, NULL, 1),
+       ('2019-01-09 15:01:36', 'Наконец, обработал фотки!', 'rock-medium.jpg', NULL, 16501, 0, 3, NULL, 3),
+       ('2019-03-03 18:46:01', 'Моя мечта', 'coast-medium.jpg', NULL, 12349, 0, 4, NULL, 3),
+       ('2019-05-10 07:02:23', 'Лучшие курсы', 'www.htmlacademy.ru', NULL, 5784, 0, 5, NULL, 5);
 
 INSERT INTO comments (created_at, comment, author_id, post_id)
 VALUES ('2018-10-29 02:35:41', 'Олег, великолепные слова. Есенин мой любимый поэт.', 2, 1),
