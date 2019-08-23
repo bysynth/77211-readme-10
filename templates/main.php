@@ -41,7 +41,20 @@
                         <span>Все</span>
                     </a>
                 </li>
-                <li class="popular__filters-item filters__item">
+                <?php foreach ($content_types as $content_type): ?>
+                    <li class="popular__filters-item filters__item">
+                        <a class="filters__button filters__button--<?= isset($content_type['type_icon']) ? $content_type['type_icon'] : '' ?> button"
+                           href="#">
+                            <span class="visually-hidden">
+                                <?= isset($content_type['type_name']) ? $content_type['type_name'] : '' ?>
+                            </span>
+                            <svg class="filters__icon" width="22" height="18">
+                                <use xlink:href="#icon-filter-<?= isset($content_type['type_icon']) ? $content_type['type_icon'] : '' ?>"></use>
+                            </svg>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+<!--                <li class="popular__filters-item filters__item">
                     <a class="filters__button filters__button--photo button" href="#">
                         <span class="visually-hidden">Фото</span>
                         <svg class="filters__icon" width="22" height="18">
@@ -80,13 +93,13 @@
                             <use xlink:href="#icon-filter-link"></use>
                         </svg>
                     </a>
-                </li>
+                </li>-->
             </ul>
         </div>
     </div>
     <div class="popular__posts">
         <?php foreach ($posts as $key => $post): ?>
-            <article class="popular__post post <?= isset($post['type']) ? $post['type'] : '' ?>">
+            <article class="popular__post post post-<?= isset($post['type_icon']) ? $post['type_icon'] : '' ?>">
                 <header class="post__header">
                     <?php if (isset($post['title'])): ?>
                         <h2><?= clear_input($post['title']) ?></h2>
@@ -94,24 +107,26 @@
                 </header>
                 <div class="post__main">
 
-                    <?php if (isset($post['type']) && $post['type'] === 'post-quote'): ?>
+                    <?php if (isset($post['type_name']) && $post['type_name'] === 'Цитата'): ?>
                         <blockquote>
                             <?php if (isset($post['content'])): ?>
                                 <p>
                                     <?= clear_input($post['content']) ?>
                                 </p>
                             <?php endif; ?>
-                            <cite>Неизвестный Автор</cite>
+                            <cite>
+                                <?= isset($post['cite_author']) ? $post['cite_author'] : 'Неизвестный Автор' ?>
+                            </cite>
                         </blockquote>
                     <?php endif; ?>
 
-                    <?php if (isset($post['type']) && $post['type'] === 'post-text'): ?>
+                    <?php if (isset($post['type_name']) && $post['type_name'] === 'Текст'): ?>
                         <?php if (isset($post['content'])): ?>
                             <?= cut_text(clear_input($post['content'])) ?>
                         <?php endif; ?>
                     <?php endif; ?>
 
-                    <?php if (isset($post['type']) && $post['type'] === 'post-photo'): ?>
+                    <?php if (isset($post['type_name']) && $post['type_name'] === 'Картинка'): ?>
                         <div class="post-photo__image-wrapper">
                             <?php if (isset($post['content'])): ?>
                                 <img src="img/<?= clear_input($post['content']) ?>" alt="Фото от пользователя" width="360"
@@ -120,13 +135,12 @@
                         </div>
                     <?php endif; ?>
 
-                    <?php if (isset($post['type']) && $post['type'] === 'post-link'): ?>
+                    <?php if (isset($post['type_name']) && $post['type_name'] === 'Ссылка'): ?>
                         <div class="post-link__wrapper">
-                            <a class="post-link__external" href="http://" title="Перейти по ссылке">
+                            <a class="post-link__external" href="http://<?= isset($post['content']) ? clear_input($post['content']) : '' ?>" title="Перейти по ссылке">
                                 <div class="post-link__info-wrapper">
                                     <div class="post-link__icon-wrapper">
-                                        <img src="https://www.google.com/s2/favicons?domain=vitadental.ru"
-                                             alt="Иконка">
+                                        <img src="https://www.google.com/s2/favicons?domain=<?= isset($post['content']) ? clear_input($post['content']) : '' ?>" alt="Иконка">
                                     </div>
                                     <div class="post-link__info">
                                         <?php if (isset($post['title'])): ?>
@@ -152,10 +166,10 @@
                                 <?php endif; ?>
                             </div>
                             <div class="post__info">
-                                <?php if (isset($post['user'])): ?>
-                                    <b class="post__author-name"><?= clear_input($post['user']) ?></b>
+                                <?php if (isset($post['name'])): ?>
+                                    <b class="post__author-name"><?= clear_input($post['name']) ?></b>
                                 <?php endif; ?>
-                                <time class="post__time" datetime="<?= $time = clear_input(generate_random_date($key)) ?>"
+                                <time class="post__time" datetime="<?= $time = clear_input($post['created_at']) ?>"
                                       title="<?= get_custom_time_format($time) ?>">
                                     <?= get_relative_time_format($time) ?>
                                 </time>
