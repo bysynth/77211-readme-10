@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var array $content_types
+ * @var array $posts
+ */
+?>
+
 <div class="container">
     <h1 class="page__title page__title--popular">Популярное</h1>
 </div>
@@ -43,63 +50,23 @@
                 </li>
                 <?php foreach ($content_types as $content_type): ?>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--<?= isset($content_type['type_icon']) ? $content_type['type_icon'] : '' ?> button"
+                        <a class="filters__button filters__button--<?= isset($content_type['type_icon']) ?? '' ?> button"
                            href="#">
                             <span class="visually-hidden">
-                                <?= isset($content_type['type_name']) ? $content_type['type_name'] : '' ?>
+                                <?= $content_type['type_name'] ?? '' ?>
                             </span>
                             <svg class="filters__icon" width="22" height="18">
-                                <use xlink:href="#icon-filter-<?= isset($content_type['type_icon']) ? $content_type['type_icon'] : '' ?>"></use>
+                                <use xlink:href="#icon-filter-<?= $content_type['type_icon'] ?? '' ?>"></use>
                             </svg>
                         </a>
                     </li>
                 <?php endforeach; ?>
-<!--                <li class="popular__filters-item filters__item">
-                    <a class="filters__button filters__button--photo button" href="#">
-                        <span class="visually-hidden">Фото</span>
-                        <svg class="filters__icon" width="22" height="18">
-                            <use xlink:href="#icon-filter-photo"></use>
-                        </svg>
-                    </a>
-                </li>
-                <li class="popular__filters-item filters__item">
-                    <a class="filters__button filters__button--video button" href="#">
-                        <span class="visually-hidden">Видео</span>
-                        <svg class="filters__icon" width="24" height="16">
-                            <use xlink:href="#icon-filter-video"></use>
-                        </svg>
-                    </a>
-                </li>
-                <li class="popular__filters-item filters__item">
-                    <a class="filters__button filters__button--text button" href="#">
-                        <span class="visually-hidden">Текст</span>
-                        <svg class="filters__icon" width="20" height="21">
-                            <use xlink:href="#icon-filter-text"></use>
-                        </svg>
-                    </a>
-                </li>
-                <li class="popular__filters-item filters__item">
-                    <a class="filters__button filters__button--quote button" href="#">
-                        <span class="visually-hidden">Цитата</span>
-                        <svg class="filters__icon" width="21" height="20">
-                            <use xlink:href="#icon-filter-quote"></use>
-                        </svg>
-                    </a>
-                </li>
-                <li class="popular__filters-item filters__item">
-                    <a class="filters__button filters__button--link button" href="#">
-                        <span class="visually-hidden">Ссылка</span>
-                        <svg class="filters__icon" width="21" height="18">
-                            <use xlink:href="#icon-filter-link"></use>
-                        </svg>
-                    </a>
-                </li>-->
             </ul>
         </div>
     </div>
     <div class="popular__posts">
         <?php foreach ($posts as $key => $post): ?>
-            <article class="popular__post post post-<?= isset($post['type_icon']) ? $post['type_icon'] : '' ?>">
+            <article class="popular__post post post-<?= $post['type_icon'] ?? '' ?>">
                 <header class="post__header">
                     <?php if (isset($post['title'])): ?>
                         <h2><?= clear_input($post['title']) ?></h2>
@@ -115,7 +82,7 @@
                                 </p>
                             <?php endif; ?>
                             <cite>
-                                <?= isset($post['cite_author']) ? $post['cite_author'] : 'Неизвестный Автор' ?>
+                                <?= $post['cite_author'] ?? 'Неизвестный Автор' ?>
                             </cite>
                         </blockquote>
                     <?php endif; ?>
