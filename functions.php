@@ -62,3 +62,31 @@ function get_custom_time_format($time_data)
     $date_and_time = date_create($time_data);
     return date_format($date_and_time, 'd.m.Y H:i');
 }
+
+function get_content_types($db_connect)
+{
+    $sql_content_types = 'SELECT type_name, type_icon FROM content_types';
+    $result_content_types = mysqli_query($db_connect, $sql_content_types);
+    if ($result_content_types === false) {
+        $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
+        exit($query_error);
+    }
+    return mysqli_fetch_all($result_content_types, MYSQLI_ASSOC);
+}
+
+function get_posts($db_connect)
+{
+    $sql_posts = 'SELECT p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon, '
+        . 'u.name, u.avatar '
+        . 'FROM posts AS p '
+        . 'JOIN content_types AS ct ON ct.id = p.content_type '
+        . 'JOIN users as u ON u.id = p.author_id '
+        . 'ORDER BY p.views_counter DESC '
+        . 'LIMIT 6;';
+    $result_posts = mysqli_query($db_connect, $sql_posts);
+    if ($result_posts === false) {
+        $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
+        exit($query_error);
+    }
+    return mysqli_fetch_all($result_posts, MYSQLI_ASSOC);
+}
