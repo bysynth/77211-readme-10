@@ -70,8 +70,10 @@
         <?php foreach ($posts as $key => $post): ?>
             <article class="popular__post post post-<?= $post['type_icon'] ?? '' ?>">
                 <header class="post__header">
-                    <?php if (isset($post['title'])): ?>
-                        <h2><?= clear_input($post['title']) ?></h2>
+                    <?php if (isset($post['title']) && isset($post['id'])): ?>
+                        <h2>
+                            <a href="<?= '/post.php?id=' . $post['id'] ?>"><?= clear_input($post['title']) ?></a>
+                        </h2>
                     <?php endif; ?>
                 </header>
                 <div class="post__main">
