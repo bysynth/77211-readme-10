@@ -1,5 +1,27 @@
 <?php
 
+//function db_fetch_data($link, $sql, $data = [])
+//{
+//    $result = [];
+//    $stmt = db_get_prepare_stmt($link, $sql, $data);
+//    mysqli_stmt_execute($stmt);
+//    $res = mysqli_stmt_get_result($stmt);
+//    if ($res) {
+//        $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
+//    }
+//    return $result;
+//}
+//
+//function db_insert_data($link, $sql, $data = [])
+//{
+//    $stmt = db_get_prepare_stmt($link, $sql, $data);
+//    $result = mysqli_stmt_execute($stmt);
+//    if ($result) {
+//        $result = mysqli_insert_id($link);
+//    }
+//    return $result;
+//}
+
 function cut_text($text, $length = 300)
 {
     if (mb_strlen($text) > $length) {
@@ -65,8 +87,8 @@ function get_custom_time_format($time_data)
 
 function get_content_types($db_connect)
 {
-    $sql_content_types = 'SELECT type_name, type_icon FROM content_types';
-    $result_content_types = mysqli_query($db_connect, $sql_content_types);
+    $sql = 'SELECT id, type_name, type_icon FROM content_types';
+    $result_content_types = mysqli_query($db_connect, $sql);
     if ($result_content_types === false) {
         $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
         exit($query_error);
@@ -74,16 +96,20 @@ function get_content_types($db_connect)
     return mysqli_fetch_all($result_content_types, MYSQLI_ASSOC);
 }
 
-function get_posts($db_connect)
+function get_posts($db_connect, $type)
 {
-    $sql_posts = 'SELECT p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon, '
-        . 'u.name, u.avatar '
-        . 'FROM posts AS p '
-        . 'JOIN content_types AS ct ON ct.id = p.content_type '
-        . 'JOIN users as u ON u.id = p.author_id '
-        . 'ORDER BY p.views_counter DESC '
-        . 'LIMIT 6;';
-    $result_posts = mysqli_query($db_connect, $sql_posts);
+    $sql = 'SELECT p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon, u.name, u.avatar 
+            FROM posts AS p 
+            JOIN content_types AS ct 
+                ON ct.id = p.content_type 
+            JOIN users as u 
+                ON u.id = p.author_id ';
+            if (isset($type)) {
+                $sql .= 'WHERE p.content_type = ' . $type . ' ';
+            }
+            $sql .= 'ORDER BY p.views_counter DESC LIMIT 6;';
+
+    $result_posts = mysqli_query($db_connect, $sql);
     if ($result_posts === false) {
         $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
         exit($query_error);
