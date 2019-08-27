@@ -2,6 +2,7 @@
 /**
  * @var array $content_types
  * @var array $posts
+ * @var string $type
  */
 ?>
 
@@ -43,15 +44,16 @@
             <b class="popular__filters-caption filters__caption">Тип контента:</b>
             <ul class="popular__filters-list filters__list">
                 <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-                    <a class="filters__button filters__button--ellipse filters__button--all filters__button--active"
-                       href="#">
+                    <a class="filters__button filters__button--ellipse filters__button--all <?= !isset($type) ? $active_class : '' ?>"
+                       href="/index.php">
                         <span>Все</span>
                     </a>
                 </li>
                 <?php foreach ($content_types as $content_type): ?>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--<?= isset($content_type['type_icon']) ?? '' ?> button"
-                           href="#">
+                        <a class="filters__button filters__button--<?= $content_type['type_icon'] ?? '' ?> button
+                            <?php if (isset($content_type['id']) && $type === $content_type['id']): ?><?= $active_class ?><?php endif; ?>"
+                            href="<?= '/index.php?type='. $content_type['id'] ?>">
                             <span class="visually-hidden">
                                 <?= $content_type['type_name'] ?? '' ?>
                             </span>
