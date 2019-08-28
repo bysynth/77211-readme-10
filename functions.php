@@ -98,13 +98,7 @@ function get_content_types($db_connect)
 }
 
 function is_type_exist ($arrays, $type) {
-    $result = false;
-    foreach ($arrays as $array) {
-        if (in_array($type, $array, true)) {
-            $result = true;
-        }
-    }
-    return $result;
+    return in_array($type, array_column($arrays, 'id'), true);
 }
 
 function get_posts($db_connect, $type)
@@ -145,7 +139,7 @@ function get_post($db_connect, $id) {
 }
 
 function get_publications_count($db_connect, $user_id) {
-    $sql = 'SELECT id as count
+    $sql = 'SELECT COUNT(id) as count
             FROM posts
             WHERE author_id =' . $user_id;
 
@@ -155,11 +149,11 @@ function get_publications_count($db_connect, $user_id) {
         exit($query_error);
     }
 
-    return mysqli_num_rows($result);
+    return mysqli_fetch_assoc($result);
 }
 
-function get_subsriptions_count($db_connect, $user_id) {
-    $sql = 'SELECT id
+function get_subscriptions_count($db_connect, $user_id) {
+    $sql = 'SELECT COUNT(id) as count
             FROM subscriptions
             WHERE author_id =' . $user_id;
 
@@ -169,5 +163,5 @@ function get_subsriptions_count($db_connect, $user_id) {
         exit($query_error);
     }
 
-    return mysqli_num_rows($result);
+    return mysqli_fetch_assoc($result);
 }
