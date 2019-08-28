@@ -70,7 +70,7 @@
         <?php foreach ($posts as $key => $post): ?>
             <article class="popular__post post post-<?= $post['type_icon'] ?? '' ?>">
                 <header class="post__header">
-                    <?php if (isset($post['title']) && isset($post['id'])): ?>
+                    <?php if (isset($post['title'], $post['id'])): ?>
                         <h2>
                             <a href="<?= '/post.php?id=' . $post['id'] ?>"><?= clear_input($post['title']) ?></a>
                         </h2>
@@ -80,14 +80,14 @@
 
                     <?php if (isset($post['type_name']) && $post['type_name'] === 'Цитата'): ?>
                         <blockquote>
-                            <?php if (isset($post['content'])): ?>
+                            <?php if (isset($post['content'], $post['cite_author'])): ?>
                                 <p>
                                     <?= clear_input($post['content']) ?>
                                 </p>
+                                <cite>
+                                    <?= $post['cite_author'] ?>
+                                </cite>
                             <?php endif; ?>
-                            <cite>
-                                <?= $post['cite_author'] ?? 'Неизвестный Автор' ?>
-                            </cite>
                         </blockquote>
                     <?php endif; ?>
 
@@ -100,8 +100,7 @@
                     <?php if (isset($post['type_name']) && $post['type_name'] === 'Картинка'): ?>
                         <div class="post-photo__image-wrapper">
                             <?php if (isset($post['content'])): ?>
-                                <img src="img/<?= clear_input($post['content']) ?>" alt="Фото от пользователя" width="360"
-                                     height="240">
+                                <img src="img/<?= clear_input($post['content']) ?>" alt="Фото от пользователя" width="360" height="240">
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
@@ -140,10 +139,12 @@
                                 <?php if (isset($post['name'])): ?>
                                     <b class="post__author-name"><?= clear_input($post['name']) ?></b>
                                 <?php endif; ?>
-                                <time class="post__time" datetime="<?= $time = clear_input($post['created_at']) ?>"
-                                      title="<?= get_custom_time_format($time) ?>">
-                                    <?= get_relative_time_format($time) ?>
-                                </time>
+                                <?php if (isset($post['created_at'])): ?>
+                                    <time class="post__time" datetime="<?= $time = clear_input($post['created_at']) ?>"
+                                          title="<?= get_custom_time_format($time) ?>">
+                                        <?= get_relative_time_format($time, 'назад') ?>
+                                    </time>
+                                <?php endif; ?>
                             </div>
                         </a>
                     </div>
