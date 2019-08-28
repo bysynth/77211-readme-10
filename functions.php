@@ -1,16 +1,23 @@
 <?php
 
-//function db_fetch_data($link, $sql, $data = [])
-//{
-//    $result = [];
-//    $stmt = db_get_prepare_stmt($link, $sql, $data);
-//    mysqli_stmt_execute($stmt);
-//    $res = mysqli_stmt_get_result($stmt);
-//    if ($res) {
-//        $result = mysqli_fetch_all($res, MYSQLI_ASSOC);
-//    }
-//    return $result;
-//}
+function db_fetch_data($link, $sql, $data = [], $fetch_type = null)
+{
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+
+    if ($result === false) {
+        $query_error = 'Ошибка №' . mysqli_errno($link) . ' --- ' . mysqli_error($link);
+        exit($query_error);
+    }
+
+    if ($fetch_type === 'assoc') {
+        return mysqli_fetch_assoc($result);
+    }
+
+    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+}
+
 //
 //function db_insert_data($link, $sql, $data = [])
 //{
@@ -37,6 +44,7 @@ function cut_text($text, $length = 300)
         return '<p>' . implode(' ', $result_array) . '...' .
             '</p><a class="post-text__more-link" href="#">Читать далее</a>';
     }
+
     return '<p>' . $text . '</p>';
 }
 
@@ -82,6 +90,7 @@ function get_relative_time_format($time_data, $word)
 function get_custom_time_format($time_data)
 {
     $date_and_time = date_create($time_data);
+
     return date_format($date_and_time, 'd.m.Y H:i');
 }
 
@@ -94,6 +103,7 @@ function get_content_types($db_connect)
         $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
         exit($query_error);
     }
+
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
@@ -103,23 +113,20 @@ function is_type_exist ($arrays, $type) {
 
 function get_posts($db_connect, $type)
 {
-    $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon, u.name, u.avatar 
-            FROM posts AS p 
-            JOIN content_types AS ct 
-                ON ct.id = p.content_type 
-            JOIN users as u 
+    $data = [];
+    $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon, u.name, u.avatar
+            FROM posts AS p
+            JOIN content_types AS ct
+                ON ct.id = p.content_type
+            JOIN users as u
                 ON u.id = p.author_id ';
-            if (isset($type)) {
-                $sql .= 'WHERE p.content_type = ' . $type . ' ';
-            }
-            $sql .= 'ORDER BY p.views_counter DESC LIMIT 6;';
-
-    $result = mysqli_query($db_connect, $sql);
-    if ($result === false) {
-        $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
-        exit($query_error);
+    if (isset($type)) {
+        $sql .= 'WHERE p.content_type = ? ';
+        $data[] = $type;
     }
-    return mysqli_fetch_all($result, MYSQLI_ASSOC);
+    $sql .= 'ORDER BY p.views_counter DESC LIMIT 6;';
+
+    return db_fetch_data($db_connect, $sql, $data);
 }
 
 function get_post($db_connect, $id) {
@@ -127,41 +134,24 @@ function get_post($db_connect, $id) {
             p.author_id, u.name, u.avatar, u.created_at as user_created_at
             FROM posts as p
             JOIN users as u
-                ON u.id = p.author_id ';
-    $sql .= 'WHERE p.id = ' . $id;
+                ON u.id = p.author_id 
+            WHERE p.id = ?';
 
-    $result = mysqli_query($db_connect, $sql);
-    if ($result === false) {
-        $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
-        exit($query_error);
-    }
-    return mysqli_fetch_assoc($result);
+    return db_fetch_data($db_connect, $sql, [$id], 'assoc');
 }
 
 function get_publications_count($db_connect, $user_id) {
     $sql = 'SELECT COUNT(id) as count
             FROM posts
-            WHERE author_id =' . $user_id;
+            WHERE author_id = ?';
 
-    $result = mysqli_query($db_connect, $sql);
-    if ($result === false) {
-        $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
-        exit($query_error);
-    }
-
-    return mysqli_fetch_assoc($result);
+    return db_fetch_data($db_connect, $sql, [$user_id], 'assoc');
 }
 
 function get_subscriptions_count($db_connect, $user_id) {
     $sql = 'SELECT COUNT(id) as count
             FROM subscriptions
-            WHERE author_id =' . $user_id;
+            WHERE author_id = ?';
 
-    $result = mysqli_query($db_connect, $sql);
-    if ($result === false) {
-        $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
-        exit($query_error);
-    }
-
-    return mysqli_fetch_assoc($result);
+    return db_fetch_data($db_connect, $sql, [$user_id], 'assoc');
 }
