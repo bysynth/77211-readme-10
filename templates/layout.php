@@ -195,7 +195,7 @@
     </div>
 </header>
 
-<section class="page__main page__main--popular">
+<section class="page__main <?= $main_class ?>">
     <?= $content ?>
 </section>
 
