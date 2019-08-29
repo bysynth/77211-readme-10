@@ -145,7 +145,7 @@ function get_publications_count($db_connect, $user_id) {
             FROM posts
             WHERE author_id = ?';
 
-    return db_fetch_data($db_connect, $sql, [$user_id], true);
+    return db_fetch_data($db_connect, $sql, [$user_id], true)['count'] ?? 0;
 }
 
 function get_subscriptions_count($db_connect, $user_id) {
@@ -153,5 +153,5 @@ function get_subscriptions_count($db_connect, $user_id) {
             FROM subscriptions
             WHERE author_id = ?';
 
-    return db_fetch_data($db_connect, $sql, [$user_id], true);
+    return db_fetch_data($db_connect, $sql, [$user_id], true)['count'] ?? 0;
 }
