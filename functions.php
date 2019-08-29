@@ -1,6 +1,6 @@
 <?php
 
-function db_fetch_data($link, $sql, $data = [], $fetch_type = null)
+function db_fetch_data($link, $sql, $data = [], $is_single = false)
 {
     $stmt = db_get_prepare_stmt($link, $sql, $data);
     mysqli_stmt_execute($stmt);
@@ -11,7 +11,7 @@ function db_fetch_data($link, $sql, $data = [], $fetch_type = null)
         exit($query_error);
     }
 
-    if ($fetch_type === 'assoc') {
+    if ($is_single) {
         return mysqli_fetch_assoc($result);
     }
 
@@ -137,7 +137,7 @@ function get_post($db_connect, $id) {
                 ON u.id = p.author_id 
             WHERE p.id = ?';
 
-    return db_fetch_data($db_connect, $sql, [$id], 'assoc');
+    return db_fetch_data($db_connect, $sql, [$id], true);
 }
 
 function get_publications_count($db_connect, $user_id) {
@@ -145,7 +145,7 @@ function get_publications_count($db_connect, $user_id) {
             FROM posts
             WHERE author_id = ?';
 
-    return db_fetch_data($db_connect, $sql, [$user_id], 'assoc');
+    return db_fetch_data($db_connect, $sql, [$user_id], true);
 }
 
 function get_subscriptions_count($db_connect, $user_id) {
@@ -153,5 +153,5 @@ function get_subscriptions_count($db_connect, $user_id) {
             FROM subscriptions
             WHERE author_id = ?';
 
-    return db_fetch_data($db_connect, $sql, [$user_id], 'assoc');
+    return db_fetch_data($db_connect, $sql, [$user_id], true);
 }
