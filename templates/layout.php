@@ -195,7 +195,7 @@
     </div>
 </header>
 
-<section class="page__main page__main--popular">
+<section class="page__main <?= $main_class ?>">
     <?= $content ?>
 </section>
 
@@ -257,6 +257,6 @@
 </footer>
 <script src="libs/dropzone.js"></script>
 <script src="js/dropzone-settings.js"></script>
-<script src="js/main.js"></script>
+<!--<script src="js/main.js"></script>-->
 </body>
 </html>
