@@ -31,7 +31,6 @@ $layout_content = include_template('layout.php',
         'content' => $page_content,
         'main_class' => 'page__main--publication',
         'title' => 'readme: ' . $post_content['title'],
-        'is_auth' => $is_auth,
         'user_name' => $user_name
     ]);
 

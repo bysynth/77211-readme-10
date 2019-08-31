@@ -4,7 +4,6 @@ date_default_timezone_set('Europe/Moscow');
 require_once 'helpers.php';
 require_once 'functions.php';
 
-$is_auth = rand(0, 1);
 $user_name = 'Владимир';
 
 $db_connect = mysqli_connect('localhost', 'root', '', 'readme');
