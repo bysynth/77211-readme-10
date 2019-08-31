@@ -1,9 +1,10 @@
 <label class="adding-post__label form__label" for="post-text">Текст поста <span class="form__input-required">*</span></label>
-<div class="form__input-section">
-    <textarea class="adding-post__textarea form__textarea form__input" id="post-text" name="text-content" placeholder="Введите текст публикации"></textarea>
+<?php $classname = isset($error) ? 'form__input-section--error' : '' ?>
+<div class="form__input-section <?= $classname ?>">
+    <textarea class="adding-post__textarea form__textarea form__input" id="post-text" name="text-content" placeholder="Введите текст публикации"><?= get_post_val('text-content')?></textarea>
     <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
     <?= include_template('input-error.php', [
-        'error_title' => 'Заголовок',
-        'error_desc' => 'Текст сообщения об ошибке, подробно объясняющий, что не так.'
+        'error_title' => $error['input_name'],
+        'error_desc' => $error['input_error_desc']
     ])?>
 </div>

@@ -18,16 +18,20 @@ function db_fetch_data($link, $sql, $data = [], $is_single = false)
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-//
-//function db_insert_data($link, $sql, $data = [])
-//{
-//    $stmt = db_get_prepare_stmt($link, $sql, $data);
-//    $result = mysqli_stmt_execute($stmt);
-//    if ($result) {
-//        $result = mysqli_insert_id($link);
-//    }
-//    return $result;
-//}
+function db_insert_data($link, $sql, $data = [])
+{
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    $result = mysqli_stmt_execute($stmt);
+
+    if ($result) {
+        $result = mysqli_insert_id($link);
+    } else {
+        $query_error = 'Ошибка №' . mysqli_errno($link) . ' --- ' . mysqli_error($link);
+        exit($query_error);
+    }
+
+    return $result;
+}
 
 function cut_text($text, $length = 300)
 {
@@ -94,15 +98,20 @@ function get_custom_time_format($time_data)
     return date_format($date_and_time, 'd.m.Y H:i');
 }
 
-function get_content_types($db_connect)
-{
-    $sql = 'SELECT id, type_name, type_icon FROM content_types';
-
+function get_mysqli_result($db_connect, $sql) {
     $result = mysqli_query($db_connect, $sql);
     if ($result === false) {
         $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
         exit($query_error);
     }
+
+    return $result;
+}
+
+function get_content_types($db_connect)
+{
+    $sql = 'SELECT id, type_name, type_icon FROM content_types';
+    $result = get_mysqli_result($db_connect, $sql);
 
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
@@ -154,4 +163,76 @@ function get_subscriptions_count($db_connect, $user_id) {
             WHERE author_id = ?';
 
     return db_fetch_data($db_connect, $sql, [$user_id], true)['count'] ?? 0;
+}
+
+function get_hashtags_from_db($db_connect)
+{
+    $sql = 'SELECT hashtag FROM hashtags';
+    $result = get_mysqli_result($db_connect, $sql);
+
+    $assoc_array = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return array_column($assoc_array, 'hashtag');
+}
+
+function db_insert_uniq_hashtags($db_connect, $string_tags)
+{
+    $post_hashtags_array = explode(' ', $string_tags);
+    $uniq_hashtags = array_diff($post_hashtags_array, get_hashtags_from_db($db_connect));
+
+    $sql_hashtag = 'INSERT INTO hashtags (hashtag) VALUES (?)';
+
+    if (!empty($uniq_hashtags)) {
+        foreach ($uniq_hashtags as $hashtag) {
+            $stmt = db_get_prepare_stmt($db_connect, $sql_hashtag, [$hashtag]);
+            mysqli_stmt_execute($stmt);
+        }
+    }
+}
+
+function get_hashtag_id($db_connect, $hashtag)
+{
+    $sql = "SELECT id FROM hashtags WHERE hashtag = '$hashtag'";
+    $result = get_mysqli_result($db_connect, $sql);
+    $hashtag_id = mysqli_fetch_assoc($result)['id'];
+
+    return (int) $hashtag_id;
+}
+
+function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id) {
+    $post_hashtags_array = explode(' ', $string_tags);
+
+    foreach ($post_hashtags_array as $hashtag) {
+        $hashtag_id = get_hashtag_id($db_connect, $hashtag);
+        $sql_hashtag_post = "INSERT INTO hashtags_posts (hashtag_id, post_id) VALUES ('$hashtag_id', '$post_id')";
+        get_mysqli_result($db_connect, $sql_hashtag_post);
+    }
+}
+
+function validator_chain(...$validators)
+{
+    foreach ($validators as $validator) {
+        $result = $validator();
+        if ($result !== null) {
+            return $result;
+        }
+    }
+
+    return null;
+}
+
+function get_post_val($name)
+{
+    return $_POST[$name] ?? '';
+}
+
+function validate_filled($name, $input_name)
+{
+    if (empty($name)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    return null;
 }

@@ -28,28 +28,29 @@
                                 <div class="adding-post__input-wrapper form__input-wrapper">
                                     <?= include_template('input-heading.php',
                                         [
-                                            'type' => 'text'
+                                            'type' => 'text',
+                                            'error' => $errors['title'] ?? null
                                         ]) ?>
                                 </div>
                                 <div class="adding-post__textarea-wrapper form__textarea-wrapper">
-                                    <?= include_template('input-post-text.php', []) ?>
+                                    <?= include_template('input-post-text.php', [
+                                        'error' => $errors['content'] ?? null
+                                    ]) ?>
                                 </div>
                                 <div class="adding-post__input-wrapper form__input-wrapper">
                                     <?= include_template('input-tags.php', [
-                                        'type' => 'post'
+                                        'type' => 'text'
                                     ]) ?>
                                 </div>
                             </div>
-                            <div class="form__invalid-block">
-                                <b class="form__invalid-slogan">Пожалуйста, исправьте следующие ошибки:</b>
-                                <ul class="form__invalid-list">
-                                    <li class="form__invalid-item">Заголовок. Это поле должно быть заполнено.</li>
-                                    <li class="form__invalid-item">Цитата. Она не должна превышать 70 знаков.</li>
-                                </ul>
-                            </div>
+                            <?php if (!empty($errors)) : ?>
+                                <?= include_template('form-invalid-block.php', [
+                                    'errors' => $errors
+                                ]); ?>
+                            <?php endif; ?>
                         </div>
                         <div class="adding-post__buttons">
-                            <button class="adding-post__submit button button--main" type="submit">Опубликовать</button>
+                            <button class="adding-post__submit button button--main" type="submit" name="text-submit">Опубликовать</button>
                             <a class="adding-post__close" href="#">Закрыть</a>
                         </div>
                     </form>
@@ -67,21 +68,21 @@
                                         ]) ?>
                                 </div>
                                 <div class="adding-post__input-wrapper form__textarea-wrapper">
-                                    <?= include_template('input-cite-text.php', [])?>
+                                    <?= include_template('input-quote-text.php', [])?>
                                 </div>
                                 <div class="adding-post__textarea-wrapper form__input-wrapper">
                                     <?= include_template('input-quote-author.php', [])?>
                                 </div>
                                 <div class="adding-post__input-wrapper form__input-wrapper">
                                     <?= include_template('input-tags.php', [
-                                        'type' => 'cite'
+                                        'type' => 'quote'
                                     ]) ?>
                                 </div>
                             </div>
                             <?= include_template('form-invalid-block.php', []) ?>
                         </div>
                         <div class="adding-post__buttons">
-                            <button class="adding-post__submit button button--main" type="submit">Опубликовать</button>
+                            <button class="adding-post__submit button button--main" type="submit" name="quote-submit">Опубликовать</button>
                             <a class="adding-post__close" href="#">Закрыть</a>
                         </div>
                     </form>
@@ -128,7 +129,7 @@
                             </div>
                         </div>
                         <div class="adding-post__buttons">
-                            <button class="adding-post__submit button button--main" type="submit">Опубликовать</button>
+                            <button class="adding-post__submit button button--main" type="submit" name="photo-submit">Опубликовать</button>
                             <a class="adding-post__close" href="#">Закрыть</a>
                         </div>
                     </form>
@@ -157,7 +158,7 @@
                             <?= include_template('form-invalid-block.php', []) ?>
                         </div>
                         <div class="adding-post__buttons">
-                            <button class="adding-post__submit button button--main" type="submit">Опубликовать</button>
+                            <button class="adding-post__submit button button--main" type="submit" name="video-submit">Опубликовать</button>
                             <a class="adding-post__close" href="#">Закрыть</a>
                         </div>
                     </form>
@@ -186,7 +187,7 @@
                             <?= include_template('form-invalid-block.php', []) ?>
                         </div>
                         <div class="adding-post__buttons">
-                            <button class="adding-post__submit button button--main" type="submit">Опубликовать</button>
+                            <button class="adding-post__submit button button--main" type="submit" name="link-submit">Опубликовать</button>
                             <a class="adding-post__close" href="#">Закрыть</a>
                         </div>
                     </form>
