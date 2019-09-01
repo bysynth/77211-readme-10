@@ -9,7 +9,7 @@
                     <?php foreach ($content_types as $key => $content_type): ?>
                         <li class="adding-post__tabs-item filters__item">
                             <a class="adding-post__tabs-link filters__button filters__button--<?= $content_type['type_icon'] ?? '' ?> tabs__item button
-                                <?= ($key === 0) ? 'filters__button--active tabs__item--active' : '' ?>">
+                            <?= (empty($_POST) && $key === 0) || array_key_exists($content_type['type_icon'], $_POST) ? 'filters__button--active tabs__item--active' : '' ?>">
                                 <svg class="filters__icon" width="22" height="18">
                                     <use xlink:href="#icon-filter-<?= $content_type['type_icon'] ?? '' ?>"></use>
                                 </svg>
@@ -20,7 +20,7 @@
                 </ul>
             </div>
             <div class="adding-post__tab-content">
-                <section class="adding-post__text tabs__content tabs__content--active">
+                <section class="adding-post__text tabs__content <?= empty($_POST) || isset($_POST['text']) ? 'tabs__content--active' : '' ?>">
                     <h2 class="visually-hidden">Форма добавления текста</h2>
                     <form class="adding-post__form form" action="add.php" method="post">
                         <div class="form__text-inputs-wrapper">
@@ -29,13 +29,16 @@
                                     <?= include_template('input-heading.php',
                                         [
                                             'type' => 'text',
-                                            'error' => $errors['title'] ?? null
-                                        ]) ?>
+                                            'error' => $errors['text-heading'] ?? null
+                                        ])
+                                    ?>
                                 </div>
                                 <div class="adding-post__textarea-wrapper form__textarea-wrapper">
-                                    <?= include_template('input-post-text.php', [
-                                        'error' => $errors['content'] ?? null
-                                    ]) ?>
+                                    <?= include_template('input-post-text.php',
+                                        [
+                                            'error' => $errors['text-content'] ?? null
+                                        ])
+                                    ?>
                                 </div>
                                 <div class="adding-post__input-wrapper form__input-wrapper">
                                     <?= include_template('input-tags.php', [
@@ -43,20 +46,22 @@
                                     ]) ?>
                                 </div>
                             </div>
-                            <?php if (!empty($errors)) : ?>
-                                <?= include_template('form-invalid-block.php', [
-                                    'errors' => $errors
-                                ]); ?>
+                            <?php if (!empty($errors) && isset($_POST['text'])) : ?>
+                                <?= include_template('form-invalid-block.php',
+                                    [
+                                        'errors' => $errors
+                                    ]);
+                                ?>
                             <?php endif; ?>
                         </div>
                         <div class="adding-post__buttons">
-                            <button class="adding-post__submit button button--main" type="submit" name="text-submit">Опубликовать</button>
+                            <button class="adding-post__submit button button--main" type="submit" name="text">Опубликовать</button>
                             <a class="adding-post__close" href="#">Закрыть</a>
                         </div>
                     </form>
                 </section>
 
-                <section class="adding-post__quote tabs__content">
+                <section class="adding-post__quote tabs__content <?= isset($_POST['quote']) ? 'tabs__content--active' : '' ?>">
                     <h2 class="visually-hidden">Форма добавления цитаты</h2>
                     <form class="adding-post__form form" action="add.php" method="post">
                         <div class="form__text-inputs-wrapper">
@@ -64,31 +69,49 @@
                                 <div class="adding-post__input-wrapper form__input-wrapper">
                                     <?= include_template('input-heading.php',
                                         [
-                                            'type' => 'quote'
-                                        ]) ?>
+                                            'type' => 'quote',
+                                            'error' => $errors['quote-heading'] ?? null
+                                        ])
+                                    ?>
                                 </div>
                                 <div class="adding-post__input-wrapper form__textarea-wrapper">
-                                    <?= include_template('input-quote-text.php', [])?>
+                                    <?= include_template('input-quote-text.php',
+                                        [
+                                            'error' => $errors['quote-content'] ?? null
+                                        ])
+                                    ?>
                                 </div>
                                 <div class="adding-post__textarea-wrapper form__input-wrapper">
-                                    <?= include_template('input-quote-author.php', [])?>
+                                    <?= include_template('input-quote-author.php',
+                                        [
+                                            'error' => $errors['quote-author'] ?? null
+                                        ])
+                                    ?>
                                 </div>
                                 <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-tags.php', [
-                                        'type' => 'quote'
-                                    ]) ?>
+                                    <?= include_template('input-tags.php',
+                                        [
+                                            'type' => 'quote'
+                                        ])
+                                    ?>
                                 </div>
                             </div>
-                            <?= include_template('form-invalid-block.php', []) ?>
+                            <?php if (!empty($errors) && isset($_POST['quote'])) : ?>
+                                <?= include_template('form-invalid-block.php',
+                                    [
+                                        'errors' => $errors
+                                    ])
+                                ?>
+                            <?php endif; ?>
                         </div>
                         <div class="adding-post__buttons">
-                            <button class="adding-post__submit button button--main" type="submit" name="quote-submit">Опубликовать</button>
+                            <button class="adding-post__submit button button--main" type="submit" name="quote">Опубликовать</button>
                             <a class="adding-post__close" href="#">Закрыть</a>
                         </div>
                     </form>
                 </section>
 
-                <section class="adding-post__photo tabs__content">
+                <section class="adding-post__photo tabs__content <?= isset($_POST['photo']) ? 'tabs__content--active' : '' ?>">
                     <h2 class="visually-hidden">Форма добавления фото</h2>
                     <form class="adding-post__form form" action="add.php" method="post" enctype="multipart/form-data">
                         <div class="form__text-inputs-wrapper">
@@ -96,19 +119,33 @@
                                 <div class="adding-post__input-wrapper form__input-wrapper">
                                     <?= include_template('input-heading.php',
                                         [
+                                            'type' => 'photo',
+                                            'error' => $errors['photo-heading'] ?? null
+                                        ])
+                                    ?>
+                                </div>
+                                <div class="adding-post__input-wrapper form__input-wrapper">
+                                    <?= include_template('input-photo-url.php',
+                                        [
+                                            'error' => $errors['photo-url'] ?? null
+                                        ])
+                                    ?>
+                                </div>
+                                <div class="adding-post__input-wrapper form__input-wrapper">
+                                    <?= include_template('input-tags.php',
+                                        [
                                             'type' => 'photo'
-                                        ]) ?>
-                                </div>
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-photo-url.php', [])?>
-                                </div>
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-tags.php', [
-                                        'type' => 'photo'
-                                    ]) ?>
+                                        ])
+                                    ?>
                                 </div>
                             </div>
-                            <?= include_template('form-invalid-block.php', []) ?>
+                            <?php if (!empty($errors) && isset($_POST['photo'])) : ?>
+                                <?= include_template('form-invalid-block.php',
+                                    [
+                                        'errors' => $errors
+                                    ])
+                                ?>
+                            <?php endif; ?>
                         </div>
                         <div class="adding-post__input-file-container form__input-container form__input-container--file">
                             <div class="adding-post__input-file-wrapper form__input-file-wrapper">
@@ -129,13 +166,13 @@
                             </div>
                         </div>
                         <div class="adding-post__buttons">
-                            <button class="adding-post__submit button button--main" type="submit" name="photo-submit">Опубликовать</button>
+                            <button class="adding-post__submit button button--main" type="submit" name="photo">Опубликовать</button>
                             <a class="adding-post__close" href="#">Закрыть</a>
                         </div>
                     </form>
                 </section>
 
-                <section class="adding-post__video tabs__content">
+                <section class="adding-post__video tabs__content <?= isset($_POST['video']) ? 'tabs__content--active' : '' ?>">
                     <h2 class="visually-hidden">Форма добавления видео</h2>
                     <form class="adding-post__form form" action="add.php" method="post" enctype="multipart/form-data">
                         <div class="form__text-inputs-wrapper">
@@ -164,7 +201,7 @@
                     </form>
                 </section>
 
-                <section class="adding-post__link tabs__content">
+                <section class="adding-post__link tabs__content <?= isset($_POST['link']) ? 'tabs__content--active' : '' ?>">
                     <h2 class="visually-hidden">Форма добавления ссылки</h2>
                     <form class="adding-post__form form" action="add.php" method="post">
                         <div class="form__text-inputs-wrapper">

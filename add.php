@@ -9,25 +9,58 @@ if (!empty($_GET)) {
     exit('Ошибка 404 -- Запрашиваемая страница не найдена');
 }
 
+//var_dump($_POST);
+
+// TODO: для каждой формы одинаковые name - при сборе $post - назначить уникальные
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    if (array_key_exists('text-submit', $_POST)) {
+    if (array_key_exists('text', $_POST)) {
+        $post_type = 'text';
         $post = [
-            'title' => $_POST['text-heading'] ?? null,
-            'content' => $_POST['text-content'] ?? null,
-            'tags' => $_POST['text-tags'] ?? null
+            'text-heading' => $_POST['title'] ?? null,
+            'text-content' => $_POST['content'] ?? null,
+            'tags' => $_POST['tags'] ?? null
         ];
     }
 
-    $required = ['title', 'content'];
+    if (array_key_exists('quote', $_POST)) {
+        $post_type = 'quote';
+        $post = [
+            'quote-heading' => $_POST['title'] ?? null,
+            'quote-content' => $_POST['content'] ?? null,
+            'quote-author' => $_POST['author'] ?? null,
+            'tags' => $_POST['tags'] ?? null
+        ];
+    }
+
+    if (array_key_exists('photo', $_POST)) {
+        $post_type = 'photo';
+        $post = [
+            'photo-heading' => $_POST['title'] ?? null,
+            'photo-content' => $_POST['content'] ?? null,
+            'quote-author' => $_POST['author'] ?? null,
+            'tags' => $_POST['tags'] ?? null
+        ];
+    }
+
     $errors = [];
 
     $rules = [
-        'title' => function () use ($post) {
-            return validate_filled($post['title'], 'Заголовок');
+        'text-heading' => function () use ($post) {
+            return validate_filled($post['text-heading'], 'Заголовок');
         },
-        'content' => function () use ($post) {
-            return validate_filled($post['content'], 'Текст поста');
+        'text-content' => function () use ($post) {
+            return validate_filled($post['text-content'], 'Текст поста');
+        },
+        'quote-heading' => function () use ($post) {
+            return validate_filled($post['quote-heading'], 'Заголовок');
+        },
+        'quote-content' => function () use ($post) {
+            return validate_filled($post['quote-content'], 'Текст цитаты');
+        },
+        'quote-author' => function () use ($post) {
+            return validate_filled($post['quote-author'], 'Автор цитаты');
         }
     ];
 
@@ -46,9 +79,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'content_types' => $content_types,
                 'errors' => $errors
             ]);
+
     } else {
-        $sql_post = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, 1, 1)';
-        $post_id = db_insert_data($db_connect, $sql_post, [$post['title'], $post['content']]);
+
+        if ($post_type === 'text') {
+            $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, 1, 1)';
+            $data = [
+                $post['text-heading'],
+                $post['text-content']
+            ];
+        }
+
+        if ($post_type === 'quote') {
+            $sql = 'INSERT INTO posts (title, content, cite_author, author_id, content_type) VALUES (?, ?, ?, 2, 2)';
+            $data = [
+                $post['quote-heading'],
+                $post['quote-content'],
+                $post['quote-author']
+            ];
+        }
+
+        if ($post_type === 'photo') {
+            $sql = 'INSERT INTO posts (title, content, cite_author, author_id, content_type) VALUES (?, ?, ?, 2, 2)';
+            $data = [
+                $post['quote-heading'],
+                $post['quote-content'],
+                $post['quote-author']
+            ];
+        }
+
+        $post_id = db_insert_data($db_connect, $sql, $data);
 
         if ($post['tags'] !== '') {
             db_insert_uniq_hashtags($db_connect, $post['tags']);
