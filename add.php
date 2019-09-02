@@ -11,9 +11,6 @@ if (!empty($_GET)) {
 
 //var_dump($_POST);
 
-
-// TODO: для каждой формы одинаковые name - при сборе $post - назначить уникальные
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $errors = [];
@@ -21,8 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (array_key_exists('text', $_POST)) {
         $post_type = 'text';
         $post = [
-            'text-heading' => $_POST['title'] ?? null,
-            'text-content' => $_POST['content'] ?? null,
+            'text-heading' => $_POST['text-heading'] ?? null,
+            'text-content' => $_POST['text-content'] ?? null,
             'tags' => $_POST['tags'] ?? null
         ];
 
@@ -39,9 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (array_key_exists('quote', $_POST)) {
         $post_type = 'quote';
         $post = [
-            'quote-heading' => $_POST['title'] ?? null,
-            'quote-content' => $_POST['content'] ?? null,
-            'quote-author' => $_POST['author'] ?? null,
+            'quote-heading' => $_POST['quote-heading'] ?? null,
+            'quote-content' => $_POST['quote-content'] ?? null,
+            'quote-author' => $_POST['quote-author'] ?? null,
             'tags' => $_POST['tags'] ?? null
         ];
 
@@ -62,8 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $post_type = 'photo';
         $post = [
-            'photo-heading' => $_POST['title'] ?? null,
-            'photo-url' => $_POST['content'] ?? null,
+            'photo-heading' => $_POST['photo-heading'] ?? null,
+            'photo-url' => $_POST['photo-url'] ?? null,
             'tags' => $_POST['tags'] ?? null,
             'file' => $_FILES['upload-file'] ?? null
         ];
@@ -84,8 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (array_key_exists('video', $_POST)) {
         $post_type = 'video';
         $post = [
-            'video-heading' => $_POST['title'] ?? null,
-            'video-url' => $_POST['content'] ?? null,
+            'video-heading' => $_POST['video-heading'] ?? null,
+            'video-url' => $_POST['video-url'] ?? null,
             'tags' => $_POST['tags'] ?? null
         ];
 
@@ -102,8 +99,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (array_key_exists('link', $_POST)) {
         $post_type = 'link';
         $post = [
-            'link-heading' => $_POST['title'] ?? null,
-            'link-url' => $_POST['content'] ?? null,
+            'link-heading' => $_POST['link-heading'] ?? null,
+            'link-url' => $_POST['link-url'] ?? null,
             'tags' => $_POST['tags'] ?? null
         ];
 

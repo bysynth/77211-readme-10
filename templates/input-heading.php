@@ -1,6 +1,8 @@
-<label class="adding-post__label form__label" for="<?= $type ?>-heading">Заголовок <span class="form__input-required">*</span></label>
+<?php $input_name = $type . '-heading'; ?>
+
+<label class="adding-post__label form__label" for="<?= $input_name ?>">Заголовок <span class="form__input-required">*</span></label>
 <div class="form__input-section <?= isset($error) ? 'form__input-section--error' : '' ?>">
-    <input class="adding-post__input form__input" id="<?= $type ?>-heading" type="text" name="title" placeholder="Введите заголовок" value="<?= get_post_val('title') ?>">
+    <input class="adding-post__input form__input" id="<?= $input_name ?>" type="text" name="<?= $input_name ?>" placeholder="Введите заголовок" value="<?= get_post_val($input_name) ?>">
     <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
     <?= include_template('input-error.php', [
         'error_title' => $error['input_name'],
