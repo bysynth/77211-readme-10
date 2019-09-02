@@ -96,7 +96,6 @@
     var messagesCollback = switchTabs(messagesTabs);
   }
 })();
-'use script';
 
 (function () {
   var activeModal = document.querySelector('.modal--active');
@@ -158,7 +157,6 @@
   //   showModal(addingPostSubmit, modalAdding);
   // }
 })();
-'use script';
 
 (function () {
   var sorting = document.querySelector('.sorting');
