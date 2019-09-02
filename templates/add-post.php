@@ -22,7 +22,7 @@
             <div class="adding-post__tab-content">
                 <section class="adding-post__text tabs__content <?= empty($_POST) || isset($_POST['text']) ? 'tabs__content--active' : '' ?>">
                     <h2 class="visually-hidden">Форма добавления текста</h2>
-                    <form class="adding-post__form form" action="add.php" method="post">
+                    <form class="adding-post__form form" action="/add.php" method="post">
                         <div class="form__text-inputs-wrapper">
                             <div class="form__text-inputs">
                                 <div class="adding-post__input-wrapper form__input-wrapper">
@@ -50,7 +50,7 @@
                                 <?= include_template('form-invalid-block.php',
                                     [
                                         'errors' => $errors
-                                    ]);
+                                    ])
                                 ?>
                             <?php endif; ?>
                         </div>
@@ -63,7 +63,7 @@
 
                 <section class="adding-post__quote tabs__content <?= isset($_POST['quote']) ? 'tabs__content--active' : '' ?>">
                     <h2 class="visually-hidden">Форма добавления цитаты</h2>
-                    <form class="adding-post__form form" action="add.php" method="post">
+                    <form class="adding-post__form form" action="/add.php" method="post">
                         <div class="form__text-inputs-wrapper">
                             <div class="form__text-inputs">
                                 <div class="adding-post__input-wrapper form__input-wrapper">
@@ -113,7 +113,7 @@
 
                 <section class="adding-post__photo tabs__content <?= isset($_POST['photo']) ? 'tabs__content--active' : '' ?>">
                     <h2 class="visually-hidden">Форма добавления фото</h2>
-                    <form class="adding-post__form form" action="add.php" method="post" enctype="multipart/form-data">
+                    <form class="adding-post__form form" action="/add.php" method="post" enctype="multipart/form-data">
                         <div class="form__text-inputs-wrapper">
                             <div class="form__text-inputs">
                                 <div class="adding-post__input-wrapper form__input-wrapper">
@@ -139,7 +139,7 @@
                                     ?>
                                 </div>
                             </div>
-                            <?php if (!empty($errors) && isset($_POST['photo'])) : ?>
+                            <?php if (!empty($errors) && (isset($_POST['photo']) || isset($_FILES['upload-file']))) : ?>
                                 <?= include_template('form-invalid-block.php',
                                     [
                                         'errors' => $errors
@@ -148,6 +148,9 @@
                             <?php endif; ?>
                         </div>
                         <div class="adding-post__input-file-container form__input-container form__input-container--file">
+                            <input type="file" name="upload-file">
+                        </div>
+<!--                        <div class="adding-post__input-file-container form__input-container form__input-container--file">
                             <div class="adding-post__input-file-wrapper form__input-file-wrapper">
                                 <div class="adding-post__file-zone adding-post__file-zone--photo form__file-zone dropzone">
                                     <input class="adding-post__input-file form__input-file" id="userpic-file-photo" type="file" name="userpic-file-photo" title=" ">
@@ -164,9 +167,9 @@
                             </div>
                             <div class="adding-post__file adding-post__file--photo form__file dropzone-previews">
                             </div>
-                        </div>
+                        </div>-->
                         <div class="adding-post__buttons">
-                            <button class="adding-post__submit button button--main" type="submit" name="photo">Опубликовать</button>
+                            <button class="adding-post__submit button button--main" id="photo-submit" type="submit" name="photo">Опубликовать</button>
                             <a class="adding-post__close" href="#">Закрыть</a>
                         </div>
                     </form>
@@ -174,7 +177,7 @@
 
                 <section class="adding-post__video tabs__content <?= isset($_POST['video']) ? 'tabs__content--active' : '' ?>">
                     <h2 class="visually-hidden">Форма добавления видео</h2>
-                    <form class="adding-post__form form" action="add.php" method="post" enctype="multipart/form-data">
+                    <form class="adding-post__form form" action="/add.php" method="post" enctype="multipart/form-data">
                         <div class="form__text-inputs-wrapper">
                             <div class="form__text-inputs">
                                 <div class="adding-post__input-wrapper form__input-wrapper">

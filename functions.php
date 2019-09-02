@@ -208,17 +208,17 @@ function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id)
     }
 }
 
-function validator_chain(...$validators)
-{
-    foreach ($validators as $validator) {
-        $result = $validator();
-        if ($result !== null) {
-            return $result;
-        }
-    }
-
-    return null;
-}
+//function validator_chain(...$validators)
+//{
+//    foreach ($validators as $validator) {
+//        $result = $validator();
+//        if ($result !== null) {
+//            return $result;
+//        }
+//    }
+//
+//    return null;
+//}
 
 function get_post_val($name)
 {
@@ -232,6 +232,87 @@ function validate_filled($name, $input_name)
             'input_name' => $input_name,
             'input_error_desc' => 'Это поле должно быть заполнено.'
         ];
+    }
+
+    return null;
+}
+
+function is_url_exists($url)
+{
+    $headers = get_headers($url);
+    return stripos($headers[0], '200 OK') ? true : false;
+}
+
+function check_link_mime_type($url, $input_name) {
+    $file = file_get_contents($url);
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $file_type = finfo_buffer($finfo, $file);
+
+    if ($file_type !== 'image/png' && $file_type !== 'image/jpeg' && $file_type !== 'image/gif') {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Выбранный файл не является png, jpg/jpeg или gif.'
+        ];
+    }
+
+    return null;
+}
+
+function validate_photo_url($url, $input_name)
+{
+    if (!empty($url)) {
+
+        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+            return [
+                'input_name' => $input_name,
+                'input_error_desc' => 'Неверный формат адреса картинки.'
+            ];
+        }
+
+        if (is_url_exists($url) === false) {
+            return [
+                'input_name' => $input_name,
+                'input_error_desc' => 'Невозможно загрузить файл.'
+            ];
+        }
+
+        return check_link_mime_type($url, $input_name);
+    }
+
+    return null;
+}
+
+function validate_uploaded_file($file_data, $input_name)
+{
+
+    if ($file_data['error'] !== 4) {
+        $tmp_name = $file_data['tmp_name'];
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $file_type = finfo_file($finfo, $tmp_name);
+        if ($file_type !== 'image/png' && $file_type !== 'image/jpeg' && $file_type !== 'image/gif') {
+            return [
+                'input_name' => $input_name,
+                'input_error_desc' => 'Выбранный файл не является png, jpg/jpeg или gif.'
+            ];
+        }
+    }
+
+    return null;
+}
+
+function get_link_file_ext($url)
+{
+    $file = file_get_contents($url);
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $file_type = finfo_buffer($finfo, $file);
+
+    switch ($file_type) {
+        case 'image/png':
+            return 'png';
+        case 'image/jpeg':
+            return 'jpg';
+        case 'image/gif':
+            return 'gif';
     }
 
     return null;

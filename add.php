@@ -11,9 +11,12 @@ if (!empty($_GET)) {
 
 //var_dump($_POST);
 
+
 // TODO: для каждой формы одинаковые name - при сборе $post - назначить уникальные
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $errors = [];
 
     if (array_key_exists('text', $_POST)) {
         $post_type = 'text';
@@ -21,6 +24,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'text-heading' => $_POST['title'] ?? null,
             'text-content' => $_POST['content'] ?? null,
             'tags' => $_POST['tags'] ?? null
+        ];
+
+        $rules = [
+            'text-heading' => function () use ($post) {
+                return validate_filled($post['text-heading'], 'Заголовок');
+            },
+            'text-content' => function () use ($post) {
+                return validate_filled($post['text-content'], 'Текст поста');
+            }
         ];
     }
 
@@ -32,43 +44,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'quote-author' => $_POST['author'] ?? null,
             'tags' => $_POST['tags'] ?? null
         ];
-    }
 
-    if (array_key_exists('photo', $_POST)) {
-        $post_type = 'photo';
-        $post = [
-            'photo-heading' => $_POST['title'] ?? null,
-            'photo-content' => $_POST['content'] ?? null,
-            'quote-author' => $_POST['author'] ?? null,
-            'tags' => $_POST['tags'] ?? null
+        $rules = [
+            'quote-heading' => function () use ($post) {
+                return validate_filled($post['quote-heading'], 'Заголовок');
+            },
+            'quote-content' => function () use ($post) {
+                return validate_filled($post['quote-content'], 'Текст цитаты');
+            },
+            'quote-author' => function () use ($post) {
+                return validate_filled($post['quote-author'], 'Автор цитаты');
+            }
         ];
     }
 
-    $errors = [];
+    if (array_key_exists('photo', $_POST)) {
 
-    $rules = [
-        'text-heading' => function () use ($post) {
-            return validate_filled($post['text-heading'], 'Заголовок');
-        },
-        'text-content' => function () use ($post) {
-            return validate_filled($post['text-content'], 'Текст поста');
-        },
-        'quote-heading' => function () use ($post) {
-            return validate_filled($post['quote-heading'], 'Заголовок');
-        },
-        'quote-content' => function () use ($post) {
-            return validate_filled($post['quote-content'], 'Текст цитаты');
-        },
-        'quote-author' => function () use ($post) {
-            return validate_filled($post['quote-author'], 'Автор цитаты');
-        }
-    ];
+        $post_type = 'photo';
+        $post = [
+            'photo-heading' => $_POST['title'] ?? null,
+            'photo-url' => $_POST['content'] ?? null,
+            'tags' => $_POST['tags'] ?? null,
+            'file' => $_FILES['upload-file'] ?? null
+        ];
+
+        $rules = [
+            'photo-heading' => function () use ($post) {
+                return validate_filled($post['photo-heading'], 'Заголовок');
+            },
+            'photo-url' => function () use ($post) {
+                return validate_photo_url($post['photo-url'], 'Ссылка из интернета');
+            },
+            'file' => function () use ($post) {
+                        return validate_uploaded_file($post['file'], 'Загруженный файл');
+            }
+        ];
+    }
 
     foreach ($post as $key => $value) {
         if (!isset($errors[$key]) && isset($rules[$key])) {
             $rule = $rules[$key];
             $errors[$key] = $rule();
         }
+    }
+
+    if (empty($post['photo-url']) && $post['file']['error'] === 4) {
+        $errors[] = [
+            'input_name' => 'Картинка',
+            'input_error_desc' => 'Укажите ссылку на файл или выберите файл для загрузки'
+        ];
     }
 
     $errors = array_filter($errors);
@@ -100,11 +124,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($post_type === 'photo') {
-            $sql = 'INSERT INTO posts (title, content, cite_author, author_id, content_type) VALUES (?, ?, ?, 2, 2)';
+
+            if ($post['file']['error'] !== 4) {
+                if (isset($_FILES['upload-file']['name'])) {
+                    $temp_name = $_FILES['upload-file']['tmp_name'];
+                    $file_ext = pathinfo($_FILES['upload-file']['name'], PATHINFO_EXTENSION);
+                    $filename = uniqid('', false) . '.' . $file_ext;
+                    $uploaddir = __DIR__ . '/uploads/';
+                    $file_url = $uploaddir . $filename;
+                    move_uploaded_file($temp_name, $file_url);
+                    $post['path'] = $filename;
+                }
+            } elseif (isset($post['photo-url'])) {
+                $url = $post['photo-url'];
+                $file_ext = get_link_file_ext($url);
+                $file_input = file_get_contents($url);
+                $filename = uniqid('', false) . '.' . $file_ext;
+                $uploaddir = __DIR__ . '/uploads/';
+                $file_url = $uploaddir . $filename;
+                file_put_contents($file_url, $file_input);
+                $post['path'] = $filename;
+            }
+
+            $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, 3, 3)';
             $data = [
-                $post['quote-heading'],
-                $post['quote-content'],
-                $post['quote-author']
+                $post['photo-heading'],
+                $post['path']
             ];
         }
 
@@ -118,7 +163,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: post.php?id=' . $post_id);
         exit();
     }
-
 } else {
     $page_content = include_template('add-post.php',
         [
