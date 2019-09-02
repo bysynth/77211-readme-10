@@ -183,22 +183,36 @@
                                 <div class="adding-post__input-wrapper form__input-wrapper">
                                     <?= include_template('input-heading.php',
                                         [
+                                            'type' => 'video',
+                                            'error' => $errors['video-heading'] ?? null
+                                        ])
+                                    ?>
+                                </div>
+                                <div class="adding-post__input-wrapper form__input-wrapper">
+                                    <?= include_template('input-video-url.php',
+                                        [
+                                            'error' => $errors['video-url'] ?? null
+                                        ])
+                                    ?>
+                                </div>
+                                <div class="adding-post__input-wrapper form__input-wrapper">
+                                    <?= include_template('input-tags.php',
+                                        [
                                             'type' => 'video'
-                                        ]) ?>
-                                </div>
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-video-url.php', []) ?>
-                                </div>
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-tags.php', [
-                                        'type' => 'video'
-                                    ]) ?>
+                                        ])
+                                    ?>
                                 </div>
                             </div>
-                            <?= include_template('form-invalid-block.php', []) ?>
+                            <?php if (!empty($errors) && (isset($_POST['video']))) : ?>
+                                <?= include_template('form-invalid-block.php',
+                                    [
+                                        'errors' => $errors
+                                    ])
+                                ?>
+                            <?php endif; ?>
                         </div>
                         <div class="adding-post__buttons">
-                            <button class="adding-post__submit button button--main" type="submit" name="video-submit">Опубликовать</button>
+                            <button class="adding-post__submit button button--main" type="submit" name="video">Опубликовать</button>
                             <a class="adding-post__close" href="#">Закрыть</a>
                         </div>
                     </form>
@@ -212,19 +226,33 @@
                                 <div class="adding-post__input-wrapper form__input-wrapper">
                                     <?= include_template('input-heading.php',
                                         [
-                                            'type' => 'link'
-                                        ]) ?>
+                                            'type' => 'link',
+                                            'error' => $errors['link-heading'] ?? null
+                                        ])
+                                    ?>
                                 </div>
                                 <div class="adding-post__textarea-wrapper form__input-wrapper">
-                                    <?= include_template('input-post-link.php', []) ?>
+                                    <?= include_template('input-post-link.php',
+                                        [
+                                            'error' => $errors['link'] ?? null
+                                        ])
+                                    ?>
                                 </div>
                                 <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-tags.php', [
-                                        'type' => 'link'
-                                    ]) ?>
+                                    <?= include_template('input-tags.php',
+                                        [
+                                            'type' => 'link'
+                                        ])
+                                    ?>
                                 </div>
                             </div>
-                            <?= include_template('form-invalid-block.php', []) ?>
+                            <?php if (!empty($errors) && (isset($_POST['link']))) : ?>
+                                <?= include_template('form-invalid-block.php',
+                                    [
+                                        'errors' => $errors
+                                    ])
+                                ?>
+                            <?php endif; ?>
                         </div>
                         <div class="adding-post__buttons">
                             <button class="adding-post__submit button button--main" type="submit" name="link-submit">Опубликовать</button>

@@ -317,3 +317,29 @@ function get_link_file_ext($url)
 
     return null;
 }
+
+function validate_video_url($url, $input_name)
+{
+    if (empty($url)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Неверный формат адреса видео.'
+        ];
+    }
+
+    if (!check_youtube_url($url)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Нет такого видео'
+        ];
+    }
+
+    return null;
+}

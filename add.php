@@ -81,6 +81,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
     }
 
+    if (array_key_exists('video', $_POST)) {
+        $post_type = 'video';
+        $post = [
+            'video-heading' => $_POST['title'] ?? null,
+            'video-url' => $_POST['content'] ?? null,
+            'tags' => $_POST['tags'] ?? null
+        ];
+
+        $rules = [
+            'video-heading' => function () use ($post) {
+                return validate_filled($post['video-heading'], 'Заголовок');
+            },
+            'video-url' => function () use ($post) {
+                return validate_video_url($post['video-url'], 'Ссылка Youtube');
+            }
+        ];
+    }
+
     foreach ($post as $key => $value) {
         if (!isset($errors[$key]) && isset($rules[$key])) {
             $rule = $rules[$key];
@@ -88,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if (empty($post['photo-url']) && $post['file']['error'] === 4) {
+    if ($post_type === 'photo' && empty($post['photo-url']) && $post['file']['error'] === 4) {
         $errors[] = [
             'input_name' => 'Картинка',
             'input_error_desc' => 'Укажите ссылку на файл или выберите файл для загрузки'
@@ -103,7 +121,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'content_types' => $content_types,
                 'errors' => $errors
             ]);
-
     } else {
 
         if ($post_type === 'text') {
@@ -150,6 +167,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 $post['photo-heading'],
                 $post['path']
+            ];
+        }
+
+        if ($post_type === 'video') {
+            $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, 4, 4)';
+            $data = [
+                $post['video-heading'],
+                $post['video-url']
             ];
         }
 
