@@ -158,10 +158,8 @@ function check_youtube_url($youtube_url)
     $res = false;
     $id = extract_youtube_id($youtube_url);
 
-    // AIzaSyC-n4aQQk0mZrZNsfswKcaljExfM1UG57c - html academy key
-
     if ($id) {
-        $api_data = ['part' => 'id,status', 'id' => $id, 'key' => 'AIzaSyB2Az2TOVTCg64Jx4RQLwAFIl08b7JYObo'];
+        $api_data = ['part' => 'id,status', 'id' => $id, 'key' => 'AIzaSyC-n4aQQk0mZrZNsfswKcaljExfM1UG57c'];
         $url = "https://www.googleapis.com/youtube/v3/videos?" . http_build_query($api_data);
 
         $resp = file_get_contents($url);
