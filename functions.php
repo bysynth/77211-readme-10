@@ -343,3 +343,21 @@ function validate_video_url($url, $input_name)
 
     return null;
 }
+
+function validate_link($url, $input_name) {
+    if (empty($url)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Неверный формат cсылки.'
+        ];
+    }
+
+    return null;
+}

@@ -99,6 +99,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
     }
 
+    if (array_key_exists('link', $_POST)) {
+        $post_type = 'link';
+        $post = [
+            'link-heading' => $_POST['title'] ?? null,
+            'link-url' => $_POST['content'] ?? null,
+            'tags' => $_POST['tags'] ?? null
+        ];
+
+        $rules = [
+            'link-heading' => function () use ($post) {
+                return validate_filled($post['link-heading'], 'Заголовок');
+            },
+            'link-url' => function () use ($post) {
+                return validate_link($post['link-url'], 'Ссылка');
+            }
+        ];
+    }
+
     foreach ($post as $key => $value) {
         if (!isset($errors[$key]) && isset($rules[$key])) {
             $rule = $rules[$key];
@@ -175,6 +193,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 $post['video-heading'],
                 $post['video-url']
+            ];
+        }
+
+        if ($post_type === 'link') {
+            $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, 5, 5)';
+            $data = [
+                $post['link-heading'],
+                $post['link-url']
             ];
         }
 

@@ -203,7 +203,7 @@
                                     ?>
                                 </div>
                             </div>
-                            <?php if (!empty($errors) && (isset($_POST['video']))) : ?>
+                            <?php if (!empty($errors) && isset($_POST['video'])) : ?>
                                 <?= include_template('form-invalid-block.php',
                                     [
                                         'errors' => $errors
@@ -220,7 +220,7 @@
 
                 <section class="adding-post__link tabs__content <?= isset($_POST['link']) ? 'tabs__content--active' : '' ?>">
                     <h2 class="visually-hidden">Форма добавления ссылки</h2>
-                    <form class="adding-post__form form" action="add.php" method="post">
+                    <form class="adding-post__form form" action="/add.php" method="post">
                         <div class="form__text-inputs-wrapper">
                             <div class="form__text-inputs">
                                 <div class="adding-post__input-wrapper form__input-wrapper">
@@ -234,7 +234,7 @@
                                 <div class="adding-post__textarea-wrapper form__input-wrapper">
                                     <?= include_template('input-post-link.php',
                                         [
-                                            'error' => $errors['link'] ?? null
+                                            'error' => $errors['link-url'] ?? null
                                         ])
                                     ?>
                                 </div>
@@ -246,7 +246,7 @@
                                     ?>
                                 </div>
                             </div>
-                            <?php if (!empty($errors) && (isset($_POST['link']))) : ?>
+                            <?php if (!empty($errors) && isset($_POST['link'])) : ?>
                                 <?= include_template('form-invalid-block.php',
                                     [
                                         'errors' => $errors
@@ -255,7 +255,7 @@
                             <?php endif; ?>
                         </div>
                         <div class="adding-post__buttons">
-                            <button class="adding-post__submit button button--main" type="submit" name="link-submit">Опубликовать</button>
+                            <button class="adding-post__submit button button--main" type="submit" name="link">Опубликовать</button>
                             <a class="adding-post__close" href="#">Закрыть</a>
                         </div>
                     </form>
