@@ -237,10 +237,12 @@ function validate_filled($name, $input_name)
     return null;
 }
 
+// TODO: Переделать функцию is_url_exists
+
 function is_url_exists($url)
 {
-    $headers = get_headers($url);
-    return stripos($headers[0], '200 OK') ? true : false;
+    $response_code_header = @get_headers($url)[0] ?? '';
+    return stripos($response_code_header, '200 OK') !== false;
 }
 
 function check_link_mime_type($url, $input_name) {
