@@ -28,12 +28,12 @@
                                 <?= include_template('input-heading.php',
                                     [
                                         'type' => 'text',
-                                        'error' => $errors['text-heading'] ?? null
+                                        'error' => $errors['text-heading'] ?? []
                                     ])
                                 ?>
                                 <?= include_template('input-post-text.php',
                                     [
-                                        'error' => $errors['text-content'] ?? null
+                                        'error' => $errors['text-content'] ?? []
                                     ])
                                 ?>
                                 <?= include_template('input-tags.php',
@@ -65,17 +65,17 @@
                                 <?= include_template('input-heading.php',
                                     [
                                         'type' => 'quote',
-                                        'error' => $errors['quote-heading'] ?? null
+                                        'error' => $errors['quote-heading'] ?? []
                                     ])
                                 ?>
                                 <?= include_template('input-quote-text.php',
                                     [
-                                        'error' => $errors['quote-content'] ?? null
+                                        'error' => $errors['quote-content'] ?? []
                                     ])
                                 ?>
                                 <?= include_template('input-quote-author.php',
                                     [
-                                        'error' => $errors['quote-author'] ?? null
+                                        'error' => $errors['quote-author'] ?? []
                                     ])
                                 ?>
                                 <?= include_template('input-tags.php',
@@ -107,12 +107,12 @@
                                 <?= include_template('input-heading.php',
                                     [
                                         'type' => 'photo',
-                                        'error' => $errors['photo-heading'] ?? null
+                                        'error' => $errors['photo-heading'] ?? []
                                     ])
                                 ?>
                                 <?= include_template('input-photo-url.php',
                                     [
-                                        'error' => $errors['photo-url'] ?? null
+                                        'error' => $errors['photo-url'] ?? []
                                     ])
                                 ?>
                                 <?= include_template('input-tags.php',
@@ -165,12 +165,12 @@
                                 <?= include_template('input-heading.php',
                                     [
                                         'type' => 'video',
-                                        'error' => $errors['video-heading'] ?? null
+                                        'error' => $errors['video-heading'] ?? []
                                     ])
                                 ?>
                                 <?= include_template('input-video-url.php',
                                     [
-                                        'error' => $errors['video-url'] ?? null
+                                        'error' => $errors['video-url'] ?? []
                                     ])
                                 ?>
                                 <?= include_template('input-tags.php',
@@ -202,12 +202,12 @@
                                 <?= include_template('input-heading.php',
                                     [
                                         'type' => 'link',
-                                        'error' => $errors['link-heading'] ?? null
+                                        'error' => $errors['link-heading'] ?? []
                                     ])
                                 ?>
                                 <?= include_template('input-post-link.php',
                                     [
-                                        'error' => $errors['link-url'] ?? null
+                                        'error' => $errors['link-url'] ?? []
                                     ])
                                 ?>
                                 <?= include_template('input-tags.php',
