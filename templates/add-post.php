@@ -25,26 +25,22 @@
                     <form class="adding-post__form form" action="/add.php" method="post">
                         <div class="form__text-inputs-wrapper">
                             <div class="form__text-inputs">
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-heading.php',
-                                        [
-                                            'type' => 'text',
-                                            'error' => $errors['text-heading'] ?? null
-                                        ])
-                                    ?>
-                                </div>
-                                <div class="adding-post__textarea-wrapper form__textarea-wrapper">
-                                    <?= include_template('input-post-text.php',
-                                        [
-                                            'error' => $errors['text-content'] ?? null
-                                        ])
-                                    ?>
-                                </div>
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-tags.php', [
+                                <?= include_template('input-heading.php',
+                                    [
+                                        'type' => 'text',
+                                        'error' => $errors['text-heading'] ?? null
+                                    ])
+                                ?>
+                                <?= include_template('input-post-text.php',
+                                    [
+                                        'error' => $errors['text-content'] ?? null
+                                    ])
+                                ?>
+                                <?= include_template('input-tags.php',
+                                    [
                                         'type' => 'text'
-                                    ]) ?>
-                                </div>
+                                    ])
+                                ?>
                             </div>
                             <?php if (!empty($errors) && isset($_POST['text'])) : ?>
                                 <?= include_template('form-invalid-block.php',
@@ -66,35 +62,27 @@
                     <form class="adding-post__form form" action="/add.php" method="post">
                         <div class="form__text-inputs-wrapper">
                             <div class="form__text-inputs">
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-heading.php',
-                                        [
-                                            'type' => 'quote',
-                                            'error' => $errors['quote-heading'] ?? null
-                                        ])
-                                    ?>
-                                </div>
-                                <div class="adding-post__input-wrapper form__textarea-wrapper">
-                                    <?= include_template('input-quote-text.php',
-                                        [
-                                            'error' => $errors['quote-content'] ?? null
-                                        ])
-                                    ?>
-                                </div>
-                                <div class="adding-post__textarea-wrapper form__input-wrapper">
-                                    <?= include_template('input-quote-author.php',
-                                        [
-                                            'error' => $errors['quote-author'] ?? null
-                                        ])
-                                    ?>
-                                </div>
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-tags.php',
-                                        [
-                                            'type' => 'quote'
-                                        ])
-                                    ?>
-                                </div>
+                                <?= include_template('input-heading.php',
+                                    [
+                                        'type' => 'quote',
+                                        'error' => $errors['quote-heading'] ?? null
+                                    ])
+                                ?>
+                                <?= include_template('input-quote-text.php',
+                                    [
+                                        'error' => $errors['quote-content'] ?? null
+                                    ])
+                                ?>
+                                <?= include_template('input-quote-author.php',
+                                    [
+                                        'error' => $errors['quote-author'] ?? null
+                                    ])
+                                ?>
+                                <?= include_template('input-tags.php',
+                                    [
+                                        'type' => 'quote'
+                                    ])
+                                ?>
                             </div>
                             <?php if (!empty($errors) && isset($_POST['quote'])) : ?>
                                 <?= include_template('form-invalid-block.php',
@@ -116,28 +104,22 @@
                     <form class="adding-post__form form" action="/add.php" method="post" enctype="multipart/form-data">
                         <div class="form__text-inputs-wrapper">
                             <div class="form__text-inputs">
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-heading.php',
-                                        [
-                                            'type' => 'photo',
-                                            'error' => $errors['photo-heading'] ?? null
-                                        ])
-                                    ?>
-                                </div>
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-photo-url.php',
-                                        [
-                                            'error' => $errors['photo-url'] ?? null
-                                        ])
-                                    ?>
-                                </div>
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-tags.php',
-                                        [
-                                            'type' => 'photo'
-                                        ])
-                                    ?>
-                                </div>
+                                <?= include_template('input-heading.php',
+                                    [
+                                        'type' => 'photo',
+                                        'error' => $errors['photo-heading'] ?? null
+                                    ])
+                                ?>
+                                <?= include_template('input-photo-url.php',
+                                    [
+                                        'error' => $errors['photo-url'] ?? null
+                                    ])
+                                ?>
+                                <?= include_template('input-tags.php',
+                                    [
+                                        'type' => 'photo'
+                                    ])
+                                ?>
                             </div>
                             <?php if (!empty($errors) && (isset($_POST['photo']) || isset($_FILES['upload-file']))) : ?>
                                 <?= include_template('form-invalid-block.php',
@@ -180,28 +162,22 @@
                     <form class="adding-post__form form" action="/add.php" method="post" enctype="multipart/form-data">
                         <div class="form__text-inputs-wrapper">
                             <div class="form__text-inputs">
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-heading.php',
-                                        [
-                                            'type' => 'video',
-                                            'error' => $errors['video-heading'] ?? null
-                                        ])
-                                    ?>
-                                </div>
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-video-url.php',
-                                        [
-                                            'error' => $errors['video-url'] ?? null
-                                        ])
-                                    ?>
-                                </div>
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-tags.php',
-                                        [
-                                            'type' => 'video'
-                                        ])
-                                    ?>
-                                </div>
+                                <?= include_template('input-heading.php',
+                                    [
+                                        'type' => 'video',
+                                        'error' => $errors['video-heading'] ?? null
+                                    ])
+                                ?>
+                                <?= include_template('input-video-url.php',
+                                    [
+                                        'error' => $errors['video-url'] ?? null
+                                    ])
+                                ?>
+                                <?= include_template('input-tags.php',
+                                    [
+                                        'type' => 'video'
+                                    ])
+                                ?>
                             </div>
                             <?php if (!empty($errors) && isset($_POST['video'])) : ?>
                                 <?= include_template('form-invalid-block.php',
@@ -223,28 +199,22 @@
                     <form class="adding-post__form form" action="/add.php" method="post">
                         <div class="form__text-inputs-wrapper">
                             <div class="form__text-inputs">
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-heading.php',
-                                        [
-                                            'type' => 'link',
-                                            'error' => $errors['link-heading'] ?? null
-                                        ])
-                                    ?>
-                                </div>
-                                <div class="adding-post__textarea-wrapper form__input-wrapper">
-                                    <?= include_template('input-post-link.php',
-                                        [
-                                            'error' => $errors['link-url'] ?? null
-                                        ])
-                                    ?>
-                                </div>
-                                <div class="adding-post__input-wrapper form__input-wrapper">
-                                    <?= include_template('input-tags.php',
-                                        [
-                                            'type' => 'link'
-                                        ])
-                                    ?>
-                                </div>
+                                <?= include_template('input-heading.php',
+                                    [
+                                        'type' => 'link',
+                                        'error' => $errors['link-heading'] ?? null
+                                    ])
+                                ?>
+                                <?= include_template('input-post-link.php',
+                                    [
+                                        'error' => $errors['link-url'] ?? null
+                                    ])
+                                ?>
+                                <?= include_template('input-tags.php',
+                                    [
+                                        'type' => 'link'
+                                    ])
+                                ?>
                             </div>
                             <?php if (!empty($errors) && isset($_POST['link'])) : ?>
                                 <?= include_template('form-invalid-block.php',
