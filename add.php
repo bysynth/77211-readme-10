@@ -4,13 +4,6 @@ require_once 'init.php';
 
 $content_types = get_content_types($db_connect);
 
-if (!empty($_GET)) {
-    http_response_code(404);
-    exit('Ошибка 404 -- Запрашиваемая страница не найдена');
-}
-
-//var_dump($_POST);
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $errors = [];
