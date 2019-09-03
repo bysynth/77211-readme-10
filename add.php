@@ -3,10 +3,9 @@
 require_once 'init.php';
 
 $content_types = get_content_types($db_connect);
+$errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $errors = [];
 
     if (array_key_exists('text', $_POST)) {
         $post_type = 'text';
@@ -123,13 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $errors = array_filter($errors);
 
-    if (count($errors)) {
-        $page_content = include_template('add-post.php',
-            [
-                'content_types' => $content_types,
-                'errors' => $errors
-            ]);
-    } else {
+    if (count($errors) === 0) {
 
         if ($post_type === 'text') {
             $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, 1, 1)';
@@ -204,13 +197,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: post.php?id=' . $post_id);
         exit();
     }
-} else {
-    $page_content = include_template('add-post.php',
-        [
-            'content_types' => $content_types,
-            'errors' => null
-        ]);
 }
+
+$page_content = include_template('add-post.php',
+    [
+        'content_types' => $content_types,
+        'errors' => $errors
+    ]);
 
 $layout_content = include_template('layout.php',
     [
