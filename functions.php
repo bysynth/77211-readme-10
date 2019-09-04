@@ -178,14 +178,19 @@ function db_insert_uniq_hashtags($db_connect, $string_tags)
 {
     $post_hashtags_array = explode(' ', $string_tags);
     $uniq_hashtags = array_diff($post_hashtags_array, get_hashtags_from_db($db_connect));
+    $array_count = count($uniq_hashtags);
 
-    $sql_hashtag = 'INSERT INTO hashtags (hashtag) VALUES (?)';
-
-    if (!empty($uniq_hashtags)) {
-        foreach ($uniq_hashtags as $hashtag) {
-            $stmt = db_get_prepare_stmt($db_connect, $sql_hashtag, [$hashtag]);
-            mysqli_stmt_execute($stmt);
+    if ($array_count > 0) {
+        $sql = 'INSERT INTO hashtags (hashtag) VALUES';
+        for ($i = 0; $i < $array_count; $i++) {
+            if ($array_count === 1 || $i === $array_count - 1) {
+                $sql .= ' (?)';
+            } else {
+                $sql .= ' (?), ';
+            }
         }
+        $stmt = db_get_prepare_stmt($db_connect, $sql, $uniq_hashtags);
+        mysqli_stmt_execute($stmt);
     }
 }
 
