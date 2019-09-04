@@ -194,22 +194,19 @@ function db_insert_uniq_hashtags($db_connect, $string_tags)
     }
 }
 
-function get_hashtag_id($db_connect, $hashtag)
-{
-    $sql = 'SELECT id FROM hashtags WHERE hashtag = (?)';
-    $hashtag_id = db_fetch_data($db_connect, $sql, [$hashtag], true)['id'];
-
-    return (int) $hashtag_id;
-}
+//function get_hashtag_id($db_connect, $hashtag)
+//{
+//    $sql = 'SELECT id FROM hashtags WHERE hashtag = (?)';
+//    $hashtag_id = db_fetch_data($db_connect, $sql, [$hashtag], true)['id'];
+//
+//    return (int) $hashtag_id;
+//}
 
 function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id) {
-    $post_hashtags_array = explode(' ', $string_tags);
-
-    foreach ($post_hashtags_array as $hashtag) {
-        $hashtag_id = get_hashtag_id($db_connect, $hashtag);
-        $sql_hashtag_post = "INSERT INTO hashtags_posts (hashtag_id, post_id) VALUES ('$hashtag_id', '$post_id')";
-        get_mysqli_result($db_connect, $sql_hashtag_post);
-    }
+    $string_tags_with_commas = "'" .  str_replace(' ', "', '" , $string_tags) . "'";
+    $sql = "INSERT INTO hashtags_posts (hashtag_id, post_id) 
+            SELECT id, $post_id FROM hashtags WHERE hashtag IN ($string_tags_with_commas)";
+    get_mysqli_result($db_connect, $sql);
 }
 
 //function validator_chain(...$validators)
