@@ -196,9 +196,8 @@ function db_insert_uniq_hashtags($db_connect, $string_tags)
 
 function get_hashtag_id($db_connect, $hashtag)
 {
-    $sql = "SELECT id FROM hashtags WHERE hashtag = '$hashtag'";
-    $result = get_mysqli_result($db_connect, $sql);
-    $hashtag_id = mysqli_fetch_assoc($result)['id'];
+    $sql = 'SELECT id FROM hashtags WHERE hashtag = (?)';
+    $hashtag_id = db_fetch_data($db_connect, $sql, [$hashtag], true)['id'];
 
     return (int) $hashtag_id;
 }
