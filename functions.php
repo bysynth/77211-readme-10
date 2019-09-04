@@ -203,7 +203,8 @@ function db_insert_uniq_hashtags($db_connect, $string_tags)
 //}
 
 function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id) {
-
+    $string_tags = mysqli_real_escape_string($db_connect, $string_tags);
+    $post_id = mysqli_real_escape_string($db_connect, $post_id);
     $string_tags_with_commas = "'" .  str_replace(' ', "', '" , $string_tags) . "'";
     $sql = "INSERT INTO hashtags_posts (hashtag_id, post_id) 
             SELECT id, $post_id FROM hashtags WHERE hashtag IN ($string_tags_with_commas)";
