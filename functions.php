@@ -203,6 +203,7 @@ function db_insert_uniq_hashtags($db_connect, $string_tags)
 //}
 
 function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id) {
+
     $string_tags_with_commas = "'" .  str_replace(' ', "', '" , $string_tags) . "'";
     $sql = "INSERT INTO hashtags_posts (hashtag_id, post_id) 
             SELECT id, $post_id FROM hashtags WHERE hashtag IN ($string_tags_with_commas)";
@@ -271,7 +272,7 @@ function validate_photo_url($url, $input_name)
     if ($url === '') {
         return [
             'input_name' => $input_name,
-            'input_error_desc' => 'Укажите ссылку для загрузки файла.'
+            'input_error_desc' => 'Укажите ссылку для загрузки файла или выберите файл для загрузки.'
         ];
     }
 
@@ -299,7 +300,11 @@ function validate_photo_url($url, $input_name)
 
 function validate_uploaded_file($file_data, $input_name)
 {
-    if ($_FILES['upload-file']['name'] === '') {
+    if ($_POST['photo-url'] !== '' && $file_data['error'] === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+
+    if ($file_data['name'] === '') {
         return [
             'input_name' => $input_name,
             'input_error_desc' => 'Выберите файл для загрузки.'
@@ -329,18 +334,6 @@ function validate_uploaded_file($file_data, $input_name)
             'input_error_desc' => 'Выбранный файл не является png, jpg/jpeg или gif.'
         ];
     }
-
-//    if ($file_data['error'] !== UPLOAD_ERR_NO_FILE) {
-//        $tmp_name = $file_data['tmp_name'];
-//        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-//        $file_type = finfo_file($finfo, $tmp_name);
-//        if ($file_type !== 'image/png' && $file_type !== 'image/jpeg' && $file_type !== 'image/gif') {
-//            return [
-//                'input_name' => $input_name,
-//                'input_error_desc' => 'Выбранный файл не является png, jpg/jpeg или gif.'
-//            ];
-//        }
-//    }
 
     return null;
 }
