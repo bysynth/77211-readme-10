@@ -262,6 +262,18 @@ function check_link_mime_type($url, $input_name) {
 
 function validate_photo_url($url, $input_name)
 {
+
+    if ($_FILES['upload-file']['error'] !== UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+
+    if ($url === '') {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Укажите ссылку для загрузки файла.'
+        ];
+    }
+
     if (!empty($url)) {
 
         if (filter_var($url, FILTER_VALIDATE_URL) === false) {
@@ -286,18 +298,48 @@ function validate_photo_url($url, $input_name)
 
 function validate_uploaded_file($file_data, $input_name)
 {
-
-    if ($file_data['error'] !== 4) {
-        $tmp_name = $file_data['tmp_name'];
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $file_type = finfo_file($finfo, $tmp_name);
-        if ($file_type !== 'image/png' && $file_type !== 'image/jpeg' && $file_type !== 'image/gif') {
-            return [
-                'input_name' => $input_name,
-                'input_error_desc' => 'Выбранный файл не является png, jpg/jpeg или gif.'
-            ];
-        }
+    if ($_FILES['upload-file']['name'] === '') {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Выберите файл для загрузки.'
+        ];
     }
+
+    if ($file_data['error'] !== UPLOAD_ERR_OK) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Не удалось загрузить файл.'
+        ];
+    }
+
+    if ($file_data['size'] > 2097152) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Файл слишком большой. Загрузите файл до 2МБ.'
+        ];
+    }
+
+    $tmp_name = $file_data['tmp_name'];
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $file_type = finfo_file($finfo, $tmp_name);
+    if ($file_type !== 'image/png' && $file_type !== 'image/jpeg' && $file_type !== 'image/gif') {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Выбранный файл не является png, jpg/jpeg или gif.'
+        ];
+    }
+
+//    if ($file_data['error'] !== UPLOAD_ERR_NO_FILE) {
+//        $tmp_name = $file_data['tmp_name'];
+//        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+//        $file_type = finfo_file($finfo, $tmp_name);
+//        if ($file_type !== 'image/png' && $file_type !== 'image/jpeg' && $file_type !== 'image/gif') {
+//            return [
+//                'input_name' => $input_name,
+//                'input_error_desc' => 'Выбранный файл не является png, jpg/jpeg или gif.'
+//            ];
+//        }
+//    }
 
     return null;
 }

@@ -7,6 +7,10 @@ $errors = [];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    if (empty($_POST)) {
+        exit('Что-то пошло не так!');
+    }
+
     if (array_key_exists('text', $_POST)) {
         $post_type = 'text';
         $post = [
@@ -113,12 +117,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if ($post_type === 'photo' && empty($post['photo-url']) && $post['file']['error'] === 4) {
-        $errors[] = [
-            'input_name' => 'Картинка',
-            'input_error_desc' => 'Укажите ссылку на файл или выберите файл для загрузки'
-        ];
-    }
+//    if ($post_type === 'photo' && empty($post['photo-url']) && $post['file']['error'] === UPLOAD_ERR_NO_FILE) {
+//        $errors[] = [
+//            'input_name' => 'Картинка',
+//            'input_error_desc' => 'Укажите ссылку на файл или выберите файл для загрузки'
+//        ];
+//    }
 
     $errors = array_filter($errors);
 
@@ -143,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($post_type === 'photo') {
 
-            if ($post['file']['error'] !== 4) {
+            if ($post['file']['error'] !== UPLOAD_ERR_NO_FILE) {
                 if (isset($_FILES['upload-file']['name'])) {
                     $temp_name = $_FILES['upload-file']['tmp_name'];
                     $file_ext = pathinfo($_FILES['upload-file']['name'], PATHINFO_EXTENSION);
