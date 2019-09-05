@@ -22,7 +22,6 @@ $layout_content = include_template('layout.php',
         'content' => $page_content,
         'main_class' => 'page__main--popular',
         'title' => 'readme: популярные посты',
-        'is_auth' => $is_auth,
         'user_name' => $user_name
     ]);
 

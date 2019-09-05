@@ -1,6 +1,6 @@
 <?php
 
-function db_fetch_data($link, $sql, $data = [], $fetch_type = null)
+function db_fetch_data($link, $sql, $data = [], $is_single = false)
 {
     $stmt = db_get_prepare_stmt($link, $sql, $data);
     mysqli_stmt_execute($stmt);
@@ -11,23 +11,27 @@ function db_fetch_data($link, $sql, $data = [], $fetch_type = null)
         exit($query_error);
     }
 
-    if ($fetch_type === 'assoc') {
+    if ($is_single) {
         return mysqli_fetch_assoc($result);
     }
 
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-//
-//function db_insert_data($link, $sql, $data = [])
-//{
-//    $stmt = db_get_prepare_stmt($link, $sql, $data);
-//    $result = mysqli_stmt_execute($stmt);
-//    if ($result) {
-//        $result = mysqli_insert_id($link);
-//    }
-//    return $result;
-//}
+function db_insert_data($link, $sql, $data = [])
+{
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    $result = mysqli_stmt_execute($stmt);
+
+    if ($result) {
+        $result = mysqli_insert_id($link);
+    } else {
+        $query_error = 'Ошибка №' . mysqli_errno($link) . ' --- ' . mysqli_error($link);
+        exit($query_error);
+    }
+
+    return $result;
+}
 
 function cut_text($text, $length = 300)
 {
@@ -94,15 +98,20 @@ function get_custom_time_format($time_data)
     return date_format($date_and_time, 'd.m.Y H:i');
 }
 
-function get_content_types($db_connect)
-{
-    $sql = 'SELECT id, type_name, type_icon FROM content_types';
-
+function get_mysqli_result($db_connect, $sql) {
     $result = mysqli_query($db_connect, $sql);
     if ($result === false) {
         $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
         exit($query_error);
     }
+
+    return $result;
+}
+
+function get_content_types($db_connect)
+{
+    $sql = 'SELECT id, type_name, type_icon FROM content_types';
+    $result = get_mysqli_result($db_connect, $sql);
 
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
@@ -137,7 +146,7 @@ function get_post($db_connect, $id) {
                 ON u.id = p.author_id 
             WHERE p.id = ?';
 
-    return db_fetch_data($db_connect, $sql, [$id], 'assoc');
+    return db_fetch_data($db_connect, $sql, [$id], true);
 }
 
 function get_publications_count($db_connect, $user_id) {
@@ -145,7 +154,7 @@ function get_publications_count($db_connect, $user_id) {
             FROM posts
             WHERE author_id = ?';
 
-    return db_fetch_data($db_connect, $sql, [$user_id], 'assoc');
+    return db_fetch_data($db_connect, $sql, [$user_id], true)['count'] ?? 0;
 }
 
 function get_subscriptions_count($db_connect, $user_id) {
@@ -153,5 +162,241 @@ function get_subscriptions_count($db_connect, $user_id) {
             FROM subscriptions
             WHERE author_id = ?';
 
-    return db_fetch_data($db_connect, $sql, [$user_id], 'assoc');
+    return db_fetch_data($db_connect, $sql, [$user_id], true)['count'] ?? 0;
+}
+
+function get_hashtags_from_db($db_connect)
+{
+    $sql = 'SELECT hashtag FROM hashtags';
+    $result = get_mysqli_result($db_connect, $sql);
+
+    $assoc_array = mysqli_fetch_all($result, MYSQLI_ASSOC);
+    return array_column($assoc_array, 'hashtag');
+}
+
+function db_insert_uniq_hashtags($db_connect, $string_tags)
+{
+    $post_hashtags_array = explode(' ', $string_tags);
+    $uniq_hashtags = array_diff($post_hashtags_array, get_hashtags_from_db($db_connect));
+    $array_count = count($uniq_hashtags);
+
+    if ($array_count > 0) {
+        $sql = 'INSERT INTO hashtags (hashtag) VALUES';
+        for ($i = 0; $i < $array_count; $i++) {
+            if ($array_count === 1 || $i === $array_count - 1) {
+                $sql .= ' (?)';
+            } else {
+                $sql .= ' (?), ';
+            }
+        }
+        $stmt = db_get_prepare_stmt($db_connect, $sql, $uniq_hashtags);
+        mysqli_stmt_execute($stmt);
+    }
+}
+
+//function get_hashtag_id($db_connect, $hashtag)
+//{
+//    $sql = 'SELECT id FROM hashtags WHERE hashtag = (?)';
+//    $hashtag_id = db_fetch_data($db_connect, $sql, [$hashtag], true)['id'];
+//
+//    return (int) $hashtag_id;
+//}
+
+function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id) {
+    $string_tags = mysqli_real_escape_string($db_connect, $string_tags);
+    $post_id = mysqli_real_escape_string($db_connect, $post_id);
+    $string_tags_with_commas = "'" .  str_replace(' ', "', '" , $string_tags) . "'";
+    $sql = "INSERT INTO hashtags_posts (hashtag_id, post_id) 
+            SELECT id, $post_id FROM hashtags WHERE hashtag IN ($string_tags_with_commas)";
+    get_mysqli_result($db_connect, $sql);
+}
+
+//function validator_chain(...$validators)
+//{
+//    foreach ($validators as $validator) {
+//        $result = $validator();
+//        if ($result !== null) {
+//            return $result;
+//        }
+//    }
+//
+//    return null;
+//}
+
+function get_post_val($name)
+{
+    return $_POST[$name] ?? '';
+}
+
+function validate_filled($name, $input_name)
+{
+    if (empty($name)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    return null;
+}
+
+// TODO: Переделать функцию is_url_exists
+
+function is_url_exists($url)
+{
+    $response_code_header = @get_headers($url)[0] ?? '';
+    return stripos($response_code_header, '200 OK') !== false;
+}
+
+function check_link_mime_type($url, $input_name) {
+    $file = file_get_contents($url);
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $file_type = finfo_buffer($finfo, $file);
+
+    if ($file_type !== 'image/png' && $file_type !== 'image/jpeg' && $file_type !== 'image/gif') {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Выбранный файл не является png, jpg/jpeg или gif.'
+        ];
+    }
+
+    return null;
+}
+
+function validate_photo_url($url, $input_name)
+{
+
+    if ($_FILES['upload-file']['error'] !== UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+
+    if ($url === '') {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Укажите ссылку для загрузки файла или выберите файл для загрузки.'
+        ];
+    }
+
+    if (!empty($url)) {
+
+        if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+            return [
+                'input_name' => $input_name,
+                'input_error_desc' => 'Неверный формат адреса картинки.'
+            ];
+        }
+
+        if (is_url_exists($url) === false) {
+            return [
+                'input_name' => $input_name,
+                'input_error_desc' => 'Невозможно загрузить файл.'
+            ];
+        }
+
+        return check_link_mime_type($url, $input_name);
+    }
+
+    return null;
+}
+
+function validate_uploaded_file($file_data, $input_name)
+{
+    if ($_POST['photo-url'] !== '' && $file_data['error'] === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+
+    if ($file_data['name'] === '') {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Выберите файл для загрузки.'
+        ];
+    }
+
+    if ($file_data['error'] !== UPLOAD_ERR_OK) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Не удалось загрузить файл.'
+        ];
+    }
+
+    if ($file_data['size'] > 2097152) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Файл слишком большой. Загрузите файл до 2МБ.'
+        ];
+    }
+
+    $tmp_name = $file_data['tmp_name'];
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $file_type = finfo_file($finfo, $tmp_name);
+    if ($file_type !== 'image/png' && $file_type !== 'image/jpeg' && $file_type !== 'image/gif') {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Выбранный файл не является png, jpg/jpeg или gif.'
+        ];
+    }
+
+    return null;
+}
+
+function get_link_file_ext($url)
+{
+    $file = file_get_contents($url);
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $file_type = finfo_buffer($finfo, $file);
+
+    switch ($file_type) {
+        case 'image/png':
+            return 'png';
+        case 'image/jpeg':
+            return 'jpg';
+        case 'image/gif':
+            return 'gif';
+    }
+
+    return null;
+}
+
+function validate_video_url($url, $input_name)
+{
+    if (empty($url)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Неверный формат адреса видео.'
+        ];
+    }
+
+    if (!check_youtube_url($url)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Нет такого видео'
+        ];
+    }
+
+    return null;
+}
+
+function validate_link($url, $input_name) {
+    if (empty($url)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Неверный формат cсылки.'
+        ];
+    }
+
+    return null;
 }

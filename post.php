@@ -1,4 +1,5 @@
 <?php
+
 require_once 'init.php';
 
 if (!isset($_GET['id']) || $_GET['id'] === '') {
@@ -21,8 +22,8 @@ $user_publications_count = isset($post_content['author_id']) ? get_publications_
 $page_content = include_template('post.php',
     [
         'post_content' => $post_content,
-        'user_subscriptions_count' => $user_subscriptions_count['count'],
-        'user_publications_count' => $user_publications_count['count']
+        'user_subscriptions_count' => $user_subscriptions_count,
+        'user_publications_count' => $user_publications_count
     ]);
 
 $layout_content = include_template('layout.php',
@@ -30,7 +31,6 @@ $layout_content = include_template('layout.php',
         'content' => $page_content,
         'main_class' => 'page__main--publication',
         'title' => 'readme: ' . $post_content['title'],
-        'is_auth' => $is_auth,
         'user_name' => $user_name
     ]);
 

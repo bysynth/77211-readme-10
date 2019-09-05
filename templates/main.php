@@ -105,6 +105,22 @@
                         </div>
                     <?php endif; ?>
 
+                    <?php if (isset($post['type_name']) && $post['type_name'] === 'Видео'): ?>
+                        <div class="post-video__block">
+                            <div class="post-video__preview">
+                                <?php if (isset($post['content'])): ?>
+                                    <?= embed_youtube_cover(clear_input($post['content'])) ?>
+                                <?php endif; ?>
+                            </div>
+                            <a href="<?= '/post.php?id=' . $post['id'] ?>" class="post-video__play-big button">
+                                <svg class="post-video__play-big-icon" width="14" height="14">
+                                    <use xlink:href="#icon-video-play-big"></use>
+                                </svg>
+                                <span class="visually-hidden">Запустить проигрыватель</span>
+                            </a>
+                        </div>
+                    <?php endif; ?>
+
                     <?php if (isset($post['type_name']) && $post['type_name'] === 'Ссылка'): ?>
                         <div class="post-link__wrapper">
                             <a class="post-link__external" href="http://<?= isset($post['content']) ? clear_input($post['content']) : '' ?>" title="Перейти по ссылке">

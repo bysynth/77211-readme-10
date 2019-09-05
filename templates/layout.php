@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body class="page">
-<div style="display: none">
+<div style="display: none;">
     <svg xmlns="http://www.w3.org/2000/svg">
         <symbol id="icon-arrow-right-ad" viewbox="0 0 6 9">
             <path
@@ -121,83 +121,82 @@
             </div>
         </form>
         <div class="header__nav-wrapper">
-            <?php if ($is_auth === 1): ?>
-                <nav class="header__nav">
-                    <ul class="header__my-nav">
-                        <li class="header__my-page header__my-page--popular">
-                            <a class="header__page-link header__page-link--active" title="Популярный контент">
-                                <span class="visually-hidden">Популярный контент</span>
-                            </a>
-                        </li>
-                        <li class="header__my-page header__my-page--feed">
-                            <a class="header__page-link" href="feed.html" title="Моя лента">
-                                <span class="visually-hidden">Моя лента</span>
-                            </a>
-                        </li>
-                        <li class="header__my-page header__my-page--messages">
-                            <a class="header__page-link" href="messages.html" title="Личные сообщения">
-                                <span class="visually-hidden">Личные сообщения</span>
-                            </a>
-                        </li>
-                    </ul>
-                    <ul class="header__user-nav">
-                        <li class="header__profile">
-                            <a class="header__profile-link" href="#">
-                                <div class="header__avatar-wrapper">
-                                    <img class="header__profile-avatar" src="img/userpic-medium.jpg"
-                                         alt="Аватар профиля">
-                                </div>
-                                <div class="header__profile-name">
+            <nav class="header__nav">
+                <ul class="header__my-nav">
+                    <li class="header__my-page header__my-page--popular">
+                        <a class="header__page-link header__page-link--active" href="index.php" title="Популярный контент">
+                            <span class="visually-hidden">Популярный контент</span>
+                        </a>
+                    </li>
+                    <li class="header__my-page header__my-page--feed">
+                        <a class="header__page-link" href="feed.html" title="Моя лента">
+                            <span class="visually-hidden">Моя лента</span>
+                        </a>
+                    </li>
+                    <li class="header__my-page header__my-page--messages">
+                        <a class="header__page-link" href="messages.html" title="Личные сообщения">
+                            <span class="visually-hidden">Личные сообщения</span>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="header__user-nav">
+                    <li class="header__profile">
+                        <a class="header__profile-link" href="#">
+                            <div class="header__avatar-wrapper">
+                                <img class="header__profile-avatar" src="img/userpic-medium.jpg"
+                                     alt="Аватар профиля">
+                            </div>
+                            <div class="header__profile-name">
                                 <span>
                                     <?= $user_name ?>
                                 </span>
-                                    <svg class="header__link-arrow" width="10" height="6">
-                                        <use xlink:href="#icon-arrow-right-ad"></use>
-                                    </svg>
-                                </div>
-                            </a>
-                            <div class="header__tooltip-wrapper">
-                                <div class="header__profile-tooltip">
-                                    <ul class="header__profile-nav">
-                                        <li class="header__profile-nav-item">
-                                            <a class="header__profile-nav-link" href="#">
+                                <svg class="header__link-arrow" width="10" height="6">
+                                    <use xlink:href="#icon-arrow-right-ad"></use>
+                                </svg>
+                            </div>
+                        </a>
+                        <div class="header__tooltip-wrapper">
+                            <div class="header__profile-tooltip">
+                                <ul class="header__profile-nav">
+                                    <li class="header__profile-nav-item">
+                                        <a class="header__profile-nav-link" href="#">
                                             <span class="header__profile-nav-text">
                                                 Мой профиль
                                             </span>
-                                            </a>
-                                        </li>
-                                        <li class="header__profile-nav-item">
-                                            <a class="header__profile-nav-link" href="#">
+                                        </a>
+                                    </li>
+                                    <li class="header__profile-nav-item">
+                                        <a class="header__profile-nav-link" href="#">
                                             <span class="header__profile-nav-text">
                                                 Сообщения
                                                 <i class="header__profile-indicator">2</i>
                                             </span>
-                                            </a>
-                                        </li>
-                                        <li class="header__profile-nav-item">
-                                            <a class="header__profile-nav-link" href="#">
+                                        </a>
+                                    </li>
+                                    <li class="header__profile-nav-item">
+                                        <a class="header__profile-nav-link" href="#">
                                             <span class="header__profile-nav-text">
                                                 Выход
                                             </span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
-                        </li>
-                        <li>
-                            <a class="header__post-button button button--transparent" href="adding-post.html">Пост</a>
-                        </li>
-                    </ul>
-                </nav>
-            <?php endif; ?>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="header__post-button button button--transparent" href="add.php">Пост</a>
+<!-- TODO: На странице add.php "Пост заменяется на "Закрыть", добавляется класс header__post-button--active, меняется значение атрибута href -->
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </header>
 
-<section class="page__main <?= $main_class ?>">
+<main class="page__main <?= $main_class ?>">
     <?= $content ?>
-</section>
+</main>
 
 <footer class="footer">
     <div class="footer__wrapper">
@@ -244,7 +243,7 @@
                     </li>
                 </ul>
                 <div class="footer__copyright">
-                    <a class="footer__copyright-link" href="#">
+                    <a class="footer__copyright-link" href="https://htmlacademy.ru">
                         <span>Разработано HTML Academy</span>
                         <svg class="footer__copyright-logo" width="27" height="34">
                             <use xlink:href="#icon-htmlacademy"></use>
@@ -255,8 +254,8 @@
         </div>
     </div>
 </footer>
-<script src="libs/dropzone.js"></script>
-<script src="js/dropzone-settings.js"></script>
-<!--<script src="js/main.js"></script>-->
+<!--<script src="libs/dropzone.js"></script>-->
+<!--<script src="js/dropzone-settings-.js"></script>-->
+<script src="js/main-edited.js"></script>
 </body>
 </html>
