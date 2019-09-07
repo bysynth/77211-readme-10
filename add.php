@@ -117,13 +117,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-//    if ($post_type === 'photo' && empty($post['photo-url']) && $post['file']['error'] === UPLOAD_ERR_NO_FILE) {
-//        $errors[] = [
-//            'input_name' => 'Картинка',
-//            'input_error_desc' => 'Укажите ссылку на файл или выберите файл для загрузки'
-//        ];
-//    }
-
     $errors = array_filter($errors);
 
     if (count($errors) === 0) {
