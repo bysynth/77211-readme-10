@@ -4,18 +4,18 @@ require_once 'init.php';
 
 $errors = [];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($_POST)) {
         exit('Что-то пошло не так!');
     }
 
     $form = [
-        'email' => $_POST['email'],
-        'login' => $_POST['login'],
-        'password' => $_POST['password'],
-        'password-repeat' => $_POST['password-repeat'],
-        'userpic-file' => $_FILES['userpic-file']
+        'email' => $_POST['email'] ?? null,
+        'login' => $_POST['login'] ?? null,
+        'password' => $_POST['password'] ?? null,
+        'password-repeat' => $_POST['password-repeat'] ?? null,
+        'userpic-file' => $_FILES['userpic-file'] ?? null
     ];
 
     $rules = [

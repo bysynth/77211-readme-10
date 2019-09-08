@@ -5,7 +5,7 @@ require_once 'init.php';
 $content_types = get_content_types($db_connect);
 $errors = [];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($_POST)) {
         exit('Что-то пошло не так!');
