@@ -91,7 +91,7 @@ $page_content = include_template('registration.php',
         'errors' => $errors
     ]);
 
-$layout_content = include_template('layout.php',
+$layout_content = include_template('layout-reg.php',
     [
         'content' => $page_content,
         'main_class' => 'page__main--registration',
