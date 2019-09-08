@@ -1,5 +1,4 @@
 <?php
-
 function db_fetch_data($link, $sql, $data = [], $is_single = false)
 {
     $stmt = db_get_prepare_stmt($link, $sql, $data);
@@ -194,14 +193,6 @@ function db_insert_uniq_hashtags($db_connect, $string_tags)
     }
 }
 
-//function get_hashtag_id($db_connect, $hashtag)
-//{
-//    $sql = 'SELECT id FROM hashtags WHERE hashtag = (?)';
-//    $hashtag_id = db_fetch_data($db_connect, $sql, [$hashtag], true)['id'];
-//
-//    return (int) $hashtag_id;
-//}
-
 function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id) {
     $string_tags = mysqli_real_escape_string($db_connect, $string_tags);
     $post_id = mysqli_real_escape_string($db_connect, $post_id);
@@ -210,18 +201,6 @@ function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id)
             SELECT id, $post_id FROM hashtags WHERE hashtag IN ($string_tags_with_commas)";
     get_mysqli_result($db_connect, $sql);
 }
-
-//function validator_chain(...$validators)
-//{
-//    foreach ($validators as $validator) {
-//        $result = $validator();
-//        if ($result !== null) {
-//            return $result;
-//        }
-//    }
-//
-//    return null;
-//}
 
 function get_post_val($name)
 {
@@ -395,6 +374,90 @@ function validate_link($url, $input_name) {
         return [
             'input_name' => $input_name,
             'input_error_desc' => 'Неверный формат cсылки.'
+        ];
+    }
+
+    return null;
+}
+
+function is_email_exists ($db_connect, $email) {
+    $email = mysqli_real_escape_string($db_connect, $email);
+    $sql = "SELECT email FROM users WHERE email = '$email'";
+    $result = mysqli_num_rows(get_mysqli_result($db_connect, $sql));
+
+    return $result > 0;
+}
+
+function validate_email($db_connect, $email, $input_name) {
+    if (empty($email)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Неверный формат email.'
+        ];
+    }
+
+    if (is_email_exists($db_connect, $email)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Пользователь с этим email уже зарегистрирован.'
+        ];
+    }
+
+    return null;
+}
+
+function validate_password_repeat($pass, $pass_repeat, $input_name) {
+    if (empty($pass_repeat)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if ($pass !== $pass_repeat) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Повтор пароля не совпадает с изначальным паролем.'
+        ];
+    }
+
+    return null;
+}
+
+function validate_avatar($file_data, $input_name)
+{
+    if ($file_data['name'] === '') {
+        return null;
+    }
+
+    if ($file_data['error'] !== UPLOAD_ERR_OK) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Не удалось загрузить файл.'
+        ];
+    }
+
+    if ($file_data['size'] > 307200) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Файл слишком большой. Загрузите файл до 300КБ.'
+        ];
+    }
+
+    $tmp_name = $file_data['tmp_name'];
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $file_type = finfo_file($finfo, $tmp_name);
+    if ($file_type !== 'image/png' && $file_type !== 'image/jpeg' && $file_type !== 'image/gif') {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Выбранный файл не является png, jpg/jpeg или gif.'
         ];
     }
 

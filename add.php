@@ -5,7 +5,7 @@ require_once 'init.php';
 $content_types = get_content_types($db_connect);
 $errors = [];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($_POST)) {
         exit('Что-то пошло не так!');
@@ -116,13 +116,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[$key] = $rule();
         }
     }
-
-//    if ($post_type === 'photo' && empty($post['photo-url']) && $post['file']['error'] === UPLOAD_ERR_NO_FILE) {
-//        $errors[] = [
-//            'input_name' => 'Картинка',
-//            'input_error_desc' => 'Укажите ссылку на файл или выберите файл для загрузки'
-//        ];
-//    }
 
     $errors = array_filter($errors);
 
