@@ -97,7 +97,8 @@ function get_custom_time_format($time_data)
     return date_format($date_and_time, 'd.m.Y H:i');
 }
 
-function get_mysqli_result($db_connect, $sql) {
+function get_mysqli_result($db_connect, $sql)
+{
     $result = mysqli_query($db_connect, $sql);
     if ($result === false) {
         $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
@@ -115,7 +116,8 @@ function get_content_types($db_connect)
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
-function is_type_exist ($arrays, $type) {
+function is_type_exist($arrays, $type)
+{
     return in_array($type, array_column($arrays, 'id'), true);
 }
 
@@ -137,7 +139,8 @@ function get_posts($db_connect, $type)
     return db_fetch_data($db_connect, $sql, $data);
 }
 
-function get_post($db_connect, $id) {
+function get_post($db_connect, $id)
+{
     $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, p.views_counter, p.is_repost, p.content_type, 
             p.author_id, u.name, u.avatar, u.created_at as user_created_at
             FROM posts as p
@@ -148,7 +151,8 @@ function get_post($db_connect, $id) {
     return db_fetch_data($db_connect, $sql, [$id], true);
 }
 
-function get_publications_count($db_connect, $user_id) {
+function get_publications_count($db_connect, $user_id)
+{
     $sql = 'SELECT COUNT(id) as count
             FROM posts
             WHERE author_id = ?';
@@ -156,7 +160,8 @@ function get_publications_count($db_connect, $user_id) {
     return db_fetch_data($db_connect, $sql, [$user_id], true)['count'] ?? 0;
 }
 
-function get_subscriptions_count($db_connect, $user_id) {
+function get_subscriptions_count($db_connect, $user_id)
+{
     $sql = 'SELECT COUNT(id) as count
             FROM subscriptions
             WHERE author_id = ?';
@@ -193,10 +198,11 @@ function db_insert_uniq_hashtags($db_connect, $string_tags)
     }
 }
 
-function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id) {
+function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id)
+{
     $string_tags = mysqli_real_escape_string($db_connect, $string_tags);
     $post_id = mysqli_real_escape_string($db_connect, $post_id);
-    $string_tags_with_commas = "'" .  str_replace(' ', "', '" , $string_tags) . "'";
+    $string_tags_with_commas = "'" . str_replace(' ', "', '", $string_tags) . "'";
     $sql = "INSERT INTO hashtags_posts (hashtag_id, post_id) 
             SELECT id, $post_id FROM hashtags WHERE hashtag IN ($string_tags_with_commas)";
     get_mysqli_result($db_connect, $sql);
@@ -227,7 +233,8 @@ function is_url_exists($url)
     return stripos($response_code_header, '200 OK') !== false;
 }
 
-function check_link_mime_type($url, $input_name) {
+function check_link_mime_type($url, $input_name)
+{
     $file = file_get_contents($url);
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $file_type = finfo_buffer($finfo, $file);
@@ -362,7 +369,8 @@ function validate_video_url($url, $input_name)
     return null;
 }
 
-function validate_link($url, $input_name) {
+function validate_link($url, $input_name)
+{
     if (empty($url)) {
         return [
             'input_name' => $input_name,
@@ -380,7 +388,8 @@ function validate_link($url, $input_name) {
     return null;
 }
 
-function is_email_exists ($db_connect, $email) {
+function is_email_exists($db_connect, $email)
+{
     $email = mysqli_real_escape_string($db_connect, $email);
     $sql = "SELECT email FROM users WHERE email = '$email'";
     $result = mysqli_num_rows(get_mysqli_result($db_connect, $sql));
@@ -388,7 +397,8 @@ function is_email_exists ($db_connect, $email) {
     return $result > 0;
 }
 
-function validate_email($db_connect, $email, $input_name) {
+function validate_email($db_connect, $email, $input_name)
+{
     if (empty($email)) {
         return [
             'input_name' => $input_name,
@@ -413,7 +423,8 @@ function validate_email($db_connect, $email, $input_name) {
     return null;
 }
 
-function validate_password_repeat($pass, $pass_repeat, $input_name) {
+function validate_password_repeat($pass, $pass_repeat, $input_name)
+{
     if (empty($pass_repeat)) {
         return [
             'input_name' => $input_name,
@@ -458,6 +469,54 @@ function validate_avatar($file_data, $input_name)
         return [
             'input_name' => $input_name,
             'input_error_desc' => 'Выбранный файл не является png, jpg/jpeg или gif.'
+        ];
+    }
+
+    return null;
+}
+
+function validate_ext_email($db_connect, $email)
+{
+    if (empty($email)) {
+        return [
+            'error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+        return [
+            'error_desc' => 'Неверный формат email.'
+        ];
+    }
+
+    if (!is_email_exists($db_connect, $email)) {
+        return [
+            'error_desc' => 'Нет пользователя с таким email.'
+        ];
+    }
+
+    return null;
+}
+
+function check_user_password($db_connect, $email, $password) {
+    $email = mysqli_real_escape_string($db_connect, $email);
+    $sql = "SELECT password FROM users WHERE email = '$email'";
+    $result_password = mysqli_fetch_assoc(get_mysqli_result($db_connect, $sql))['password'];
+
+    return password_verify($password, $result_password);
+}
+
+function validate_ext_password($db_connect, $email, $password)
+{
+    if (empty($password)) {
+        return [
+            'error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (!check_user_password($db_connect, $email, $password)) {
+        return [
+            'error_desc' => 'Неверный пароль.'
         ];
     }
 
