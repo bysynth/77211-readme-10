@@ -80,7 +80,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         $result = mysqli_stmt_execute($stmt);
 
         if ($result !== false) {
-            header("Location: /login.html");
+            header("Location: /login.php");
             exit();
         }
     }
