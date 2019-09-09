@@ -2,6 +2,11 @@
 
 require_once 'init.php';
 
+if (isset($_SESSION['user'])) {
+    header('Location: /feed.php');
+    exit();
+}
+
 $errors = [];
 
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -95,7 +100,9 @@ $layout_content = include_template('layout-reg.php',
     [
         'content' => $page_content,
         'main_class' => 'page__main--registration',
-        'title' => 'readme: регистрация'
+        'title' => 'readme: регистрация',
+        'is_reg_active' => true,
+        'login_url' => '/login.php'
     ]);
 
 print($layout_content);
