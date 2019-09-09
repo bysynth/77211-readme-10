@@ -522,3 +522,48 @@ function validate_ext_password($db_connect, $email, $password)
 
     return null;
 }
+
+function validate_login_email($db_connect, $email, $input_name)
+{
+    if (empty($email)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Неверный формат email.'
+        ];
+    }
+
+    if (!is_email_exists($db_connect, $email)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Нет пользователя с таким email.'
+        ];
+    }
+
+    return null;
+}
+
+function validate_login_password($db_connect, $email, $password, $input_name)
+{
+    if (empty($password)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (!check_user_password($db_connect, $email, $password)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Неверный пароль.'
+        ];
+    }
+
+    return null;
+}
