@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?></title>
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body class="page">
 <div style="display: none;">
@@ -101,8 +101,8 @@
 <header class="header">
     <div class="header__wrapper container">
         <div class="header__logo-wrapper">
-            <a class="header__logo-link" href="main.html">
-                <img class="header__logo" src="img/logo.svg" alt="Логотип readme" width="128" height="24">
+            <a class="header__logo-link" href="/index.php">
+                <img class="header__logo" src="/img/logo.svg" alt="Логотип readme" width="128" height="24">
             </a>
             <p class="header__topic">
                 micro blogging
@@ -112,10 +112,10 @@
             <nav class="header__nav">
                 <ul class="header__user-nav">
                     <li class="header__authorization">
-                        <a class="header__user-button header__authorization-button button" href="login.html">Вход</a>
+                        <a class="header__user-button <?= isset($is_login_active) ? 'header__user-button--active' : '' ?> header__authorization-button button" <?= isset($login_url) ? 'href="' . $login_url . '"' : '' ?>>Вход</a>
                     </li>
                     <li>
-                        <a class="header__user-button header__user-button--active header__register-button button">Регистрация</a>
+                        <a class="header__user-button <?= isset($is_reg_active) ? 'header__user-button--active' : '' ?> header__register-button button" <?= isset($reg_url) ? 'href="' . $reg_url . '"' : '' ?>>Регистрация</a>
                     </li>
                 </ul>
             </nav>
@@ -162,13 +162,13 @@
             <div class="footer__my-info">
                 <ul class="footer__my-pages">
                     <li class="footer__my-page footer__my-page--feed">
-                        <a class="footer__page-link" href="feed.html">Моя лента</a>
+                        <a class="footer__page-link" href="/feed.html">Моя лента</a>
                     </li>
                     <li class="footer__my-page footer__my-page--popular">
-                        <a class="footer__page-link" href="popular.html">Популярный контент</a>
+                        <a class="footer__page-link" href="/popular.html">Популярный контент</a>
                     </li>
                     <li class="footer__my-page footer__my-page--messages">
-                        <a class="footer__page-link" href="messages.html">Личные сообщения</a>
+                        <a class="footer__page-link" href="/messages.html">Личные сообщения</a>
                     </li>
                 </ul>
                 <div class="footer__copyright">
@@ -183,8 +183,8 @@
         </div>
     </div>
 </footer>
-<script src="libs/dropzone.js"></script>
-<script src="js/dropzone-settings-.js"></script>
-<script src="js/main-edited.js"></script>
+<script src="/libs/dropzone.js"></script>
+<script src="/js/dropzone-settings.js"></script>
+<script src="/js/main-edited.js"></script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 <?php
+
 require_once 'init.php';
 
 if (isset($_SESSION['user'])) {
@@ -16,15 +17,15 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
     $form = [
         'email' => $_POST['email'] ?? null,
-        'password' => $_POST['password'] ?? null,
+        'password' => $_POST['password'] ?? null
     ];
 
     $rules = [
         'email' => function () use ($form, $db_connect) {
-            return validate_ext_email($db_connect, $form['email']);
+            return validate_login_email($db_connect, $form['email'], 'Электронная почта');
         },
         'password' => function () use ($form, $db_connect) {
-            return validate_ext_password($db_connect, $form['email'], $form['password']);
+            return validate_login_password($db_connect, $form['email'], $form['password'], 'Пароль');
         }
     ];
 
@@ -47,12 +48,20 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         header('Location: /feed.php');
         exit();
     }
-
 }
 
-$layout_content = include_template('layout-ext.php',
+$page_content = include_template('login.php',
     [
         'errors' => $errors
+    ]);
+
+$layout_content = include_template('layout-reg.php',
+    [
+        'content' => $page_content,
+        'main_class' => 'page__main--login',
+        'title' => 'readme: авторизация',
+        'is_login_active' => true,
+        'reg_url' => '/registration.php'
     ]);
 
 print($layout_content);

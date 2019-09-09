@@ -101,7 +101,7 @@
 <header class="header">
     <div class="header__wrapper container">
         <div class="header__logo-wrapper">
-            <a class="header__logo-link" href="main.html">
+            <a class="header__logo-link" href="/index.php">
                 <img class="header__logo" src="img/logo.svg" alt="Логотип readme" width="128" height="24">
             </a>
             <p class="header__topic">
@@ -124,18 +124,18 @@
             <nav class="header__nav">
                 <ul class="header__my-nav">
                     <li class="header__my-page header__my-page--popular">
-                        <a class="header__page-link header__page-link--active" href="index.php"
+                        <a class="header__page-link header__page-link--active" href="/popular.php"
                            title="Популярный контент">
                             <span class="visually-hidden">Популярный контент</span>
                         </a>
                     </li>
                     <li class="header__my-page header__my-page--feed">
-                        <a class="header__page-link" href="feed.html" title="Моя лента">
+                        <a class="header__page-link" href="/feed.php" title="Моя лента">
                             <span class="visually-hidden">Моя лента</span>
                         </a>
                     </li>
                     <li class="header__my-page header__my-page--messages">
-                        <a class="header__page-link" href="messages.html" title="Личные сообщения">
+                        <a class="header__page-link" href="/messages.php" title="Личные сообщения">
                             <span class="visually-hidden">Личные сообщения</span>
                         </a>
                     </li>
@@ -144,12 +144,14 @@
                     <li class="header__profile">
                         <a class="header__profile-link" href="#">
                             <div class="header__avatar-wrapper">
-                                <img class="header__profile-avatar" src="img/userpic-medium.jpg"
-                                     alt="Аватар профиля">
+                                <?php if (isset($_SESSION['user']['avatar'])): ?>
+                                    <img class="header__profile-avatar" src="/uploads/<?= $_SESSION['user']['avatar'] ?>"
+                                         alt="Аватар профиля">
+                                <?php endif; ?>
                             </div>
                             <div class="header__profile-name">
                                     <span>
-                                        <?= $user_name ?>
+                                        <?= $_SESSION['user']['name'] ?>
                                     </span>
                                 <svg class="header__link-arrow" width="10" height="6">
                                     <use xlink:href="#icon-arrow-right-ad"></use>
@@ -175,7 +177,7 @@
                                         </a>
                                     </li>
                                     <li class="header__profile-nav-item">
-                                        <a class="header__profile-nav-link" href="#">
+                                        <a class="header__profile-nav-link" href="/logout.php">
                                                 <span class="header__profile-nav-text">
                                                     Выход
                                                 </span>
@@ -186,7 +188,7 @@
                         </div>
                     </li>
                     <li>
-                        <a class="header__post-button button button--transparent" href="add.php">Пост</a>
+                        <a class="header__post-button button button--transparent" href="/add.php">Пост</a>
                         <!-- TODO: На странице add.php "Пост заменяется на "Закрыть", добавляется класс header__post-button--active, меняется значение атрибута href -->
                     </li>
                 </ul>
@@ -234,13 +236,13 @@
             <div class="footer__my-info">
                 <ul class="footer__my-pages">
                     <li class="footer__my-page footer__my-page--feed">
-                        <a class="footer__page-link" href="feed.html">Моя лента</a>
+                        <a class="footer__page-link" href="/feed.html">Моя лента</a>
                     </li>
                     <li class="footer__my-page footer__my-page--popular">
-                        <a class="footer__page-link" href="popular.html">Популярный контент</a>
+                        <a class="footer__page-link" href="/popular.html">Популярный контент</a>
                     </li>
                     <li class="footer__my-page footer__my-page--messages">
-                        <a class="footer__page-link" href="messages.html">Личные сообщения</a>
+                        <a class="footer__page-link" href="/messages.html">Личные сообщения</a>
                     </li>
                 </ul>
                 <div class="footer__copyright">
@@ -255,8 +257,8 @@
         </div>
     </div>
 </footer>
-<script src="libs/dropzone.js"></script>
-<script src="js/dropzone-settings-.js"></script>
-<script src="js/main-edited.js"></script>
+<script src="/libs/dropzone.js"></script>
+<script src="/js/dropzone-settings.js"></script>
+<script src="/js/main-edited.js"></script>
 </body>
 </html>
