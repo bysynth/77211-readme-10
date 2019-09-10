@@ -475,52 +475,12 @@ function validate_avatar($file_data, $input_name)
     return null;
 }
 
-function validate_ext_email($db_connect, $email)
-{
-    if (empty($email)) {
-        return [
-            'error_desc' => 'Это поле должно быть заполнено.'
-        ];
-    }
-
-    if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-        return [
-            'error_desc' => 'Неверный формат email.'
-        ];
-    }
-
-    if (!is_email_exists($db_connect, $email)) {
-        return [
-            'error_desc' => 'Нет пользователя с таким email.'
-        ];
-    }
-
-    return null;
-}
-
 function check_user_password($db_connect, $email, $password) {
     $email = mysqli_real_escape_string($db_connect, $email);
     $sql = "SELECT password FROM users WHERE email = '$email'";
     $result_password = mysqli_fetch_assoc(get_mysqli_result($db_connect, $sql))['password'];
 
     return password_verify($password, $result_password);
-}
-
-function validate_ext_password($db_connect, $email, $password)
-{
-    if (empty($password)) {
-        return [
-            'error_desc' => 'Это поле должно быть заполнено.'
-        ];
-    }
-
-    if (!check_user_password($db_connect, $email, $password)) {
-        return [
-            'error_desc' => 'Неверный пароль.'
-        ];
-    }
-
-    return null;
 }
 
 function validate_login_email($db_connect, $email, $input_name)
@@ -566,4 +526,52 @@ function validate_login_password($db_connect, $email, $password, $input_name)
     }
 
     return null;
+}
+
+function login($db_connect)
+{
+    $errors = [];
+
+    if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        if (empty($_POST)) {
+            exit('Что-то пошло не так!');
+        }
+
+        $form = [
+            'email' => $_POST['email'] ?? null,
+            'password' => $_POST['password'] ?? null,
+        ];
+
+        $rules = [
+            'email' => function () use ($form, $db_connect) {
+                return validate_login_email($db_connect, $form['email'], 'Электронная почта');
+            },
+            'password' => function () use ($form, $db_connect) {
+                return validate_login_password($db_connect, $form['email'], $form['password'], 'Пароль');
+            }
+        ];
+
+        foreach ($form as $key => $value) {
+            if (!isset($errors[$key]) && isset($rules[$key])) {
+                $rule = $rules[$key];
+                $errors[$key] = $rule();
+            }
+        }
+
+        $errors = array_filter($errors);
+
+        if (count($errors) === 0) {
+            $email = mysqli_real_escape_string($db_connect, $form['email']);
+            $sql = "SELECT * FROM users WHERE email = '$email'";
+            $user_data = mysqli_fetch_assoc(get_mysqli_result($db_connect, $sql));
+
+            $_SESSION['user'] = $user_data;
+
+            header('Location: /feed.php');
+            exit();
+        }
+    }
+
+    return $errors;
 }
