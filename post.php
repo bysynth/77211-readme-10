@@ -2,6 +2,11 @@
 
 require_once 'init.php';
 
+if (!isset($_SESSION['user'])) {
+    header('Location: /index.php');
+    exit();
+}
+
 if (!isset($_GET['id']) || $_GET['id'] === '') {
     http_response_code(404);
     exit('Ошибка 404 -- Запрашиваемая страница не найдена');
