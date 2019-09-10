@@ -8,7 +8,7 @@
         <label class="visually-hidden">Email</label>
     </div>
     <?php if (!empty($error)) : ?>
-        <span class="form__error-label form__error-label--login"><?= $error['error_desc'] ?></span>
+        <span class="form__error-label form__error-label--login"><?= $error['input_error_desc'] ?></span>
     <?php endif; ?>
 </div>
 
