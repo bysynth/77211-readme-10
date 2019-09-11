@@ -139,6 +139,70 @@ function get_posts($db_connect, $type)
     return db_fetch_data($db_connect, $sql, $data);
 }
 
+function get_post_hashtags ($db_connect, $post_id) {
+    $sql = "SELECT h.hashtag
+            FROM hashtags AS h
+            JOIN hashtags_posts AS hp
+                ON hp.hashtag_id = h.id
+            WHERE hp.post_id = $post_id";
+    $result = get_mysqli_result($db_connect, $sql);
+    $array = array_column(mysqli_fetch_all($result, MYSQLI_ASSOC), 'hashtag');
+
+    if (count($array) > 0) {
+        foreach ($array as &$value) {
+            $value = '#' . $value;
+        }
+
+        return $array;
+    }
+
+    return null;
+}
+
+function get_feed_posts($db_connect, $author_id, $type)
+{
+    $data = [$author_id];
+    $sql = 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon,
+            u.id as user_id, u.name, u.avatar
+            FROM posts AS p
+	        JOIN content_types AS ct
+   	            ON ct.id = p.content_type
+            JOIN users as u
+                ON u.id = p.author_id
+            WHERE p.author_id IN (SELECT s.subscribe_user_id FROM subscriptions AS s WHERE s.author_id = ?) ';
+
+//    $sql = 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon,
+//            u.id as user_id, u.name, u.avatar, GROUP_CONCAT(h.hashtag SEPARATOR \',\') AS tags
+//            FROM posts AS p
+//	        JOIN content_types AS ct
+//   	            ON ct.id = p.content_type
+//            JOIN users as u
+//                ON u.id = p.author_id
+//            JOIN hashtags_posts AS hp
+//                ON	hp.post_id = p.id
+//            JOIN hashtags AS h
+//                ON h.id = hp.hashtag_id
+//            WHERE p.author_id IN (SELECT s.subscribe_user_id FROM subscriptions AS s WHERE s.author_id = ?) ';
+
+    if (isset($type)) {
+        $sql .= 'AND p.content_type = ? ';
+        $data[] = $type;
+    }
+    $sql .= 'ORDER BY p.created_at DESC;';
+//    $sql .= 'GROUP BY p.id ORDER BY p.created_at DESC;';
+
+    $feed_posts = db_fetch_data($db_connect, $sql, $data);
+
+    foreach ($feed_posts as &$post) {
+        $hashtags= get_post_hashtags($db_connect, $post['post_id']);
+        if (isset($hashtags)) {
+            $post['hashtags'] = $hashtags;
+        }
+    }
+
+    return $feed_posts;
+}
+
 function get_post($db_connect, $id)
 {
     $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, p.views_counter, p.is_repost, p.content_type, 
@@ -173,8 +237,8 @@ function get_hashtags_from_db($db_connect)
 {
     $sql = 'SELECT hashtag FROM hashtags';
     $result = get_mysqli_result($db_connect, $sql);
-
     $assoc_array = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
     return array_column($assoc_array, 'hashtag');
 }
 
