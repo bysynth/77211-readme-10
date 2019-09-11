@@ -8,7 +8,7 @@
     <h1 class="page__title page__title--publication"><?= isset($post_content['title']) ? clear_input($post_content['title']) : '' ?></h1>
     <section class="post-details">
         <h2 class="visually-hidden">Публикация</h2>
-        <div class="post-details__wrapper"><!-- вот здесь есть класс, например, post-quote, но я его удалил потому что мне кажется он нигде не используется -->
+        <div class="post-details__wrapper">
             <div class="post-details__main-block post post--details">
                 <?php if ((int)$post_content['content_type'] === 1) : ?>
                     <?= include_template('post-text.php',

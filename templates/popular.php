@@ -53,7 +53,7 @@
                     <li class="popular__filters-item filters__item">
                         <a class="filters__button filters__button--<?= $content_type['type_icon'] ?? '' ?> button
                             <?php if (isset($content_type['id']) && $type === $content_type['id']): ?>filters__button--active<?php endif; ?>"
-                            href="<?= '/popular.php?type='. $content_type['id'] ?>">
+                           href="<?= '/popular.php?type=' . $content_type['id'] ?>">
                             <span class="visually-hidden">
                                 <?= $content_type['type_name'] ?? '' ?>
                             </span>
@@ -67,7 +67,7 @@
         </div>
     </div>
     <div class="popular__posts">
-        <?php foreach ($posts as $key => $post): ?>
+        <?php foreach ($posts as $post): ?>
             <article class="popular__post post post-<?= $post['type_icon'] ?? '' ?>">
                 <header class="post__header">
                     <?php if (isset($post['title'], $post['id'])): ?>
@@ -100,7 +100,8 @@
                     <?php if (isset($post['type_name']) && $post['type_name'] === 'Картинка'): ?>
                         <div class="post-photo__image-wrapper">
                             <?php if (isset($post['content'])): ?>
-                                <img src="img/<?= clear_input($post['content']) ?>" alt="Фото от пользователя" width="360" height="240">
+                                <img src="img/<?= clear_input($post['content']) ?>" alt="Фото от пользователя"
+                                     width="360" height="240">
                             <?php endif; ?>
                         </div>
                     <?php endif; ?>
@@ -123,10 +124,14 @@
 
                     <?php if (isset($post['type_name']) && $post['type_name'] === 'Ссылка'): ?>
                         <div class="post-link__wrapper">
-                            <a class="post-link__external" href="http://<?= isset($post['content']) ? clear_input($post['content']) : '' ?>" title="Перейти по ссылке">
+                            <a class="post-link__external"
+                               href="<?= isset($post['content']) ? clear_input($post['content']) : '' ?>"
+                               title="Перейти по ссылке">
                                 <div class="post-link__info-wrapper">
                                     <div class="post-link__icon-wrapper">
-                                        <img src="https://www.google.com/s2/favicons?domain=<?= isset($post['content']) ? clear_input($post['content']) : '' ?>" alt="Иконка">
+                                        <img
+                                            src="https://www.google.com/s2/favicons?domain=<?= isset($post['content']) ? clear_input($post['content']) : '' ?>"
+                                            alt="Иконка">
                                     </div>
                                     <div class="post-link__info">
                                         <?php if (isset($post['title'])): ?>

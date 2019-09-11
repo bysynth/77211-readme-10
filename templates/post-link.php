@@ -7,6 +7,7 @@
                 </div>
                 <div class="post-link__info">
                     <h3><?= $title ?></h3>
+                    <span><?= $url ?></span>
                 </div>
             </div>
         </a>
