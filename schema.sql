@@ -93,7 +93,4 @@ CREATE TABLE hashtags_posts
     FOREIGN KEY (post_id) REFERENCES posts (id)
 );
 
-# Индексы по заданию
-# CREATE INDEX title ON posts (title);
-# CREATE FULLTEXT INDEX content ON posts (content, cite_author);
-# CREATE INDEX posts_tags ON posts (post_id, hashtag_id);
+CREATE FULLTEXT INDEX content ON posts (title, content);

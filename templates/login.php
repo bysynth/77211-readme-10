@@ -3,7 +3,7 @@
 </div>
 <section class="login container">
     <h2 class="visually-hidden">Форма авторизации</h2>
-    <form class="login__form form" action="#" method="post">
+    <form class="login__form form" action="/login.php" method="post">
         <?= include_template('input-login-email.php',
             [
                 'error' => $errors['email'] ?? []

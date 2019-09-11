@@ -18,7 +18,7 @@ if ($type === '' || ($type !== null && is_type_exist($content_types, $type) === 
 $page_content = include_template('popular.php',
     [
         'content_types' => $content_types,
-        'posts' => get_posts($db_connect, $type),
+        'posts' => get_posts($db_connect, $type, null, null, true),
         'type' => $type
     ]);
 

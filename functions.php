@@ -121,22 +121,141 @@ function is_type_exist($arrays, $type)
     return in_array($type, array_column($arrays, 'id'), true);
 }
 
-function get_posts($db_connect, $type)
-{
+function get_posts(
+    $db_connect,
+    $type = null,
+    $author_id = null,
+    $search_query = null,
+    $is_popular = false,
+    $is_feed = false,
+    $is_fulltext_search = false,
+    $is_tag_search = false
+) {
+    $result = [];
     $data = [];
-    $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon, u.name, u.avatar
+    $sql = 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon,
+            u.id as user_id, u.name, u.avatar
             FROM posts AS p
-            JOIN content_types AS ct
-                ON ct.id = p.content_type
+	        JOIN content_types AS ct
+   	            ON ct.id = p.content_type
             JOIN users as u
                 ON u.id = p.author_id ';
-    if (isset($type)) {
-        $sql .= 'WHERE p.content_type = ? ';
-        $data[] = $type;
+    if ($is_popular) {
+        if (isset($type)) {
+            $sql .= 'WHERE p.content_type = ? ';
+            $data[] = $type;
+        }
+        $sql .= 'ORDER BY p.views_counter DESC LIMIT 6;';
+        $result = db_fetch_data($db_connect, $sql, $data);
     }
-    $sql .= 'ORDER BY p.views_counter DESC LIMIT 6;';
 
-    return db_fetch_data($db_connect, $sql, $data);
+    if ($is_feed) {
+        $sql .= 'WHERE p.author_id IN (SELECT s.subscribe_user_id FROM subscriptions AS s WHERE s.author_id = ?) ';
+        $data[] = $author_id;
+        if (isset($type)) {
+            $sql .= 'AND p.content_type = ? ';
+            $data[] = $type;
+        }
+        $sql .= 'ORDER BY p.created_at DESC;';
+        $feed_posts = db_fetch_data($db_connect, $sql, $data);
+        $result = append_hashtags_to_post($db_connect, $feed_posts);
+    }
+
+    if ($is_fulltext_search) {
+        $sql .= 'WHERE MATCH(title, content) AGAINST(?);';
+        $data[] = $search_query;
+        $search_results = db_fetch_data($db_connect, $sql, $data);
+        $result = append_hashtags_to_post($db_connect, $search_results);
+    }
+
+    if ($is_tag_search) {
+        $sql .= 'JOIN hashtags_posts AS hp
+                    ON hp.post_id = p.id
+                 JOIN hashtags AS h
+                    ON h.id = hp.hashtag_id
+                 WHERE h.hashtag = ?
+                 ORDER BY p.created_at DESC;';
+        $tag = substr($search_query, 1);
+        $data[] = $tag;
+        $search_results = db_fetch_data($db_connect, $sql, $data);
+        $result = append_hashtags_to_post($db_connect, $search_results);
+    }
+
+    return $result;
+}
+
+//function get_posts($db_connect, $type)
+//{
+//    $data = [];
+//    $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon, u.name, u.avatar
+//            FROM posts AS p
+//            JOIN content_types AS ct
+//                ON ct.id = p.content_type
+//            JOIN users as u
+//                ON u.id = p.author_id ';
+//    if (isset($type)) {
+//        $sql .= 'WHERE p.content_type = ? ';
+//        $data[] = $type;
+//    }
+//    $sql .= 'ORDER BY p.views_counter DESC LIMIT 6;';
+//
+//    return db_fetch_data($db_connect, $sql, $data);
+//}
+
+//function get_feed_posts($db_connect, $author_id, $type)
+//{
+//    $data = [$author_id];
+//    $sql = 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon,
+//            u.id as user_id, u.name, u.avatar
+//            FROM posts AS p
+//	        JOIN content_types AS ct
+//   	            ON ct.id = p.content_type
+//            JOIN users as u
+//                ON u.id = p.author_id
+//            WHERE p.author_id IN (SELECT s.subscribe_user_id FROM subscriptions AS s WHERE s.author_id = ?) ';
+//
+//    if (isset($type)) {
+//        $sql .= 'AND p.content_type = ? ';
+//        $data[] = $type;
+//    }
+//    $sql .= 'ORDER BY p.created_at DESC;';
+//
+//    $feed_posts = db_fetch_data($db_connect, $sql, $data);
+//
+//    return append_hashtags_to_post($db_connect, $feed_posts);
+//}
+
+function get_post_hashtags($db_connect, $post_id)
+{
+    $sql = "SELECT h.hashtag
+            FROM hashtags AS h
+            JOIN hashtags_posts AS hp
+                ON hp.hashtag_id = h.id
+            WHERE hp.post_id = $post_id";
+    $result = get_mysqli_result($db_connect, $sql);
+    $array = array_column(mysqli_fetch_all($result, MYSQLI_ASSOC), 'hashtag');
+
+    if (count($array) > 0) {
+        foreach ($array as &$value) {
+            $value = '#' . $value;
+        }
+
+        return $array;
+    }
+
+    return null;
+}
+
+function append_hashtags_to_post($db_connect, $posts)
+{
+    foreach ($posts as &$post) {
+        $hashtags = get_post_hashtags($db_connect, $post['post_id']);
+        if (isset($hashtags)) {
+            $post['hashtags'] = $hashtags;
+        }
+    }
+
+    return $posts;
 }
 
 function get_post($db_connect, $id)
@@ -173,8 +292,8 @@ function get_hashtags_from_db($db_connect)
 {
     $sql = 'SELECT hashtag FROM hashtags';
     $result = get_mysqli_result($db_connect, $sql);
-
     $assoc_array = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
     return array_column($assoc_array, 'hashtag');
 }
 
@@ -475,52 +594,13 @@ function validate_avatar($file_data, $input_name)
     return null;
 }
 
-function validate_ext_email($db_connect, $email)
+function check_user_password($db_connect, $email, $password)
 {
-    if (empty($email)) {
-        return [
-            'error_desc' => 'Это поле должно быть заполнено.'
-        ];
-    }
-
-    if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
-        return [
-            'error_desc' => 'Неверный формат email.'
-        ];
-    }
-
-    if (!is_email_exists($db_connect, $email)) {
-        return [
-            'error_desc' => 'Нет пользователя с таким email.'
-        ];
-    }
-
-    return null;
-}
-
-function check_user_password($db_connect, $email, $password) {
     $email = mysqli_real_escape_string($db_connect, $email);
     $sql = "SELECT password FROM users WHERE email = '$email'";
     $result_password = mysqli_fetch_assoc(get_mysqli_result($db_connect, $sql))['password'];
 
     return password_verify($password, $result_password);
-}
-
-function validate_ext_password($db_connect, $email, $password)
-{
-    if (empty($password)) {
-        return [
-            'error_desc' => 'Это поле должно быть заполнено.'
-        ];
-    }
-
-    if (!check_user_password($db_connect, $email, $password)) {
-        return [
-            'error_desc' => 'Неверный пароль.'
-        ];
-    }
-
-    return null;
 }
 
 function validate_login_email($db_connect, $email, $input_name)
@@ -566,4 +646,52 @@ function validate_login_password($db_connect, $email, $password, $input_name)
     }
 
     return null;
+}
+
+function login($db_connect)
+{
+    $errors = [];
+
+    if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        if (empty($_POST)) {
+            exit('Что-то пошло не так!');
+        }
+
+        $form = [
+            'email' => $_POST['email'] ?? null,
+            'password' => $_POST['password'] ?? null,
+        ];
+
+        $rules = [
+            'email' => function () use ($form, $db_connect) {
+                return validate_login_email($db_connect, $form['email'], 'Электронная почта');
+            },
+            'password' => function () use ($form, $db_connect) {
+                return validate_login_password($db_connect, $form['email'], $form['password'], 'Пароль');
+            }
+        ];
+
+        foreach ($form as $key => $value) {
+            if (!isset($errors[$key]) && isset($rules[$key])) {
+                $rule = $rules[$key];
+                $errors[$key] = $rule();
+            }
+        }
+
+        $errors = array_filter($errors);
+
+        if (count($errors) === 0) {
+            $email = mysqli_real_escape_string($db_connect, $form['email']);
+            $sql = "SELECT * FROM users WHERE email = '$email'";
+            $user_data = mysqli_fetch_assoc(get_mysqli_result($db_connect, $sql));
+
+            $_SESSION['user'] = $user_data;
+
+            header('Location: /feed.php');
+            exit();
+        }
+    }
+
+    return $errors;
 }
