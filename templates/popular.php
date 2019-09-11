@@ -70,9 +70,9 @@
         <?php foreach ($posts as $post): ?>
             <article class="popular__post post post-<?= $post['type_icon'] ?? '' ?>">
                 <header class="post__header">
-                    <?php if (isset($post['title'], $post['id'])): ?>
+                    <?php if (isset($post['title'], $post['post_id'])): ?>
                         <h2>
-                            <a href="<?= '/post.php?id=' . $post['id'] ?>"><?= clear_input($post['title']) ?></a>
+                            <a href="<?= '/post.php?id=' . $post['post_id'] ?>"><?= clear_input($post['title']) ?></a>
                         </h2>
                     <?php endif; ?>
                 </header>
@@ -113,7 +113,7 @@
                                     <?= embed_youtube_cover(clear_input($post['content'])) ?>
                                 <?php endif; ?>
                             </div>
-                            <a href="<?= '/post.php?id=' . $post['id'] ?>" class="post-video__play-big button">
+                            <a href="<?= '/post.php?id=' . $post['post_id'] ?>" class="post-video__play-big button">
                                 <svg class="post-video__play-big-icon" width="14" height="14">
                                     <use xlink:href="#icon-video-play-big"></use>
                                 </svg>

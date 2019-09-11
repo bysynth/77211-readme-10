@@ -147,7 +147,7 @@
                             <?php if (isset($post['hashtags'])): ?>
                                 <ul class="post__tags">
                                     <?php foreach ($post['hashtags'] as $tag): ?>
-                                        <li><a href="/search.php?q=<?= $tag ?>"><?= $tag ?></a></li>
+                                        <li><a href="/search.php?q=<?= urlencode($tag) ?>"><?= $tag ?></a></li>
                                     <?php endforeach; ?>
                                 </ul>
                             <?php endif; ?>
