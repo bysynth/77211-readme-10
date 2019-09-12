@@ -25,6 +25,7 @@ $page_content = include_template('feed.php',
 $layout_content = include_template('layout.php',
     [
         'content' => $page_content,
+        'is_feed' => true,
         'main_class' => 'page__main--feed',
         'title' => 'readme: моя лента'
     ]);

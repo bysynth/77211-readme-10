@@ -25,6 +25,7 @@ $page_content = include_template('popular.php',
 $layout_content = include_template('layout.php',
     [
         'content' => $page_content,
+        'is_popular' => true,
         'main_class' => 'page__main--popular',
         'title' => 'readme: популярные посты'
     ]);
