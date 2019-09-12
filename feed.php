@@ -1,7 +1,7 @@
 <?php
 require_once 'init.php';
 
-if (!isset($_SESSION['user'])) {
+if (!isset($_SESSION['user']['id'])) {
     header('Location: /index.php');
     exit();
 }
