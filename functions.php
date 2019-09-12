@@ -236,11 +236,13 @@ function get_post_hashtags($db_connect, $post_id)
     $array = array_column(mysqli_fetch_all($result, MYSQLI_ASSOC), 'hashtag');
 
     if (count($array) > 0) {
-        foreach ($array as &$value) {
+        $hashtags = [];
+        foreach ($array as $value) {
             $value = '#' . $value;
+            $hashtags[] = $value;
         }
 
-        return $array;
+        return $hashtags;
     }
 
     return null;
@@ -248,14 +250,16 @@ function get_post_hashtags($db_connect, $post_id)
 
 function append_hashtags_to_post($db_connect, $posts)
 {
-    foreach ($posts as &$post) {
-        $hashtags = get_post_hashtags($db_connect, $post['post_id']);
-        if (isset($hashtags)) {
+    $result = [];
+    foreach ($posts as $post) {
+        if (isset($post['post_id'])) {
+            $hashtags = get_post_hashtags($db_connect, $post['post_id']);
             $post['hashtags'] = $hashtags;
         }
+        $result[] = $post;
     }
 
-    return $posts;
+    return $result;
 }
 
 function get_post($db_connect, $id)
