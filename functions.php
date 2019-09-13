@@ -121,109 +121,70 @@ function is_type_exist($arrays, $type)
     return in_array($type, array_column($arrays, 'id'), true);
 }
 
-function get_posts(
-    $db_connect,
-    $type = null,
-    $author_id = null,
-    $search_query = null,
-    $is_popular = false,
-    $is_feed = false,
-    $is_fulltext_search = false,
-    $is_tag_search = false
-) {
-    $result = [];
-    $data = [];
-    $sql = 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon,
+function common_get_posts_sql()
+{
+    return 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon,
             u.id as user_id, u.name, u.avatar
             FROM posts AS p
 	        JOIN content_types AS ct
    	            ON ct.id = p.content_type
             JOIN users as u
                 ON u.id = p.author_id ';
-    if ($is_popular) {
-        if (isset($type)) {
-            $sql .= 'WHERE p.content_type = ? ';
-            $data[] = $type;
-        }
-        $sql .= 'ORDER BY p.views_counter DESC LIMIT 6;';
-        $result = db_fetch_data($db_connect, $sql, $data);
-    }
+}
 
-    if ($is_feed) {
-        $sql .= 'WHERE p.author_id IN (SELECT s.subscribe_user_id FROM subscriptions AS s WHERE s.author_id = ?) ';
-        $data[] = $author_id;
-        if (isset($type)) {
-            $sql .= 'AND p.content_type = ? ';
-            $data[] = $type;
-        }
-        $sql .= 'ORDER BY p.created_at DESC;';
-        $feed_posts = db_fetch_data($db_connect, $sql, $data);
-        $result = append_hashtags_to_post($db_connect, $feed_posts);
+function get_popular_posts($db_connect, $type = null)
+{
+    $data = [];
+    $sql = common_get_posts_sql();
+    if (isset($type)) {
+        $sql .= 'WHERE p.content_type = ? ';
+        $data[] = $type;
     }
+    $sql .= 'ORDER BY p.views_counter DESC LIMIT 6;';
 
-    if ($is_fulltext_search) {
-        $sql .= 'WHERE MATCH(title, content) AGAINST(?);';
-        $data[] = $search_query;
-        $search_results = db_fetch_data($db_connect, $sql, $data);
-        $result = append_hashtags_to_post($db_connect, $search_results);
+    return db_fetch_data($db_connect, $sql, $data);
+}
+
+function get_feed_posts($db_connect, $author_id, $type = null)
+{
+    $data = [$author_id];
+    $sql = common_get_posts_sql();
+    $sql .= 'WHERE p.author_id IN (SELECT s.subscribe_user_id FROM subscriptions AS s WHERE s.author_id = ?) ';
+    if (isset($type)) {
+        $sql .= 'AND p.content_type = ? ';
+        $data[] = $type;
     }
+    $sql .= 'ORDER BY p.created_at DESC;';
+    $feed_posts = db_fetch_data($db_connect, $sql, $data);
 
-    if ($is_tag_search) {
-        $sql .= 'JOIN hashtags_posts AS hp
+    return append_hashtags_to_post($db_connect, $feed_posts);
+}
+
+function get_fulltext_search_posts($db_connect, $search_query)
+{
+    $data = [$search_query];
+    $sql = common_get_posts_sql();
+    $sql .= 'WHERE MATCH(title, content) AGAINST(?);';
+    $search_results = db_fetch_data($db_connect, $sql, $data);
+
+    return append_hashtags_to_post($db_connect, $search_results);
+}
+
+function get_tag_search_posts($db_connect, $search_query)
+{
+    $tag = substr($search_query, 1);
+    $data = [$tag];
+    $sql = common_get_posts_sql();
+    $sql .= 'JOIN hashtags_posts AS hp
                     ON hp.post_id = p.id
                  JOIN hashtags AS h
                     ON h.id = hp.hashtag_id
                  WHERE h.hashtag = ?
                  ORDER BY p.created_at DESC;';
-        $tag = substr($search_query, 1);
-        $data[] = $tag;
-        $search_results = db_fetch_data($db_connect, $sql, $data);
-        $result = append_hashtags_to_post($db_connect, $search_results);
-    }
+    $search_results = db_fetch_data($db_connect, $sql, $data);
 
-    return $result;
+    return append_hashtags_to_post($db_connect, $search_results);
 }
-
-//function get_posts($db_connect, $type)
-//{
-//    $data = [];
-//    $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon, u.name, u.avatar
-//            FROM posts AS p
-//            JOIN content_types AS ct
-//                ON ct.id = p.content_type
-//            JOIN users as u
-//                ON u.id = p.author_id ';
-//    if (isset($type)) {
-//        $sql .= 'WHERE p.content_type = ? ';
-//        $data[] = $type;
-//    }
-//    $sql .= 'ORDER BY p.views_counter DESC LIMIT 6;';
-//
-//    return db_fetch_data($db_connect, $sql, $data);
-//}
-
-//function get_feed_posts($db_connect, $author_id, $type)
-//{
-//    $data = [$author_id];
-//    $sql = 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon,
-//            u.id as user_id, u.name, u.avatar
-//            FROM posts AS p
-//	        JOIN content_types AS ct
-//   	            ON ct.id = p.content_type
-//            JOIN users as u
-//                ON u.id = p.author_id
-//            WHERE p.author_id IN (SELECT s.subscribe_user_id FROM subscriptions AS s WHERE s.author_id = ?) ';
-//
-//    if (isset($type)) {
-//        $sql .= 'AND p.content_type = ? ';
-//        $data[] = $type;
-//    }
-//    $sql .= 'ORDER BY p.created_at DESC;';
-//
-//    $feed_posts = db_fetch_data($db_connect, $sql, $data);
-//
-//    return append_hashtags_to_post($db_connect, $feed_posts);
-//}
 
 function get_post_hashtags($db_connect, $post_id)
 {
