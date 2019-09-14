@@ -60,9 +60,7 @@
                                     </h2>
                                 <?php endif; ?>
                                 <?php if (isset($post['content'])): ?>
-                                    <p>
-                                        <?= cut_text(clear_input($post['content'])) ?>
-                                    </p>
+                                    <?= cut_text(clear_input($post['content'])) ?>
                                 <?php endif; ?>
                             <?php endif; ?>
 
@@ -74,7 +72,7 @@
                                 <?php endif; ?>
                                 <div class="post-photo__image-wrapper">
                                     <?php if (isset($post['content'])): ?>
-                                        <img src="/upload/<?= clear_input($post['content']) ?>"
+                                        <img src="/uploads/<?= clear_input($post['content']) ?>"
                                              alt="Фото от пользователя" width="760" height="396">
                                     <?php endif; ?>
                                 </div>
@@ -120,16 +118,20 @@
                                              height="17">
                                             <use xlink:href="#icon-heart-active"></use>
                                         </svg>
-                                        <span>250</span>
-                                        <span class="visually-hidden">количество лайков</span>
+                                        <?php if (isset($post['likes_count'])): ?>
+                                            <span><?= $post['likes_count'] ?></span>
+                                            <span class="visually-hidden">количество лайков</span>
+                                        <?php endif; ?>
                                     </a>
                                     <a class="post__indicator post__indicator--comments button" href="#"
                                        title="Комментарии">
                                         <svg class="post__indicator-icon" width="19" height="17">
                                             <use xlink:href="#icon-comment"></use>
                                         </svg>
-                                        <span>25</span>
-                                        <span class="visually-hidden">количество комментариев</span>
+                                        <?php if (isset($post['comments_count'])): ?>
+                                            <span><?= $post['comments_count'] ?></span>
+                                            <span class="visually-hidden">количество комментариев</span>
+                                        <?php endif; ?>
                                     </a>
                                     <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
                                         <svg class="post__indicator-icon" width="19" height="17">

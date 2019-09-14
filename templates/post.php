@@ -51,15 +51,19 @@
                             <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                                 <use xlink:href="#icon-heart-active"></use>
                             </svg>
-                            <span>250</span>
-                            <span class="visually-hidden">количество лайков</span>
+                            <?php if (isset($post_content['likes_count'])): ?>
+                                <span><?= $post_content['likes_count'] ?></span>
+                                <span class="visually-hidden">количество лайков</span>
+                            <?php endif; ?>
                         </a>
                         <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
                             <svg class="post__indicator-icon" width="19" height="17">
                                 <use xlink:href="#icon-comment"></use>
                             </svg>
-                            <span>25</span>
-                            <span class="visually-hidden">количество комментариев</span>
+                            <?php if (isset($post_content['comments_count'])): ?>
+                                <span><?= $post_content['comments_count'] ?></span>
+                                <span class="visually-hidden">количество комментариев</span>
+                            <?php endif; ?>
                         </a>
                         <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
                             <svg class="post__indicator-icon" width="19" height="17">
@@ -152,7 +156,7 @@
                         </a>
                         <?php if (isset($post_content['user_created_at'])): ?>
                             <time class="post-details__time user__time"
-                                  datetime="<?= $created_at = clear_input($post_content['user_created_at']) ?>>">
+                                  datetime="<?= $created_at = clear_input($post_content['user_created_at']) ?>">
                                 <?= get_relative_time_format($created_at, 'на сайте') ?>
                             </time>
                         <?php endif; ?>

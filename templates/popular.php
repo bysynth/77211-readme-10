@@ -149,7 +149,7 @@
                 </div>
                 <footer class="post__footer">
                     <div class="post__author">
-                        <a class="post__author-link" href="#" title="Автор">
+                        <a class="post__author-link" href="<?= '/profile.php?user=' . $post['user_id'] ?>" title="Автор">
                             <div class="post__avatar-wrapper">
                                 <?php if (isset($post['avatar'])): ?>
                                     <img class="post__author-avatar" src="img/<?= clear_input($post['avatar']) ?>"
@@ -179,16 +179,20 @@
                                      height="17">
                                     <use xlink:href="#icon-heart-active"></use>
                                 </svg>
-                                <span>0</span>
-                                <span class="visually-hidden">количество лайков</span>
+                                <?php if (isset($post['likes_count'])): ?>
+                                    <span><?= $post['likes_count'] ?></span>
+                                    <span class="visually-hidden">количество лайков</span>
+                                <?php endif; ?>
                             </a>
                             <a class="post__indicator post__indicator--comments button" href="#"
                                title="Комментарии">
                                 <svg class="post__indicator-icon" width="19" height="17">
                                     <use xlink:href="#icon-comment"></use>
                                 </svg>
-                                <span>0</span>
-                                <span class="visually-hidden">количество комментариев</span>
+                                <?php if (isset($post['comments_count'])): ?>
+                                    <span><?= $post['comments_count'] ?></span>
+                                    <span class="visually-hidden">количество комментариев</span>
+                                <?php endif; ?>
                             </a>
                         </div>
                     </div>
