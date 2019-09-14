@@ -52,8 +52,10 @@ CREATE TABLE comments
 
 CREATE TABLE likes
 (
-    user_id INT(10) NOT NULL,
-    post_id INT(10) NOT NULL,
+    id         INT(10) AUTO_INCREMENT PRIMARY KEY,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    user_id    INT(10)                            NOT NULL,
+    post_id    INT(10)                            NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (post_id) REFERENCES posts (id)
 );
