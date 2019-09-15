@@ -32,6 +32,17 @@ function db_insert_data($link, $sql, $data = [])
     return $result;
 }
 
+function get_mysqli_result($db_connect, $sql)
+{
+    $result = mysqli_query($db_connect, $sql);
+    if ($result === false) {
+        $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
+        exit($query_error);
+    }
+
+    return $result;
+}
+
 function cut_text($text, $length = 300)
 {
     if (mb_strlen($text) > $length) {
@@ -95,17 +106,6 @@ function get_custom_time_format($time_data)
     $date_and_time = date_create($time_data);
 
     return date_format($date_and_time, 'd.m.Y H:i');
-}
-
-function get_mysqli_result($db_connect, $sql)
-{
-    $result = mysqli_query($db_connect, $sql);
-    if ($result === false) {
-        $query_error = 'Ошибка №' . mysqli_errno($db_connect) . ' --- ' . mysqli_error($db_connect);
-        exit($query_error);
-    }
-
-    return $result;
 }
 
 function get_content_types($db_connect)
@@ -684,7 +684,7 @@ function login($db_connect)
 
 function get_user_info($db_connect, $user_id)
 {
-    $sql = 'SELECT created_at, name, avatar FROM users WHERE id = ?';
+    $sql = 'SELECT id, created_at, name, avatar FROM users WHERE id = ?';
     return db_fetch_data($db_connect, $sql, [$user_id], true);
 
 }
@@ -693,4 +693,17 @@ function change_post_views_count($db_connect, $post_id)
 {
     $sql = "UPDATE posts SET views_counter = views_counter + 1 WHERE id = $post_id";
     get_mysqli_result($db_connect, $sql);
+}
+
+function check_subscrtiption($db_connect, $author_id, $subscribe_user_id)
+{
+    $sql = 'SELECT id FROM subscriptions WHERE author_id = ? AND subscribe_user_id = ?';
+
+    return db_fetch_data($db_connect, $sql, [$author_id, $subscribe_user_id], true);
+
+//    if (!isset($result)) {
+//        return false;
+//    }
+//
+//    return true;
 }
