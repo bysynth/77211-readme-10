@@ -124,7 +124,9 @@ function is_type_exist($arrays, $type)
 function common_get_posts_sql()
 {
     return 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon,
-            u.id as user_id, u.name, u.avatar
+            u.id as user_id, u.name, u.avatar,
+            (SELECT COUNT(l.id) as COUNT FROM likes AS l WHERE post_id = p.id) AS likes_count,
+            (SELECT COUNT(c.id) as COUNT FROM comments AS c WHERE post_id = p.id) AS comments_count
             FROM posts AS p
 	        JOIN content_types AS ct
    	            ON ct.id = p.content_type
@@ -144,8 +146,6 @@ function get_popular_posts($db_connect, $type = null)
 
     $popular_posts = db_fetch_data($db_connect, $sql, $data);
     $popular_posts = append_hashtags_to_post($db_connect, $popular_posts);
-    $popular_posts = append_likes_count_to_post($db_connect, $popular_posts);
-    $popular_posts = append_comments_count_to_post($db_connect, $popular_posts);
 
     return $popular_posts;
 
@@ -163,8 +163,6 @@ function get_feed_posts($db_connect, $author_id, $type = null)
     $sql .= 'ORDER BY p.created_at DESC;';
     $feed_posts = db_fetch_data($db_connect, $sql, $data);
     $feed_posts = append_hashtags_to_post($db_connect, $feed_posts);
-    $feed_posts = append_likes_count_to_post($db_connect, $feed_posts);
-    $feed_posts = append_comments_count_to_post($db_connect, $feed_posts);
 
     return $feed_posts;
 }
@@ -177,7 +175,6 @@ function get_profile_posts($db_connect, $author_id)
     $sql .= 'ORDER BY p.created_at DESC;';
     $profile_posts = db_fetch_data($db_connect, $sql, $data);
     $profile_posts = append_hashtags_to_post($db_connect, $profile_posts);
-    $profile_posts = append_likes_count_to_post($db_connect, $profile_posts);
 
     return $profile_posts;
 }
@@ -189,8 +186,6 @@ function get_fulltext_search_posts($db_connect, $search_query)
     $sql .= 'WHERE MATCH(title, content) AGAINST(?);';
     $search_results = db_fetch_data($db_connect, $sql, $data);
     $search_results = append_hashtags_to_post($db_connect, $search_results);
-    $search_results = append_likes_count_to_post($db_connect, $search_results);
-    $search_results = append_comments_count_to_post($db_connect, $search_results);
 
     return $search_results;
 }
@@ -206,11 +201,8 @@ function get_tag_search_posts($db_connect, $search_query)
                     ON h.id = hp.hashtag_id
                  WHERE h.hashtag = ?
                  ORDER BY p.created_at DESC;';
-    $search_results = db_fetch_data($db_connect, $sql, $data);
-    $search_results = append_likes_count_to_post($db_connect, $search_results);
-    $search_results = append_comments_count_to_post($db_connect, $search_results);
 
-    return $search_results;
+    return db_fetch_data($db_connect, $sql, $data);
 }
 
 function get_post_hashtags($db_connect, $post_id)
@@ -250,46 +242,18 @@ function append_hashtags_to_post($db_connect, $posts)
     return $result;
 }
 
-function append_likes_count_to_post($db_connect, $posts) {
-    $result = [];
-    foreach ($posts as $post) {
-        if (isset($post['post_id'])) {
-            $likes_count = get_likes_count($db_connect, $post['post_id']);
-            $post['likes_count'] = $likes_count;
-        }
-        $result[] = $post;
-    }
-
-    return $result;
-}
-
-function append_comments_count_to_post($db_connect, $posts) {
-    $result = [];
-    foreach ($posts as $post) {
-        if (isset($post['post_id'])) {
-            $comments_count = get_comments_count($db_connect, $post['post_id']);
-            $post['comments_count'] = $comments_count;
-        }
-        $result[] = $post;
-    }
-
-    return $result;
-}
-
 function get_post($db_connect, $id)
 {
     $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, p.views_counter, p.is_repost, p.content_type, 
-            p.author_id, u.name, u.avatar, u.created_at as user_created_at
+            p.author_id, u.name, u.avatar, u.created_at as user_created_at,
+            (SELECT COUNT(l.id) as COUNT FROM likes AS l WHERE post_id = p.id) AS likes_count,
+            (SELECT COUNT(c.id) as COUNT FROM comments AS c WHERE post_id = p.id) AS comments_count
             FROM posts as p
             JOIN users as u
                 ON u.id = p.author_id
             WHERE p.id = ?';
 
-    $post = db_fetch_data($db_connect, $sql, [$id], true);
-    $post['likes_count'] = get_likes_count($db_connect, $id);
-    $post['comments_count'] = get_comments_count($db_connect, $id);
-
-    return $post;
+    return db_fetch_data($db_connect, $sql, [$id], true);
 }
 
 function get_publications_count($db_connect, $user_id)
@@ -729,22 +693,4 @@ function change_post_views_count($db_connect, $post_id)
 {
     $sql = "UPDATE posts SET views_counter = views_counter + 1 WHERE id = $post_id";
     get_mysqli_result($db_connect, $sql);
-}
-
-function get_likes_count($db_connect, $post_id)
-{
-    $sql = 'SELECT COUNT(id) as count
-            FROM likes
-            WHERE post_id = ?';
-
-    return db_fetch_data($db_connect, $sql, [$post_id], true)['count'] ?? 0;
-}
-
-function get_comments_count($db_connect, $post_id)
-{
-    $sql = 'SELECT COUNT(id) as count
-            FROM comments
-            WHERE post_id = ?';
-
-    return db_fetch_data($db_connect, $sql, [$post_id], true)['count'] ?? 0;
 }
