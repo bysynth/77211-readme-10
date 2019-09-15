@@ -33,6 +33,7 @@ $page_content = include_template('post.php',
         'post_content' => $post_content,
         'user_subscriptions_count' => $user_subscriptions_count,
         'user_publications_count' => $user_publications_count,
+        'is_subscribed' => check_subscrtiption($db_connect, $_SESSION['user']['id'], $post_content['author_id'])
     ]);
 
 $layout_content = include_template('layout.php',
