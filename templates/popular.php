@@ -149,25 +149,29 @@
                 </div>
                 <footer class="post__footer">
                     <div class="post__author">
-                        <a class="post__author-link" href="<?= '/profile.php?user=' . $post['user_id'] ?>" title="Автор">
-                            <div class="post__avatar-wrapper">
-                                <?php if (isset($post['avatar'])): ?>
-                                    <img class="post__author-avatar" src="img/<?= clear_input($post['avatar']) ?>"
-                                         alt="Аватар пользователя">
-                                <?php endif; ?>
-                            </div>
-                            <div class="post__info">
-                                <?php if (isset($post['name'])): ?>
-                                    <b class="post__author-name"><?= clear_input($post['name']) ?></b>
-                                <?php endif; ?>
-                                <?php if (isset($post['created_at'])): ?>
-                                    <time class="post__time" datetime="<?= $time = clear_input($post['created_at']) ?>"
-                                          title="<?= get_custom_time_format($time) ?>">
-                                        <?= get_relative_time_format($time, 'назад') ?>
-                                    </time>
-                                <?php endif; ?>
-                            </div>
-                        </a>
+                        <?php if (isset($post['user_id'])): ?>
+                            <a class="post__author-link" href="<?= '/profile.php?user=' . $post['user_id'] ?>"
+                               title="Автор">
+                                <div class="post__avatar-wrapper">
+                                    <?php if (isset($post['avatar'])): ?>
+                                        <img class="post__author-avatar" src="img/<?= clear_input($post['avatar']) ?>"
+                                             alt="Аватар пользователя">
+                                    <?php endif; ?>
+                                </div>
+                                <div class="post__info">
+                                    <?php if (isset($post['name'])): ?>
+                                        <b class="post__author-name"><?= clear_input($post['name']) ?></b>
+                                    <?php endif; ?>
+                                    <?php if (isset($post['created_at'])): ?>
+                                        <time class="post__time"
+                                              datetime="<?= $time = clear_input($post['created_at']) ?>"
+                                              title="<?= get_custom_time_format($time) ?>">
+                                            <?= get_relative_time_format($time, 'назад') ?>
+                                        </time>
+                                    <?php endif; ?>
+                                </div>
+                            </a>
+                        <?php endif; ?>
                     </div>
                     <div class="post__indicators">
                         <div class="post__buttons">

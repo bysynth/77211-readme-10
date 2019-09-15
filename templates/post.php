@@ -144,16 +144,21 @@
             <div class="post-details__user user">
                 <div class="post-details__user-info user__info">
                     <div class="post-details__avatar user__avatar">
-                        <a class="post-details__avatar-link user__avatar-link" href="#">
-                            <img class="post-details__picture user__picture"
-                                 src="img/<?= isset($post_content['avatar']) ? clear_input($post_content['avatar']) : '' ?>"
-                                 alt="Аватар пользователя">
-                        </a>
+                        <?php if (isset($post_content['author_id'])): ?>
+                            <a class="post-details__avatar-link user__avatar-link" href="<?= '/profile.php?user=' . $post_content['author_id'] ?>">
+                                <img class="post-details__picture user__picture"
+                                     src="img/<?= isset($post_content['avatar']) ? clear_input($post_content['avatar']) : '' ?>"
+                                     alt="Аватар пользователя">
+                            </a>
+                        <?php endif; ?>
                     </div>
                     <div class="post-details__name-wrapper user__name-wrapper">
-                        <a class="post-details__name user__name" href="#">
-                            <span><?= isset($post_content['name']) ? clear_input($post_content['name']) : '' ?></span>
-                        </a>
+                        <?php if (isset($post_content['author_id'])): ?>
+                            <a class="post-details__name user__name"
+                               href="<?= '/profile.php?user=' . $post_content['author_id'] ?>">
+                                <span><?= isset($post_content['name']) ? clear_input($post_content['name']) : '' ?></span>
+                            </a>
+                        <?php endif; ?>
                         <?php if (isset($post_content['user_created_at'])): ?>
                             <time class="post-details__time user__time"
                                   datetime="<?= $created_at = clear_input($post_content['user_created_at']) ?>">
