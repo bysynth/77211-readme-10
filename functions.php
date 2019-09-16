@@ -727,3 +727,42 @@ function is_like_exists($db_connect, $user_id, $post_id)
 
     return db_fetch_data($db_connect, $sql, [$user_id, $post_id], true);
 }
+
+//function validate_filled($name, $input_name)
+//{
+//    if (empty($name)) {
+//        return [
+//            'input_name' => $input_name,
+//            'input_error_desc' => 'Это поле должно быть заполнено.'
+//        ];
+//    }
+//
+//    return null;
+//}
+
+function validate_comment($db_connect, $comment, $post_id) {
+    $post_id_in_db = is_post_exists($db_connect, $post_id);
+
+    if($post_id_in_db['id'] !== $post_id){
+        return [
+            'input_name' => 'Комментарий',
+            'input_error_desc' => 'Нет такого поста в базе.'
+        ];
+    }
+
+    if ($comment === '') {
+        return [
+            'input_name' => 'Комментарий',
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (strlen($comment) < 5) {
+        return [
+            'input_name' => 'Комментарий',
+            'input_error_desc' => 'Комментарий должен быть больше 4 символов.'
+        ];
+    }
+
+    return null;
+}

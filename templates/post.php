@@ -84,18 +84,24 @@
                     <?php endif; ?>
                 </div>
                 <div class="comments">
-                    <form class="comments__form form" action="#" method="post">
-                        <div class="comments__my-avatar">
-                            <img class="comments__picture" src="img/userpic-medium.jpg" alt="Аватар пользователя">
-                        </div>
-                        <div class="form__input-section form__input-section--error">
-                            <textarea class="comments__textarea form__textarea form__input" placeholder="Ваш комментарий"></textarea>
-                            <label class="visually-hidden">Ваш комментарий</label>
-                            <button class="form__error-button button" type="button">!</button>
-                            <div class="form__error-text">
-                                <h3 class="form__error-title">Ошибка валидации</h3>
-                                <p class="form__error-desc">Это поле обязательно к заполнению</p>
+                    <form class="comments__form form" method="post">
+                        <?php if (isset($_SESSION['user']['avatar'])): ?>
+                            <div class="comments__my-avatar">
+                                <img class="comments__picture" src="/uploads/<?= $_SESSION['user']['avatar'] ?>" alt="Аватар пользователя">
                             </div>
+                        <?php endif ?>
+                        <div class="form__input-section <?= !empty($error) ? 'form__input-section--error' : '' ?>">
+                            <textarea class="comments__textarea form__textarea form__input"
+                                      placeholder="Ваш комментарий" name="comment" id="comment"><?= get_post_val('comment')?></textarea>
+                            <label for="comment" class="visually-hidden">Ваш комментарий</label>
+                            <input type="hidden" name="post-id" value="<?= $post['id'] ?>">
+                            <button class="form__error-button button" type="button">!</button>
+                            <?php if (isset($error)): ?>
+                                <?= include_template('input-error.php', [
+                                    'error' => $error
+                                    ])
+                                ?>
+                            <?php endif ?>
                         </div>
                         <button class="comments__submit button button--green" type="submit">Отправить</button>
                     </form>
