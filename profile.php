@@ -42,7 +42,7 @@ $template_data = [
     'user_info' => $user_info,
     'user_publications_count' => $user_publications_count,
     'user_subscriptions_count' => $user_subscriptions_count,
-    'is_subscribed' => check_subscrtiption($db_connect, $_SESSION['user']['id'], $author_id)
+    'is_subscribed' => check_subscription($db_connect, $_SESSION['user']['id'], $author_id)
 ];
 
 if ($type === 'posts') {
