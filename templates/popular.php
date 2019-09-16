@@ -175,19 +175,22 @@
                     </div>
                     <div class="post__indicators">
                         <div class="post__buttons">
-                            <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
-                                <svg class="post__indicator-icon" width="20" height="17">
-                                    <use xlink:href="#icon-heart"></use>
-                                </svg>
-                                <svg class="post__indicator-icon post__indicator-icon--like-active" width="20"
-                                     height="17">
-                                    <use xlink:href="#icon-heart-active"></use>
-                                </svg>
-                                <?php if (isset($post['likes_count'])): ?>
-                                    <span><?= $post['likes_count'] ?></span>
-                                    <span class="visually-hidden">количество лайков</span>
-                                <?php endif; ?>
-                            </a>
+                            <?php if (isset($post['post_id'])): ?>
+                                <a class="post__indicator post__indicator--likes button"
+                                   href="/like.php?post_id=<?= $post['post_id'] ?>" title="Лайк">
+                                    <svg class="post__indicator-icon" width="20" height="17">
+                                        <use xlink:href="#icon-heart"></use>
+                                    </svg>
+                                    <svg class="post__indicator-icon post__indicator-icon--like-active" width="20"
+                                         height="17">
+                                        <use xlink:href="#icon-heart-active"></use>
+                                    </svg>
+                                    <?php if (isset($post['likes_count'])): ?>
+                                        <span><?= $post['likes_count'] ?></span>
+                                        <span class="visually-hidden">количество лайков</span>
+                                    <?php endif; ?>
+                                </a>
+                            <?php endif; ?>
                             <a class="post__indicator post__indicator--comments button" href="#"
                                title="Комментарии">
                                 <svg class="post__indicator-icon" width="19" height="17">
