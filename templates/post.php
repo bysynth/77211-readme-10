@@ -1,67 +1,71 @@
 <?php
 /**
- * @var array $post_content
+ * @var array $post
  */
 ?>
 
 <div class="container">
-    <h1 class="page__title page__title--publication"><?= isset($post_content['title']) ? clear_input($post_content['title']) : '' ?></h1>
+    <h1 class="page__title page__title--publication"><?= isset($post['title']) ? clear_input($post['title']) : '' ?></h1>
     <section class="post-details">
         <h2 class="visually-hidden">Публикация</h2>
         <div class="post-details__wrapper">
             <div class="post-details__main-block post post--details">
-                <?php if ((int)$post_content['content_type'] === 1) : ?>
+                <?php if ((int)$post['content_type'] === 1) : ?>
                     <?= include_template('post-text.php',
                         [
-                            'text' => clear_input($post_content['content'])
+                            'text' => clear_input($post['content'])
                         ]) ?>
                 <?php endif; ?>
-                <?php if ((int)$post_content['content_type'] === 2) : ?>
+                <?php if ((int)$post['content_type'] === 2) : ?>
                     <?= include_template('post-quote.php',
                         [
-                            'text' => clear_input($post_content['content']),
-                            'author' => clear_input($post_content['cite_author'])
+                            'text' => clear_input($post['content']),
+                            'author' => clear_input($post['cite_author'])
                         ]) ?>
                 <?php endif; ?>
-                <?php if ((int)$post_content['content_type'] === 3) : ?>
+                <?php if ((int)$post['content_type'] === 3) : ?>
                     <?= include_template('post-photo.php',
                         [
-                            'img_url' => clear_input($post_content['content'])
+                            'img_url' => clear_input($post['content'])
                         ]) ?>
                 <?php endif; ?>
-                <?php if ((int)$post_content['content_type'] === 4) : ?>
+                <?php if ((int)$post['content_type'] === 4) : ?>
                     <?= include_template('post-video.php',
                         [
-                            'youtube_url' => clear_input($post_content['content'])
+                            'youtube_url' => clear_input($post['content'])
                         ]) ?>
                 <?php endif; ?>
-                <?php if ((int)$post_content['content_type'] === 5) : ?>
+                <?php if ((int)$post['content_type'] === 5) : ?>
                     <?= include_template('post-link.php',
                         [
-                            'url' => clear_input($post_content['content']),
-                            'title' => clear_input($post_content['title'])
+                            'url' => clear_input($post['content']),
+                            'title' => clear_input($post['title'])
                         ]) ?>
                 <?php endif; ?>
                 <div class="post__indicators">
                     <div class="post__buttons">
-                        <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
-                            <svg class="post__indicator-icon" width="20" height="17">
-                                <use xlink:href="#icon-heart"></use>
-                            </svg>
-                            <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
-                                <use xlink:href="#icon-heart-active"></use>
-                            </svg>
-                            <?php if (isset($post_content['likes_count'])): ?>
-                                <span><?= $post_content['likes_count'] ?></span>
-                                <span class="visually-hidden">количество лайков</span>
-                            <?php endif; ?>
-                        </a>
+                        <?php if (isset($post['id'])): ?>
+                            <a class="post__indicator post__indicator--likes button"
+                               href="/like.php?post_id=<?= $post['id'] ?>" title="Лайк">
+                                <svg class="post__indicator-icon" width="20" height="17">
+                                    <use xlink:href="#icon-heart"></use>
+                                </svg>
+                                <svg class="post__indicator-icon post__indicator-icon--like-active" width="20"
+                                     height="17">
+                                    <use xlink:href="#icon-heart-active"></use>
+                                </svg>
+                                <?php if (isset($post['likes_count'])): ?>
+                                    <span><?= $post['likes_count'] ?></span>
+                                    <span class="visually-hidden">количество лайков</span>
+                                <?php endif; ?>
+                            </a>
+                        <?php endif; ?>
                         <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
                             <svg class="post__indicator-icon" width="19" height="17">
                                 <use xlink:href="#icon-comment"></use>
                             </svg>
-                            <?php if (isset($post_content['comments_count'])): ?>
-                                <span><?= $post_content['comments_count'] ?></span>
+                            <?php if (isset($post['comments_count'])): ?>
+                                <span><?= $post['comments_count'] ?></span>
                                 <span class="visually-hidden">количество комментариев</span>
                             <?php endif; ?>
                         </a>
@@ -73,8 +77,8 @@
                             <span class="visually-hidden">количество репостов</span>
                         </a>
                     </div>
-                    <?php if (isset($post_content['views_counter'])): ?>
-                        <span class="post__view"><?= $views = (int) clear_input($post_content['views_counter'])?>
+                    <?php if (isset($post['views_counter'])): ?>
+                        <span class="post__view"><?= $views = (int) clear_input($post['views_counter'])?>
                             <?= get_noun_plural_form($views, 'просмотр', 'просмотра', 'просмотров')?>
                         </span>
                     <?php endif; ?>
@@ -144,24 +148,24 @@
             <div class="post-details__user user">
                 <div class="post-details__user-info user__info">
                     <div class="post-details__avatar user__avatar">
-                        <?php if (isset($post_content['author_id'])): ?>
-                            <a class="post-details__avatar-link user__avatar-link" href="<?= '/profile.php?user=' . $post_content['author_id'] ?>">
+                        <?php if (isset($post['author_id'])): ?>
+                            <a class="post-details__avatar-link user__avatar-link" href="<?= '/profile.php?user=' . $post['author_id'] ?>">
                                 <img class="post-details__picture user__picture"
-                                     src="img/<?= isset($post_content['avatar']) ? clear_input($post_content['avatar']) : '' ?>"
+                                     src="img/<?= isset($post['avatar']) ? clear_input($post['avatar']) : '' ?>"
                                      alt="Аватар пользователя">
                             </a>
                         <?php endif; ?>
                     </div>
                     <div class="post-details__name-wrapper user__name-wrapper">
-                        <?php if (isset($post_content['author_id'])): ?>
+                        <?php if (isset($post['author_id'])): ?>
                             <a class="post-details__name user__name"
-                               href="<?= '/profile.php?user=' . $post_content['author_id'] ?>">
-                                <span><?= isset($post_content['name']) ? clear_input($post_content['name']) : '' ?></span>
+                               href="<?= '/profile.php?user=' . $post['author_id'] ?>">
+                                <span><?= isset($post['name']) ? clear_input($post['name']) : '' ?></span>
                             </a>
                         <?php endif; ?>
-                        <?php if (isset($post_content['user_created_at'])): ?>
+                        <?php if (isset($post['user_created_at'])): ?>
                             <time class="post-details__time user__time"
-                                  datetime="<?= $created_at = clear_input($post_content['user_created_at']) ?>">
+                                  datetime="<?= $created_at = clear_input($post['user_created_at']) ?>">
                                 <?= get_relative_time_format($created_at, 'на сайте') ?>
                             </time>
                         <?php endif; ?>
@@ -187,7 +191,7 @@
                 </div>
                 <div class="post-details__user-buttons user__buttons">
                     <a class="user__button user__button--subscription button button--main"
-                       href="/subscribe.php?subscribe_user_id=<?= $post_content['author_id'] ?? '' ?>">
+                       href="/subscribe.php?subscribe_user_id=<?= $post['author_id'] ?? '' ?>">
                         <?= !isset($is_subscribed) ? 'Подписаться' : 'Отписаться'?></a>
                     <?php if (isset($is_subscribed)): ?>
                         <a class="user__button user__button--writing button button--green" href="#">Сообщение</a>
