@@ -190,17 +190,18 @@
                                         <span class="visually-hidden">количество лайков</span>
                                     <?php endif; ?>
                                 </a>
+                                <a class="post__indicator post__indicator--comments button"
+                                   href="<?= '/post.php?id=' . $post['post_id'] . '#comments-block'?>"
+                                   title="Комментарии">
+                                    <svg class="post__indicator-icon" width="19" height="17">
+                                        <use xlink:href="#icon-comment"></use>
+                                    </svg>
+                                    <?php if (isset($post['comments_count'])): ?>
+                                        <span><?= $post['comments_count'] ?></span>
+                                        <span class="visually-hidden">количество комментариев</span>
+                                    <?php endif; ?>
+                                </a>
                             <?php endif; ?>
-                            <a class="post__indicator post__indicator--comments button" href="#"
-                               title="Комментарии">
-                                <svg class="post__indicator-icon" width="19" height="17">
-                                    <use xlink:href="#icon-comment"></use>
-                                </svg>
-                                <?php if (isset($post['comments_count'])): ?>
-                                    <span><?= $post['comments_count'] ?></span>
-                                    <span class="visually-hidden">количество комментариев</span>
-                                <?php endif; ?>
-                            </a>
                         </div>
                     </div>
                 </footer>

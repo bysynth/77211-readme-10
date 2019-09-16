@@ -141,7 +141,7 @@
             </footer>
             <div class="comments">
                 <?php if (isset($post['post_id'])) : ?>
-                    <a class="comments__button button" href="<?= '/post.php?id=' . $post['post_id'] ?>">
+                    <a class="comments__button button" href="<?= '/post.php?id=' . $post['post_id'] . '#comments-block'?>">
                         Показать комментарии
                     </a>
                 <?php endif; ?>
