@@ -14,33 +14,33 @@ if (!isset($_GET['id']) || $_GET['id'] === '') {
 
 $id = (int)$_GET['id'];
 
-$post_content = get_post($db_connect, $id);
+$post = get_post($db_connect, $id);
 
-if (empty($post_content)) {
+if (empty($post)) {
     http_response_code(404);
     exit('Ошибка 404 -- Запрашиваемая страница не найдена');
 }
 
-$user_subscriptions_count = isset($post_content['author_id']) ? get_subscriptions_count($db_connect,
-    $post_content['author_id']) : 0;
-$user_publications_count = isset($post_content['author_id']) ? get_publications_count($db_connect,
-    $post_content['author_id']) : 0;
+$user_subscriptions_count = isset($post['author_id']) ? get_subscriptions_count($db_connect,
+    $post['author_id']) : 0;
+$user_publications_count = isset($post['author_id']) ? get_publications_count($db_connect,
+    $post['author_id']) : 0;
 
 change_post_views_count($db_connect, $id);
 
 $page_content = include_template('post.php',
     [
-        'post_content' => $post_content,
+        'post' => $post,
         'user_subscriptions_count' => $user_subscriptions_count,
         'user_publications_count' => $user_publications_count,
-        'is_subscribed' => check_subscrtiption($db_connect, $_SESSION['user']['id'], $post_content['author_id'])
+        'is_subscribed' => check_subscription($db_connect, $_SESSION['user']['id'], $post['author_id'])
     ]);
 
 $layout_content = include_template('layout.php',
     [
         'content' => $page_content,
         'main_class' => 'page__main--publication',
-        'title' => 'readme: ' . $post_content['title']
+        'title' => 'readme: ' . $post['title']
     ]);
 
 print($layout_content);
