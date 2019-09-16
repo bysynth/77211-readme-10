@@ -695,15 +695,23 @@ function change_post_views_count($db_connect, $post_id)
     get_mysqli_result($db_connect, $sql);
 }
 
-function check_subscrtiption($db_connect, $author_id, $subscribe_user_id)
+function check_subscription($db_connect, $author_id, $subscribe_user_id)
 {
     $sql = 'SELECT id FROM subscriptions WHERE author_id = ? AND subscribe_user_id = ?';
 
     return db_fetch_data($db_connect, $sql, [$author_id, $subscribe_user_id], true);
+}
 
-//    if (!isset($result)) {
-//        return false;
-//    }
-//
-//    return true;
+function is_post_exists($db_connect, $post_id)
+{
+    $sql = 'SELECT id FROM posts WHERE id = ?';
+
+    return db_fetch_data($db_connect, $sql, [$post_id], true);
+}
+
+function is_like_exists($db_connect, $user_id, $post_id)
+{
+    $sql = 'SELECT id FROM likes WHERE user_id = ? AND post_id = ?';
+
+    return db_fetch_data($db_connect, $sql, [$user_id, $post_id], true);
 }
