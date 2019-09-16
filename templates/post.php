@@ -60,7 +60,7 @@
                                 <?php endif; ?>
                             </a>
                         <?php endif; ?>
-                        <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
+                        <a class="post__indicator post__indicator--comments button" href="#comments-block" title="Комментарии">
                             <svg class="post__indicator-icon" width="19" height="17">
                                 <use xlink:href="#icon-comment"></use>
                             </svg>
@@ -99,49 +99,46 @@
                         </div>
                         <button class="comments__submit button button--green" type="submit">Отправить</button>
                     </form>
-                    <div class="comments__list-wrapper">
+                    <div class="comments__list-wrapper" id="comments-block">
+                        <?php if (!empty($comments)) : ?>
                         <ul class="comments__list">
-                            <li class="comments__item user">
-                                <div class="comments__avatar">
-                                    <a class="user__avatar-link" href="#">
-                                        <img class="comments__picture" src="img/userpic-larisa.jpg" alt="Аватар пользователя">
-                                    </a>
-                                </div>
-                                <div class="comments__info">
-                                    <div class="comments__name-wrapper">
-                                        <a class="comments__user-name" href="#">
-                                            <span>Лариса Роговая</span>
-                                        </a>
-                                        <time class="comments__time" datetime="2019-03-20">1 ч назад</time>
+                            <?php foreach ($comments as $comment) : ?>
+                                <li class="comments__item user">
+                                    <div class="comments__avatar">
+                                        <?php if (isset($comment['author_id'], $comment['avatar'])): ?>
+                                            <a class="user__avatar-link" href="<?= '/profile.php?user=' . $comment['author_id'] ?>">
+                                                <img class="comments__picture" src="/uploads/<?= clear_input($comment['avatar']) ?>"
+                                                     alt="Аватар пользователя">
+                                            </a>
+                                        <?php endif ?>
                                     </div>
-                                    <p class="comments__text">
-                                        Красота!!!1!
-                                    </p>
-                                </div>
-                            </li>
-                            <li class="comments__item user">
-                                <div class="comments__avatar">
-                                    <a class="user__avatar-link" href="#">
-                                        <img class="comments__picture" src="img/userpic-larisa.jpg" alt="Аватар пользователя">
-                                    </a>
-                                </div>
-                                <div class="comments__info">
-                                    <div class="comments__name-wrapper">
-                                        <a class="comments__user-name" href="#">
-                                            <span>Лариса Роговая</span>
-                                        </a>
-                                        <time class="comments__time" datetime="2019-03-18">2 дня назад</time>
+                                    <div class="comments__info">
+                                        <div class="comments__name-wrapper">
+                                            <?php if (isset($comment['name'], $comment['author_id'])): ?>
+                                                <a class="comments__user-name" href="<?= '/profile.php?user=' . $comment['author_id'] ?>">
+                                                    <span><?= clear_input($comment['name']) ?></span>
+                                                </a>
+                                            <?php endif ?>
+                                            <?php if (isset($comment['created_at'])): ?>
+                                                <time class="comments__time" datetime="<?= clear_input($comment['created_at']) ?>>">
+                                                    <?= get_relative_time_format(clear_input($comment['created_at']), 'назад') ?>
+                                                </time>
+                                            <?php endif ?>
+                                        </div>
+                                        <?php if (isset($comment['comment'])): ?>
+                                            <p class="comments__text">
+                                                <?= clear_input($comment['comment']) ?>
+                                            </p>
+                                        <?php endif ?>
                                     </div>
-                                    <p class="comments__text">
-                                        Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
-                                    </p>
-                                </div>
-                            </li>
+                                </li>
+                            <?php endforeach; ?>
                         </ul>
-                        <a class="comments__more-link" href="#">
-                            <span>Показать все комментарии</span>
-                            <sup class="comments__amount">45</sup>
-                        </a>
+                        <?php endif; ?>
+<!--                        <a class="comments__more-link" href="#">-->
+<!--                            <span>Показать все комментарии</span>-->
+<!--                            <sup class="comments__amount">45</sup>-->
+<!--                        </a>-->
                     </div>
                 </div>
             </div>

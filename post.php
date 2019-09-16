@@ -31,6 +31,7 @@ change_post_views_count($db_connect, $id);
 $page_content = include_template('post.php',
     [
         'post' => $post,
+        'comments' => get_comments($db_connect, $id),
         'user_subscriptions_count' => $user_subscriptions_count,
         'user_publications_count' => $user_publications_count,
         'is_subscribed' => check_subscription($db_connect, $_SESSION['user']['id'], $post['author_id'])
