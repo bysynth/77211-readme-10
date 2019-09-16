@@ -19,9 +19,9 @@
                                     <div class="post__avatar-wrapper">
                                         <?php if (isset($post['avatar'])): ?>
                                             <img class="post__author-avatar"
-                                                 src="img/<?= clear_input($post['avatar']) ?>"
+                                                 src="/uploads/<?= clear_input($post['avatar']) ?>"
                                                  alt="Аватар пользователя" width="60"
-                                                 height="60"><!-- TODO: заменить путь каталога с аватарками -->
+                                                 height="60">
                                         <?php endif; ?>
                                     </div>
                                     <div class="post__info">

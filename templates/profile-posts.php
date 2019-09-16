@@ -12,8 +12,8 @@
                                 <div class="post__avatar-wrapper post__avatar-wrapper--repost">
                                     <?php if (isset($post['original_author_avatar'])) : ?>
                                         <img class="post__author-avatar"
-                                             src="img/<?= clear_input($post['original_author_avatar']) ?>"
-                                             alt="Аватар пользователя"><!-- TODO: заменить путь каталога с аватарками -->
+                                             src="/uploads/<?= clear_input($post['original_author_avatar']) ?>"
+                                             alt="Аватар пользователя">
                                     <?php endif; ?>
                                 </div>
                                 <div class="post__info">
