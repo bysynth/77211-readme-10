@@ -256,6 +256,18 @@ function get_post($db_connect, $id)
     return db_fetch_data($db_connect, $sql, [$id], true);
 }
 
+function get_comments($db_connect, $post_id)
+{
+    $sql = 'SELECT c.created_at, c.comment, u.id as author_id, u.name, u.avatar  
+            FROM comments AS c
+            JOIN users u 
+                ON u.id = c.author_id
+            WHERE post_id = ?
+            ORDER BY c.created_at DESC';
+
+    return db_fetch_data($db_connect, $sql, [$post_id]);
+}
+
 function get_publications_count($db_connect, $user_id)
 {
     $sql = 'SELECT COUNT(id) as count
