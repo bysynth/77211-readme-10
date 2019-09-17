@@ -48,7 +48,7 @@
                             <?php if ($like['content_type'] === 3): ?>
                                 <div class="post-mini__image-wrapper">
                                     <?php if (isset($like['content'])): ?>
-                                        <img class="post-mini__image" src="/upload/<?= $like['content'] ?>" width="109"
+                                        <img class="post-mini__image" src="/uploads/<?= $like['content'] ?>" width="109"
                                              height="109"
                                              alt="Превью публикации">
                                     <?php endif ?>
