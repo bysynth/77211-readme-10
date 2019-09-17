@@ -60,8 +60,19 @@ if ($type === 'likes') {
 }
 
 if ($type === 'subscriptions') {
+    $raw_user_subcription_list = get_user_subscriptions($db_connect, $author_id);
+    $user_subscriptions_list = [];
+    foreach ($raw_user_subcription_list as $sub) {
+        if (check_subscription($db_connect, $_SESSION['user']['id'], $sub['user_id'])) {
+            $sub['is_session_user_subscribed'] = true;
+        } else {
+            $sub['is_session_user_subscribed'] = false;
+        }
+        $user_subscriptions_list[] = $sub;
+    }
+
     $template_data['template'] = 'profile-subscriptions.php';
-//    $template_data['content'] = 'sub';
+    $template_data['content'] = $user_subscriptions_list;
     $template_data['is_subscriptions'] = true;
     $page_content = include_template('profile.php', $template_data);
 }

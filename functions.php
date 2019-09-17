@@ -757,6 +757,17 @@ function validate_comment($db_connect, $comment, $post_id)
     return null;
 }
 
+function get_youtube_cover_url($youtube_link)
+{
+    $id = extract_youtube_id($youtube_link);
+
+    if ($id) {
+        return sprintf('https://img.youtube.com/vi/%s/hqdefault.jpg', $id);
+    }
+
+    return null;
+}
+
 function get_profile_likes_list($db_connect, $profile_id)
 {
     $sql = 'SELECT l.created_at, l.post_id, u.id as user_id, u.name, u.avatar, p.content, p.content_type
@@ -770,13 +781,14 @@ function get_profile_likes_list($db_connect, $profile_id)
     return db_fetch_data($db_connect, $sql, [$profile_id]);
 }
 
-function get_youtube_cover_url($youtube_link)
+function get_user_subscriptions($db_connect, $profile_id)
 {
-    $id = extract_youtube_id($youtube_link);
-
-    if ($id) {
-        return sprintf('https://img.youtube.com/vi/%s/hqdefault.jpg', $id);
-    }
-
-    return null;
+    $sql = 'SELECT s.subscribe_user_id as user_id, u.name, u.avatar, u.created_at,
+            (SELECT COUNT(id) FROM posts WHERE author_id = s.subscribe_user_id) as publ_count,
+            (SELECT COUNT(id) FROM subscriptions WHERE subscribe_user_id = s.subscribe_user_id) as sub_count
+            FROM subscriptions AS s
+            JOIN users AS u
+	            ON u.id = s.subscribe_user_id
+            WHERE author_id = ?';
+    return db_fetch_data($db_connect, $sql, [$profile_id]);
 }
