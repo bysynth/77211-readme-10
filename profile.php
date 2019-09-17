@@ -54,7 +54,7 @@ if ($type === 'posts') {
 
 if ($type === 'likes') {
     $template_data['template'] = 'profile-likes.php';
-//    $template_data['content'] = 'likes';
+    $template_data['content'] = get_profile_likes_list($db_connect, $author_id);
     $template_data['is_likes'] = true;
     $page_content = include_template('profile.php', $template_data);
 }
