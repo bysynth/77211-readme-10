@@ -134,7 +134,7 @@ function common_get_posts_sql()
                 ON u.id = p.author_id ';
 }
 
-function get_popular_posts($db_connect, $type = null)
+function get_popular_posts($db_connect, $type = null, $offset = 0)
 {
     $data = [];
     $sql = common_get_posts_sql();
@@ -142,7 +142,8 @@ function get_popular_posts($db_connect, $type = null)
         $sql .= 'WHERE p.content_type = ? ';
         $data[] = $type;
     }
-    $sql .= 'ORDER BY p.views_counter DESC LIMIT 6;';
+    $sql .= 'ORDER BY p.views_counter DESC LIMIT 6 OFFSET ?;';
+    $data[] = $offset;
 
     $popular_posts = db_fetch_data($db_connect, $sql, $data);
     $popular_posts = append_hashtags_to_post($db_connect, $popular_posts);
@@ -727,18 +728,6 @@ function is_like_exists($db_connect, $user_id, $post_id)
 
     return db_fetch_data($db_connect, $sql, [$user_id, $post_id], true);
 }
-
-//function validate_filled($name, $input_name)
-//{
-//    if (empty($name)) {
-//        return [
-//            'input_name' => $input_name,
-//            'input_error_desc' => 'Это поле должно быть заполнено.'
-//        ];
-//    }
-//
-//    return null;
-//}
 
 function validate_comment($db_connect, $comment, $post_id) {
     $post_id_in_db = is_post_exists($db_connect, $post_id);
