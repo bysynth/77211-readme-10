@@ -1,7 +1,7 @@
 <?php
 require_once 'init.php';
 
-if (!isset($_SESSION['user'])) {
+if (!isset($_SESSION['user']['id'])) {
     header('Location: /index.php');
     exit();
 }
@@ -18,13 +18,14 @@ if ($type === '' || ($type !== null && is_type_exist($content_types, $type) === 
 $page_content = include_template('feed.php',
     [
         'content_types' => $content_types,
-        'posts' => get_posts($db_connect, $type, $_SESSION['user']['id'], null, false, true),
+        'posts' => get_feed_posts($db_connect, $_SESSION['user']['id'], $type),
         'type' => $type
     ]);
 
 $layout_content = include_template('layout.php',
     [
         'content' => $page_content,
+        'is_feed' => true,
         'main_class' => 'page__main--feed',
         'title' => 'readme: моя лента'
     ]);

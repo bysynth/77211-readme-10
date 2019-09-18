@@ -18,14 +18,14 @@
                     <article class="feed__post post post-<?= $post['type_icon'] ?? '' ?>">
                         <header class="post__header post__author">
                             <?php if (isset($post['user_id'], $post['avatar'])): ?>
-                                <a class="post__author-link" href="<?= '/profile.php?id=' . $post['user_id'] ?>"
+                                <a class="post__author-link" href="<?= '/profile.php?user=' . $post['user_id'] ?>"
                                    title="Автор">
                                     <div class="post__avatar-wrapper">
                                         <?php if (isset($post['avatar'])): ?>
                                             <img class="post__author-avatar"
-                                                 src="img/<?= clear_input($post['avatar']) ?>"
+                                                 src="/uploads/<?= clear_input($post['avatar']) ?>"
                                                  alt="Аватар пользователя" width="60"
-                                                 height="60"><!-- TODO: заменить путь каталога с аватарками -->
+                                                 height="60">
                                         <?php endif; ?>
                                     </div>
                                     <div class="post__info">
@@ -64,9 +64,7 @@
                                     </h2>
                                 <?php endif; ?>
                                 <?php if (isset($post['content'])): ?>
-                                    <p>
-                                        <?= cut_text(clear_input($post['content'])) ?>
-                                    </p>
+                                    <?= cut_text(clear_input($post['content'])) ?>
                                 <?php endif; ?>
                             <?php endif; ?>
 
@@ -78,7 +76,7 @@
                                 <?php endif; ?>
                                 <div class="post-photo__image-wrapper">
                                     <?php if (isset($post['content'])): ?>
-                                        <img src="/upload/<?= clear_input($post['content']) ?>"
+                                        <img src="/uploads/<?= clear_input($post['content']) ?>"
                                              alt="Фото от пользователя" width="760" height="396">
                                     <?php endif; ?>
                                 </div>
@@ -116,24 +114,33 @@
                         <footer class="post__footer">
                             <div class="post__indicators">
                                 <div class="post__buttons">
-                                    <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
-                                        <svg class="post__indicator-icon" width="20" height="17">
-                                            <use xlink:href="#icon-heart"></use>
-                                        </svg>
-                                        <svg class="post__indicator-icon post__indicator-icon--like-active" width="20"
-                                             height="17">
-                                            <use xlink:href="#icon-heart-active"></use>
-                                        </svg>
-                                        <span>250</span>
-                                        <span class="visually-hidden">количество лайков</span>
-                                    </a>
-                                    <a class="post__indicator post__indicator--comments button" href="#"
+                                    <?php if (isset($post['post_id'])): ?>
+                                        <a class="post__indicator post__indicator--likes button"
+                                           href="/like.php?post_id=<?= $post['post_id'] ?>" title="Лайк">
+                                            <svg class="post__indicator-icon" width="20" height="17">
+                                                <use xlink:href="#icon-heart"></use>
+                                            </svg>
+                                            <svg class="post__indicator-icon post__indicator-icon--like-active"
+                                                 width="20"
+                                                 height="17">
+                                                <use xlink:href="#icon-heart-active"></use>
+                                            </svg>
+                                            <?php if (isset($post['likes_count'])): ?>
+                                                <span><?= $post['likes_count'] ?></span>
+                                                <span class="visually-hidden">количество лайков</span>
+                                            <?php endif; ?>
+                                        </a>
+                                    <?php endif; ?>
+                                    <a class="post__indicator post__indicator--comments button"
+                                       href="<?= '/post.php?id=' . $post['post_id'] . '#comments-block'?>"
                                        title="Комментарии">
                                         <svg class="post__indicator-icon" width="19" height="17">
                                             <use xlink:href="#icon-comment"></use>
                                         </svg>
-                                        <span>25</span>
-                                        <span class="visually-hidden">количество комментариев</span>
+                                        <?php if (isset($post['comments_count'])): ?>
+                                            <span><?= $post['comments_count'] ?></span>
+                                            <span class="visually-hidden">количество комментариев</span>
+                                        <?php endif; ?>
                                     </a>
                                     <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
                                         <svg class="post__indicator-icon" width="19" height="17">

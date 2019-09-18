@@ -10,9 +10,9 @@ $search_query = $_GET['q'] ?? '';
 $search_query = trim(clear_input($search_query));
 
 if ($search_query !== '' && strpos($search_query, '#') === 0) {
-    $posts = get_posts($db_connect, null, null, $search_query, false, false, false, true);
+    $posts = get_tag_search_posts($db_connect, $search_query);
 } else {
-    $posts = get_posts($db_connect, null, null, $search_query, false, false, true);
+    $posts = get_fulltext_search_posts($db_connect, $search_query);
 }
 
 if (empty($posts)) {
