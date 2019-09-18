@@ -698,8 +698,8 @@ function login($db_connect)
 function get_user_info($db_connect, $user_id)
 {
     $sql = 'SELECT id, created_at, name, avatar FROM users WHERE id = ?';
-    return db_fetch_data($db_connect, $sql, [$user_id], true);
 
+    return db_fetch_data($db_connect, $sql, [$user_id], true);
 }
 
 function change_post_views_count($db_connect, $post_id)
@@ -708,35 +708,33 @@ function change_post_views_count($db_connect, $post_id)
     get_mysqli_result($db_connect, $sql);
 }
 
-function check_subscription($db_connect, $author_id, $subscribe_user_id)
+function is_subscribed($db_connect, $author_id, $subscribe_user_id)
 {
-    $sql = 'SELECT id FROM subscriptions WHERE author_id = ? AND subscribe_user_id = ?';
+    $sql = 'SELECT * FROM subscriptions WHERE author_id = ? AND subscribe_user_id = ?';
 
-    return db_fetch_data($db_connect, $sql, [$author_id, $subscribe_user_id], true);
+    return db_fetch_data($db_connect, $sql, [$author_id, $subscribe_user_id], true) !== null;
 }
 
 function is_post_exists($db_connect, $post_id)
 {
     $sql = 'SELECT id FROM posts WHERE id = ?';
 
-    return db_fetch_data($db_connect, $sql, [$post_id], true);
+    return db_fetch_data($db_connect, $sql, [$post_id], true) !== null;
 }
 
 function is_like_exists($db_connect, $user_id, $post_id)
 {
     $sql = 'SELECT id FROM likes WHERE user_id = ? AND post_id = ?';
 
-    return db_fetch_data($db_connect, $sql, [$user_id, $post_id], true);
+    return db_fetch_data($db_connect, $sql, [$user_id, $post_id], true) !== null;
 }
 
 function validate_comment($db_connect, $comment, $post_id)
 {
-    $post_id_in_db = is_post_exists($db_connect, $post_id);
-
-    if ($post_id_in_db['id'] !== $post_id) {
+    if (!is_post_exists($db_connect, $post_id)) {
         return [
             'input_name' => 'Комментарий',
-            'input_error_desc' => 'Нет такого поста в базе.'
+            'input_error_desc' => 'Не могу добавить комментарий.'
         ];
     }
 
@@ -791,4 +789,15 @@ function get_user_subscriptions($db_connect, $profile_id)
 	            ON u.id = s.subscribe_user_id
             WHERE author_id = ?';
     return db_fetch_data($db_connect, $sql, [$profile_id]);
+}
+
+function get_items_count($db_connect, $content_type = null) {
+    $data = [];
+    $sql = 'SELECT COUNT(*) AS count FROM posts ';
+    if (isset($content_type)) {
+        $sql .= 'WHERE content_type = ?';
+        $data[] = $content_type;
+    }
+
+    return db_fetch_data($db_connect, $sql, $data, true)['count'];
 }

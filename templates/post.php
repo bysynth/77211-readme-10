@@ -195,9 +195,9 @@
                 <div class="post-details__user-buttons user__buttons">
                     <a class="user__button user__button--subscription button button--main"
                        href="/subscribe.php?subscribe_user_id=<?= $post['author_id'] ?? '' ?>">
-                        <?= !isset($is_subscribed) ? 'Подписаться' : 'Отписаться'?></a>
-                    <?php if (isset($is_subscribed)): ?>
-                        <a class="user__button user__button--writing button button--green" href="#">Сообщение</a>
+                        <?= $is_subscribed ? 'Отписаться' : 'Подписаться'?></a>
+                    <?php if ($is_subscribed): ?>
+                        <a class="user__button user__button--writing button button--green" href="/messages.php">Сообщение</a>
                     <?php endif; ?>
                 </div>
             </div>

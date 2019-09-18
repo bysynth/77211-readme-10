@@ -1,7 +1,7 @@
 <?php
 require_once 'init.php';
 
-if (!isset($_SESSION['user'])) {
+if (!isset($_SESSION['user']['id'])) {
     header('Location: /index.php');
     exit();
 }
@@ -26,11 +26,6 @@ if (!isset($user_info)) {
     exit('Ошибка 404 -- Запрашиваемая страница не найдена');
 }
 
-$user_publications_count = isset($author_id) ? get_publications_count($db_connect,
-    $author_id) : 0;
-$user_subscriptions_count = isset($author_id) ? get_subscriptions_count($db_connect,
-    $author_id) : 0;
-
 $urls = [
     'posts' => '/profile.php?user=' . $author_id . '&type=posts',
     'likes' => '/profile.php?user=' . $author_id . '&type=likes',
@@ -40,10 +35,12 @@ $urls = [
 $template_data = [
     'urls' => $urls,
     'user_info' => $user_info,
-    'user_publications_count' => $user_publications_count,
-    'user_subscriptions_count' => $user_subscriptions_count,
-    'is_subscribed' => check_subscription($db_connect, $_SESSION['user']['id'], $author_id)
+    'user_publications_count' => get_publications_count($db_connect, $author_id),
+    'user_subscriptions_count' => get_subscriptions_count($db_connect, $author_id),
+    'is_subscribed' => is_subscribed($db_connect, $_SESSION['user']['id'], $author_id)
 ];
+
+$page_content = '';
 
 if ($type === 'posts') {
     $template_data['template'] = 'profile-posts.php';
@@ -60,10 +57,10 @@ if ($type === 'likes') {
 }
 
 if ($type === 'subscriptions') {
-    $raw_user_subcription_list = get_user_subscriptions($db_connect, $author_id);
+    $raw_user_subscription_list = get_user_subscriptions($db_connect, $author_id);
     $user_subscriptions_list = [];
-    foreach ($raw_user_subcription_list as $sub) {
-        if (check_subscription($db_connect, $_SESSION['user']['id'], $sub['user_id'])) {
+    foreach ($raw_user_subscription_list as $sub) {
+        if (is_subscribed($db_connect, $_SESSION['user']['id'], $sub['user_id'])) {
             $sub['is_session_user_subscribed'] = true;
         } else {
             $sub['is_session_user_subscribed'] = false;

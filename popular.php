@@ -21,34 +21,27 @@ if (isset($cur_page)) {
 }
 
 if ($cur_page === null || $cur_page === 0 || $cur_page === '') {
-    $url = 'Location: /popular.php?page=1';
     $cur_page = 1;
-    header($url);
 }
 
 $page_items = 6;
 
-$sql = 'SELECT COUNT(*) AS count FROM posts';
-$result = mysqli_query($db_connect, $sql);
+$items_count = get_items_count($db_connect);
 
 if (isset($type)) {
-    $sql = 'SELECT COUNT(*) AS count FROM posts WHERE content_type = ?';
-    $stmt = db_get_prepare_stmt($db_connect, $sql, [$type]);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);;
+    $items_count = get_items_count($db_connect, $type);
 }
 
-$items_count = mysqli_fetch_assoc($result)['count'];
 $pages_count = ceil($items_count / $page_items);
 $offset = ($cur_page - 1) * $page_items;
 
-if ($cur_page > $pages_count && isset($type) === false) {
+if ($cur_page > $pages_count && !isset($type)) {
     $url = 'Location: /popular.php?page=' . $pages_count;
     $cur_page = $pages_count;
     header($url);
 }
 
-if ($cur_page > $pages_count && isset($type) === true) {
+if ($cur_page > $pages_count && isset($type)) {
     $url = 'Location: /popular.php?page=' . $pages_count . '&type=' . $type;
     $cur_page = $pages_count;
     header($url);

@@ -38,10 +38,10 @@
             <div class="profile__user-buttons user__buttons">
                 <a class="profile__user-button user__button user__button--subscription button button--main"
                    href="/subscribe.php?subscribe_user_id=<?= isset($user_info['id']) ? clear_input($user_info['id']) : '' ?>">
-                    <?= !isset($is_subscribed) ? 'Подписаться' : 'Отписаться'?>
+                    <?= $is_subscribed ? 'Отписаться' : 'Подписаться'?>
                 </a>
-                <?php if (isset($is_subscribed)): ?>
-                    <a class="profile__user-button user__button user__button--writing button button--green" href="#">Сообщение</a>
+                <?php if ($is_subscribed): ?>
+                    <a class="profile__user-button user__button user__button--writing button button--green" href="/messages.php">Сообщение</a>
                 <?php endif; ?>
             </div>
         </div>
