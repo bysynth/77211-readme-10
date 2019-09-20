@@ -123,15 +123,19 @@ function is_type_exist($arrays, $type)
 
 function common_get_posts_sql()
 {
-    return 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon,
-            u.id as user_id, u.name, u.avatar,
-            (SELECT COUNT(l.id) as COUNT FROM likes AS l WHERE post_id = p.id) AS likes_count,
-            (SELECT COUNT(c.id) as COUNT FROM comments AS c WHERE post_id = p.id) AS comments_count
+    return 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, p.is_repost, p.was_reposted, 
+            p.original_author_id, ct.type_name, ct.type_icon, u.id as user_id, u.name, u.avatar, 
+            us.name AS original_author_name, 
+            us.avatar AS original_author_avatar,
+            (SELECT COUNT(l.id) FROM likes AS l WHERE post_id = p.id) AS likes_count,
+            (SELECT COUNT(c.id) FROM comments AS c WHERE post_id = p.id) AS comments_count
             FROM posts AS p
 	        JOIN content_types AS ct
    	            ON ct.id = p.content_type
             JOIN users as u
-                ON u.id = p.author_id ';
+                ON u.id = p.author_id
+            LEFT JOIN users AS us
+	            ON	us.id = p.original_author_id ';
 }
 
 function get_popular_posts($db_connect, $type = null, $offset = 0)
@@ -245,8 +249,8 @@ function append_hashtags_to_post($db_connect, $posts)
 
 function get_post($db_connect, $id)
 {
-    $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, p.views_counter, p.is_repost, p.content_type, 
-            p.author_id, u.name, u.avatar, u.created_at as user_created_at,
+    $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, p.views_counter, p.was_reposted, 
+            p.content_type, p.author_id, u.name, u.avatar, u.created_at as user_created_at,
             (SELECT COUNT(l.id) as COUNT FROM likes AS l WHERE post_id = p.id) AS likes_count,
             (SELECT COUNT(c.id) as COUNT FROM comments AS c WHERE post_id = p.id) AS comments_count
             FROM posts as p
