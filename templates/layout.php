@@ -188,7 +188,6 @@
                     </li>
                     <li>
                         <a class="header__post-button button button--transparent" href="/add.php">Пост</a>
-                        <!-- TODO: На странице add.php "Пост заменяется на "Закрыть", добавляется класс header__post-button--active, меняется значение атрибута href -->
                     </li>
                 </ul>
             </nav>
@@ -256,8 +255,6 @@
         </div>
     </div>
 </footer>
-<script src="/libs/dropzone.js"></script>
-<script src="/js/dropzone-settings.js"></script>
 <script src="/js/main-edited.js"></script>
 </body>
 </html>
