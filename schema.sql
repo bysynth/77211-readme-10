@@ -70,15 +70,22 @@ CREATE TABLE subscriptions
     FOREIGN KEY (subscribe_user_id) REFERENCES users (id)
 );
 
-CREATE TABLE messages
+CREATE TABLE contacts
 (
     id          INT(10) AUTO_INCREMENT PRIMARY KEY,
-    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    message     TEXT                               NOT NULL,
-    sender_id   INT(10)                            NOT NULL,
-    receiver_id INT(10)                            NOT NULL,
+    sender_id   INT(10) NOT NULL,
+    receiver_id INT(10) NOT NULL,
     FOREIGN KEY (sender_id) REFERENCES users (id),
     FOREIGN KEY (receiver_id) REFERENCES users (id)
+);
+
+CREATE TABLE messages
+(
+    id         INT(10) AUTO_INCREMENT PRIMARY KEY,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    message    TEXT                               NOT NULL,
+    contact_id INT(10)                            NOT NULL,
+    FOREIGN KEY (contact_id) REFERENCES contacts (id)
 );
 
 CREATE TABLE hashtags

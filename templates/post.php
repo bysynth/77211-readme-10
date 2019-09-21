@@ -198,7 +198,8 @@
                        href="/subscribe.php?subscribe_user_id=<?= $post['author_id'] ?? '' ?>">
                         <?= $is_subscribed ? 'Отписаться' : 'Подписаться'?></a>
                     <?php if ($is_subscribed): ?>
-                        <a class="user__button user__button--writing button button--green" href="/messages.php">Сообщение</a>
+                        <a class="user__button user__button--writing button button--green"
+                           href="/messages.php?user_id=<?= $post['author_id'] ?>">Сообщение</a>
                     <?php endif; ?>
                 </div>
             </div>

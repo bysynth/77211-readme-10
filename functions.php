@@ -805,3 +805,28 @@ function get_items_count($db_connect, $content_type = null) {
 
     return db_fetch_data($db_connect, $sql, $data, true)['count'];
 }
+
+function validate_message($db_connect, $message, $receiver_id, $sender_id)
+{
+    if (get_user_info($db_connect, $receiver_id)['id'] === $sender_id) {
+        return [
+            'input_name' => 'Комментарий',
+            'input_error_desc' => 'Не могу отправить сообщение.'
+        ];
+    }
+
+    if ($message === '') {
+        return [
+            'input_name' => 'Комментарий',
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    return null;
+}
+
+function get_contact_id($db_connect, $sender_id, $receiver_id) {
+    $sql = 'SELECT id FROM contacts WHERE sender_id = ? AND receiver_id = ?';
+
+    return db_fetch_data($db_connect, $sql, [$sender_id, $receiver_id], true)['id'];
+}

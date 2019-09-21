@@ -41,7 +41,8 @@
                     <?= $is_subscribed ? 'Отписаться' : 'Подписаться'?>
                 </a>
                 <?php if ($is_subscribed): ?>
-                    <a class="profile__user-button user__button user__button--writing button button--green" href="/messages.php">Сообщение</a>
+                    <a class="profile__user-button user__button user__button--writing button button--green"
+                       href="/messages.php?user_id=<?= $user_info['id']?>">Сообщение</a>
                 <?php endif; ?>
             </div>
         </div>
