@@ -347,12 +347,16 @@ function validate_filled($name, $input_name)
     return null;
 }
 
-// TODO: Переделать функцию is_url_exists
+function is_url_exists($url) {
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
-function is_url_exists($url)
-{
-    $response_code_header = @get_headers($url)[0] ?? '';
-    return stripos($response_code_header, '200 OK') !== false;
+    curl_exec($ch);
+    $returnedStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    return $returnedStatusCode === 200;
 }
 
 function check_link_mime_type($url, $input_name)
