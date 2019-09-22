@@ -11,7 +11,10 @@
             <b class="popular__sorting-caption sorting__caption">Сортировка:</b>
             <ul class="popular__sorting-list sorting__list">
                 <li class="sorting__item sorting__item--popular">
-                    <a class="sorting__link sorting__link--active" href="#">
+                    <a class="sorting__link
+                    <?= ($sort === null || $sort === 'popular-desc') ? 'sorting__link--active' : '' ?>
+                    <?= ($sort === 'popular-asc') ? 'sorting__link--active sorting__link--reverse' : '' ?>"
+                       href="<?= ($sort === null || $sort === 'popular-desc') ? $sort_url['popular-asc'] : $sort_url['popular-desc'] ?>">
                         <span>Популярность</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -19,7 +22,10 @@
                     </a>
                 </li>
                 <li class="sorting__item">
-                    <a class="sorting__link" href="#">
+                    <a class="sorting__link
+                    <?= ($sort === 'likes-desc') ? 'sorting__link--active' : '' ?>
+                    <?= ($sort === 'likes-asc') ? 'sorting__link--active sorting__link--reverse' : '' ?>"
+                       href="<?= ($sort === 'likes-desc') ? $sort_url['likes-asc'] : $sort_url['likes-desc'] ?>">
                         <span>Лайки</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -27,7 +33,10 @@
                     </a>
                 </li>
                 <li class="sorting__item">
-                    <a class="sorting__link" href="#">
+                    <a class="sorting__link
+                    <?= ($sort === 'date-desc') ? 'sorting__link--active' : '' ?>
+                    <?= ($sort === 'date-asc') ? 'sorting__link--active sorting__link--reverse' : '' ?>"
+                       href="<?= ($sort === 'date-desc') ? $sort_url['date-asc'] : $sort_url['date-desc'] ?>">
                         <span>Дата</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -150,7 +159,7 @@
                                title="Автор">
                                 <div class="post__avatar-wrapper">
                                     <?php if (isset($post['avatar'])): ?>
-                                        <img class="post__author-avatar" src="img/<?= clear_input($post['avatar']) ?>"
+                                        <img class="post__author-avatar" src="/uploads/<?= clear_input($post['avatar']) ?>"
                                              alt="Аватар пользователя">
                                     <?php endif; ?>
                                 </div>

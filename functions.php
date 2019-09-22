@@ -138,7 +138,7 @@ function common_get_posts_sql()
 	            ON	us.id = p.original_author_id ';
 }
 
-function get_popular_posts($db_connect, $type = null, $offset = 0)
+function get_popular_posts($db_connect, $type = null, $offset = 0, $sort = null)
 {
     $data = [];
     $sql = common_get_posts_sql();
@@ -146,7 +146,25 @@ function get_popular_posts($db_connect, $type = null, $offset = 0)
         $sql .= 'WHERE p.content_type = ? ';
         $data[] = $type;
     }
-    $sql .= 'ORDER BY p.views_counter DESC LIMIT 6 OFFSET ?;';
+    if (!isset($sort) || (isset($sort) && $sort === 'popular-desc')) {
+        $sql .= 'ORDER BY p.views_counter DESC LIMIT 6 OFFSET ?;';
+    }
+    if (isset($sort) && $sort === 'popular-asc') {
+        $sql .= 'ORDER BY p.views_counter ASC LIMIT 6 OFFSET ?;';
+    }
+    if (isset($sort) && $sort === 'likes-desc') {
+        $sql .= 'ORDER BY likes_count DESC LIMIT 6 OFFSET ?;';
+    }
+    if (isset($sort) && $sort === 'likes-asc') {
+        $sql .= 'ORDER BY likes_count ASC LIMIT 6 OFFSET ?;';
+    }
+    if (isset($sort) && $sort === 'date-desc') {
+        $sql .= 'ORDER BY p.created_at DESC LIMIT 6 OFFSET ?;';
+    }
+    if (isset($sort) && $sort === 'date-asc') {
+        $sql .= 'ORDER BY p.created_at ASC LIMIT 6 OFFSET ?;';
+    }
+//    $sql .= 'ORDER BY p.views_counter DESC LIMIT 6 OFFSET ?;';
     $data[] = $offset;
 
     $popular_posts = db_fetch_data($db_connect, $sql, $data);
