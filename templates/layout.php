@@ -142,7 +142,7 @@
                 </ul>
                 <ul class="header__user-nav">
                     <li class="header__profile">
-                        <a class="header__profile-link" href="#">
+                        <a class="header__profile-link" href="<?= '/profile.php?user=' . $_SESSION['user']['id'] ?>">
                             <div class="header__avatar-wrapper">
                                 <?php if (isset($_SESSION['user']['avatar'])): ?>
                                     <img class="header__profile-avatar" src="/uploads/<?= $_SESSION['user']['avatar'] ?>"
