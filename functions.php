@@ -1,4 +1,12 @@
 <?php
+
+/**
+ * @param $link
+ * @param $sql
+ * @param array $data
+ * @param bool $is_single
+ * @return array|null
+ */
 function db_fetch_data($link, $sql, $data = [], $is_single = false)
 {
     $stmt = db_get_prepare_stmt($link, $sql, $data);
@@ -17,6 +25,12 @@ function db_fetch_data($link, $sql, $data = [], $is_single = false)
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+/**
+ * @param $link
+ * @param $sql
+ * @param array $data
+ * @return bool|int|string
+ */
 function db_insert_data($link, $sql, $data = [])
 {
     $stmt = db_get_prepare_stmt($link, $sql, $data);
@@ -32,6 +46,11 @@ function db_insert_data($link, $sql, $data = [])
     return $result;
 }
 
+/**
+ * @param $db_connect
+ * @param $sql
+ * @return bool|mysqli_result
+ */
 function get_mysqli_result($db_connect, $sql)
 {
     $result = mysqli_query($db_connect, $sql);
@@ -43,6 +62,11 @@ function get_mysqli_result($db_connect, $sql)
     return $result;
 }
 
+/**
+ * @param $text
+ * @param int $length
+ * @return string
+ */
 function cut_text($text, $length = 300)
 {
     if (mb_strlen($text) > $length) {
@@ -62,11 +86,20 @@ function cut_text($text, $length = 300)
     return '<p>' . $text . '</p>';
 }
 
+/**
+ * @param $input
+ * @return string
+ */
 function clear_input($input)
 {
     return htmlspecialchars($input);
 }
 
+/**
+ * @param $time_data
+ * @param $word
+ * @return string
+ */
 function get_relative_time_format($time_data, $word)
 {
     $dt_past = date_create($time_data);
@@ -101,6 +134,10 @@ function get_relative_time_format($time_data, $word)
             'минут') . ' ' . $word;
 }
 
+/**
+ * @param $time_data
+ * @return false|string
+ */
 function get_custom_time_format($time_data)
 {
     $date_and_time = date_create($time_data);
@@ -108,6 +145,10 @@ function get_custom_time_format($time_data)
     return date_format($date_and_time, 'd.m.Y H:i');
 }
 
+/**
+ * @param $db_connect
+ * @return array|null
+ */
 function get_content_types($db_connect)
 {
     $sql = 'SELECT id, type_name, type_icon FROM content_types';
@@ -116,11 +157,19 @@ function get_content_types($db_connect)
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+/**
+ * @param $arrays
+ * @param $type
+ * @return bool
+ */
 function is_type_exist($arrays, $type)
 {
     return in_array($type, array_column($arrays, 'id'), true);
 }
 
+/**
+ * @return string
+ */
 function common_get_posts_sql()
 {
     return 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, p.is_repost, p.was_reposted, 
@@ -138,6 +187,13 @@ function common_get_posts_sql()
 	            ON	us.id = p.original_author_id ';
 }
 
+/**
+ * @param $db_connect
+ * @param null $type
+ * @param int $offset
+ * @param null $sort
+ * @return array|null
+ */
 function get_popular_posts($db_connect, $type = null, $offset = 0, $sort = null)
 {
     $data = [];
@@ -164,7 +220,7 @@ function get_popular_posts($db_connect, $type = null, $offset = 0, $sort = null)
     if (isset($sort) && $sort === 'date-asc') {
         $sql .= 'ORDER BY p.created_at ASC LIMIT 6 OFFSET ?;';
     }
-//    $sql .= 'ORDER BY p.views_counter DESC LIMIT 6 OFFSET ?;';
+
     $data[] = $offset;
 
     $popular_posts = db_fetch_data($db_connect, $sql, $data);
@@ -174,6 +230,12 @@ function get_popular_posts($db_connect, $type = null, $offset = 0, $sort = null)
 
 }
 
+/**
+ * @param $db_connect
+ * @param $author_id
+ * @param null $type
+ * @return array|null
+ */
 function get_feed_posts($db_connect, $author_id, $type = null)
 {
     $data = [$author_id];
@@ -190,6 +252,11 @@ function get_feed_posts($db_connect, $author_id, $type = null)
     return $feed_posts;
 }
 
+/**
+ * @param $db_connect
+ * @param $author_id
+ * @return array|null
+ */
 function get_profile_posts($db_connect, $author_id)
 {
     $data = [$author_id];
@@ -202,6 +269,11 @@ function get_profile_posts($db_connect, $author_id)
     return $profile_posts;
 }
 
+/**
+ * @param $db_connect
+ * @param $search_query
+ * @return array|null
+ */
 function get_fulltext_search_posts($db_connect, $search_query)
 {
     $data = [$search_query];
@@ -213,6 +285,11 @@ function get_fulltext_search_posts($db_connect, $search_query)
     return $search_results;
 }
 
+/**
+ * @param $db_connect
+ * @param $search_query
+ * @return array|null
+ */
 function get_tag_search_posts($db_connect, $search_query)
 {
     $tag = substr($search_query, 1);
@@ -228,6 +305,11 @@ function get_tag_search_posts($db_connect, $search_query)
     return db_fetch_data($db_connect, $sql, $data);
 }
 
+/**
+ * @param $db_connect
+ * @param $post_id
+ * @return array|null
+ */
 function get_post_hashtags($db_connect, $post_id)
 {
     $sql = "SELECT h.hashtag
@@ -251,6 +333,11 @@ function get_post_hashtags($db_connect, $post_id)
     return null;
 }
 
+/**
+ * @param $db_connect
+ * @param $posts
+ * @return array
+ */
 function append_hashtags_to_post($db_connect, $posts)
 {
     $result = [];
@@ -265,6 +352,11 @@ function append_hashtags_to_post($db_connect, $posts)
     return $result;
 }
 
+/**
+ * @param $db_connect
+ * @param $id
+ * @return array|null
+ */
 function get_post($db_connect, $id)
 {
     $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, p.views_counter, p.was_reposted, 
@@ -279,6 +371,11 @@ function get_post($db_connect, $id)
     return db_fetch_data($db_connect, $sql, [$id], true);
 }
 
+/**
+ * @param $db_connect
+ * @param $post_id
+ * @return array|null
+ */
 function get_comments($db_connect, $post_id)
 {
     $sql = 'SELECT c.created_at, c.comment, u.id as author_id, u.name, u.avatar  
@@ -291,6 +388,11 @@ function get_comments($db_connect, $post_id)
     return db_fetch_data($db_connect, $sql, [$post_id]);
 }
 
+/**
+ * @param $db_connect
+ * @param $user_id
+ * @return int|mixed
+ */
 function get_publications_count($db_connect, $user_id)
 {
     $sql = 'SELECT COUNT(id) as count
@@ -300,6 +402,11 @@ function get_publications_count($db_connect, $user_id)
     return db_fetch_data($db_connect, $sql, [$user_id], true)['count'] ?? 0;
 }
 
+/**
+ * @param $db_connect
+ * @param $user_id
+ * @return int|mixed
+ */
 function get_subscriptions_count($db_connect, $user_id)
 {
     $sql = 'SELECT COUNT(id) as count
@@ -309,6 +416,10 @@ function get_subscriptions_count($db_connect, $user_id)
     return db_fetch_data($db_connect, $sql, [$user_id], true)['count'] ?? 0;
 }
 
+/**
+ * @param $db_connect
+ * @return array
+ */
 function get_hashtags_from_db($db_connect)
 {
     $sql = 'SELECT hashtag FROM hashtags';
@@ -318,6 +429,10 @@ function get_hashtags_from_db($db_connect)
     return array_column($assoc_array, 'hashtag');
 }
 
+/**
+ * @param $db_connect
+ * @param $string_tags
+ */
 function db_insert_uniq_hashtags($db_connect, $string_tags)
 {
     $post_hashtags_array = explode(' ', $string_tags);
@@ -338,6 +453,11 @@ function db_insert_uniq_hashtags($db_connect, $string_tags)
     }
 }
 
+/**
+ * @param $db_connect
+ * @param $string_tags
+ * @param $post_id
+ */
 function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id)
 {
     $string_tags = mysqli_real_escape_string($db_connect, $string_tags);
@@ -348,11 +468,20 @@ function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id)
     get_mysqli_result($db_connect, $sql);
 }
 
+/**
+ * @param $name
+ * @return mixed|string
+ */
 function get_post_val($name)
 {
     return $_POST[$name] ?? '';
 }
 
+/**
+ * @param $name
+ * @param $input_name
+ * @return array|null
+ */
 function validate_filled($name, $input_name)
 {
     if (empty($name)) {
@@ -365,6 +494,10 @@ function validate_filled($name, $input_name)
     return null;
 }
 
+/**
+ * @param $url
+ * @return bool
+ */
 function is_url_exists($url)
 {
     $ch = curl_init($url);
@@ -378,6 +511,11 @@ function is_url_exists($url)
     return $returnedStatusCode === 200;
 }
 
+/**
+ * @param $url
+ * @param $input_name
+ * @return array|null
+ */
 function check_link_mime_type($url, $input_name)
 {
     $file = file_get_contents($url);
@@ -394,6 +532,11 @@ function check_link_mime_type($url, $input_name)
     return null;
 }
 
+/**
+ * @param $url
+ * @param $input_name
+ * @return array|null
+ */
 function validate_photo_url($url, $input_name)
 {
 
@@ -430,6 +573,11 @@ function validate_photo_url($url, $input_name)
     return null;
 }
 
+/**
+ * @param $file_data
+ * @param $input_name
+ * @return array|null
+ */
 function validate_uploaded_file($file_data, $input_name)
 {
     if ($_POST['photo-url'] !== '' && $file_data['error'] === UPLOAD_ERR_NO_FILE) {
@@ -470,6 +618,10 @@ function validate_uploaded_file($file_data, $input_name)
     return null;
 }
 
+/**
+ * @param $url
+ * @return string|null
+ */
 function get_link_file_ext($url)
 {
     $file = file_get_contents($url);
@@ -488,6 +640,11 @@ function get_link_file_ext($url)
     return null;
 }
 
+/**
+ * @param $url
+ * @param $input_name
+ * @return array|null
+ */
 function validate_video_url($url, $input_name)
 {
     if (empty($url)) {
@@ -514,6 +671,11 @@ function validate_video_url($url, $input_name)
     return null;
 }
 
+/**
+ * @param $url
+ * @param $input_name
+ * @return array|null
+ */
 function validate_link($url, $input_name)
 {
     if (empty($url)) {
@@ -533,6 +695,11 @@ function validate_link($url, $input_name)
     return null;
 }
 
+/**
+ * @param $db_connect
+ * @param $email
+ * @return bool
+ */
 function is_email_exists($db_connect, $email)
 {
     $email = mysqli_real_escape_string($db_connect, $email);
@@ -542,6 +709,12 @@ function is_email_exists($db_connect, $email)
     return $result > 0;
 }
 
+/**
+ * @param $db_connect
+ * @param $email
+ * @param $input_name
+ * @return array|null
+ */
 function validate_email($db_connect, $email, $input_name)
 {
     if (empty($email)) {
@@ -568,6 +741,12 @@ function validate_email($db_connect, $email, $input_name)
     return null;
 }
 
+/**
+ * @param $pass
+ * @param $pass_repeat
+ * @param $input_name
+ * @return array|null
+ */
 function validate_password_repeat($pass, $pass_repeat, $input_name)
 {
     if (empty($pass_repeat)) {
@@ -587,6 +766,11 @@ function validate_password_repeat($pass, $pass_repeat, $input_name)
     return null;
 }
 
+/**
+ * @param $file_data
+ * @param $input_name
+ * @return array|null
+ */
 function validate_avatar($file_data, $input_name)
 {
     if ($file_data['name'] === '') {
@@ -620,6 +804,12 @@ function validate_avatar($file_data, $input_name)
     return null;
 }
 
+/**
+ * @param $db_connect
+ * @param $email
+ * @param $password
+ * @return bool
+ */
 function check_user_password($db_connect, $email, $password)
 {
     $email = mysqli_real_escape_string($db_connect, $email);
@@ -629,6 +819,12 @@ function check_user_password($db_connect, $email, $password)
     return password_verify($password, $result_password);
 }
 
+/**
+ * @param $db_connect
+ * @param $email
+ * @param $input_name
+ * @return array|null
+ */
 function validate_login_email($db_connect, $email, $input_name)
 {
     if (empty($email)) {
@@ -655,6 +851,13 @@ function validate_login_email($db_connect, $email, $input_name)
     return null;
 }
 
+/**
+ * @param $db_connect
+ * @param $email
+ * @param $password
+ * @param $input_name
+ * @return array|null
+ */
 function validate_login_password($db_connect, $email, $password, $input_name)
 {
     if (empty($password)) {
@@ -674,6 +877,10 @@ function validate_login_password($db_connect, $email, $password, $input_name)
     return null;
 }
 
+/**
+ * @param $db_connect
+ * @return array
+ */
 function login($db_connect)
 {
     $errors = [];
@@ -722,6 +929,11 @@ function login($db_connect)
     return $errors;
 }
 
+/**
+ * @param $db_connect
+ * @param $user_id
+ * @return array|null
+ */
 function get_user_info($db_connect, $user_id)
 {
     $sql = 'SELECT id, created_at, name, avatar, email FROM users WHERE id = ?';
@@ -729,12 +941,22 @@ function get_user_info($db_connect, $user_id)
     return db_fetch_data($db_connect, $sql, [$user_id], true);
 }
 
+/**
+ * @param $db_connect
+ * @param $post_id
+ */
 function change_post_views_count($db_connect, $post_id)
 {
     $sql = "UPDATE posts SET views_counter = views_counter + 1 WHERE id = $post_id";
     get_mysqli_result($db_connect, $sql);
 }
 
+/**
+ * @param $db_connect
+ * @param $author_id
+ * @param $subscribe_user_id
+ * @return bool
+ */
 function is_subscribed($db_connect, $author_id, $subscribe_user_id)
 {
     $sql = 'SELECT * FROM subscriptions WHERE author_id = ? AND subscribe_user_id = ?';
@@ -742,6 +964,11 @@ function is_subscribed($db_connect, $author_id, $subscribe_user_id)
     return db_fetch_data($db_connect, $sql, [$author_id, $subscribe_user_id], true) !== null;
 }
 
+/**
+ * @param $db_connect
+ * @param $post_id
+ * @return bool
+ */
 function is_post_exists($db_connect, $post_id)
 {
     $sql = 'SELECT id FROM posts WHERE id = ?';
@@ -749,6 +976,12 @@ function is_post_exists($db_connect, $post_id)
     return db_fetch_data($db_connect, $sql, [$post_id], true) !== null;
 }
 
+/**
+ * @param $db_connect
+ * @param $user_id
+ * @param $post_id
+ * @return bool
+ */
 function is_like_exists($db_connect, $user_id, $post_id)
 {
     $sql = 'SELECT id FROM likes WHERE user_id = ? AND post_id = ?';
@@ -756,6 +989,12 @@ function is_like_exists($db_connect, $user_id, $post_id)
     return db_fetch_data($db_connect, $sql, [$user_id, $post_id], true) !== null;
 }
 
+/**
+ * @param $db_connect
+ * @param $comment
+ * @param $post_id
+ * @return array|null
+ */
 function validate_comment($db_connect, $comment, $post_id)
 {
     if (!is_post_exists($db_connect, $post_id)) {
@@ -782,6 +1021,10 @@ function validate_comment($db_connect, $comment, $post_id)
     return null;
 }
 
+/**
+ * @param $youtube_link
+ * @return string|null
+ */
 function get_youtube_cover_url($youtube_link)
 {
     $id = extract_youtube_id($youtube_link);
@@ -793,6 +1036,11 @@ function get_youtube_cover_url($youtube_link)
     return null;
 }
 
+/**
+ * @param $db_connect
+ * @param $profile_id
+ * @return array|null
+ */
 function get_profile_likes_list($db_connect, $profile_id)
 {
     $sql = 'SELECT l.created_at, l.post_id, u.id as user_id, u.name, u.avatar, p.content, p.content_type
@@ -806,6 +1054,11 @@ function get_profile_likes_list($db_connect, $profile_id)
     return db_fetch_data($db_connect, $sql, [$profile_id]);
 }
 
+/**
+ * @param $db_connect
+ * @param $profile_id
+ * @return array|null
+ */
 function get_user_subscriptions($db_connect, $profile_id)
 {
     $sql = 'SELECT s.subscribe_user_id as user_id, u.name, u.avatar, u.created_at,
@@ -818,6 +1071,11 @@ function get_user_subscriptions($db_connect, $profile_id)
     return db_fetch_data($db_connect, $sql, [$profile_id]);
 }
 
+/**
+ * @param $db_connect
+ * @param null $content_type
+ * @return mixed
+ */
 function get_items_count($db_connect, $content_type = null)
 {
     $data = [];
@@ -830,6 +1088,13 @@ function get_items_count($db_connect, $content_type = null)
     return db_fetch_data($db_connect, $sql, $data, true)['count'];
 }
 
+/**
+ * @param $db_connect
+ * @param $message
+ * @param $receiver_id
+ * @param $sender_id
+ * @return array|null
+ */
 function validate_message($db_connect, $message, $receiver_id, $sender_id)
 {
     if (get_user_info($db_connect, $receiver_id)['id'] === $sender_id) {
@@ -849,6 +1114,12 @@ function validate_message($db_connect, $message, $receiver_id, $sender_id)
     return null;
 }
 
+/**
+ * @param $db_connect
+ * @param $sender_id
+ * @param $receiver_id
+ * @return mixed
+ */
 function get_contact_id($db_connect, $sender_id, $receiver_id)
 {
     $sql = 'SELECT id FROM contacts WHERE sender_id = ? AND receiver_id = ?';
@@ -856,6 +1127,11 @@ function get_contact_id($db_connect, $sender_id, $receiver_id)
     return db_fetch_data($db_connect, $sql, [$sender_id, $receiver_id], true)['id'];
 }
 
+/**
+ * @param $db_connect
+ * @param $user_id
+ * @return array|null
+ */
 function get_subscribers_list($db_connect, $user_id)
 {
     $sql = 'SELECT u.name, u.email FROM subscriptions AS s
