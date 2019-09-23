@@ -365,7 +365,8 @@ function validate_filled($name, $input_name)
     return null;
 }
 
-function is_url_exists($url) {
+function is_url_exists($url)
+{
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_NOBODY, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -817,7 +818,8 @@ function get_user_subscriptions($db_connect, $profile_id)
     return db_fetch_data($db_connect, $sql, [$profile_id]);
 }
 
-function get_items_count($db_connect, $content_type = null) {
+function get_items_count($db_connect, $content_type = null)
+{
     $data = [];
     $sql = 'SELECT COUNT(*) AS count FROM posts ';
     if (isset($content_type)) {
@@ -847,8 +849,19 @@ function validate_message($db_connect, $message, $receiver_id, $sender_id)
     return null;
 }
 
-function get_contact_id($db_connect, $sender_id, $receiver_id) {
+function get_contact_id($db_connect, $sender_id, $receiver_id)
+{
     $sql = 'SELECT id FROM contacts WHERE sender_id = ? AND receiver_id = ?';
 
     return db_fetch_data($db_connect, $sql, [$sender_id, $receiver_id], true)['id'];
+}
+
+function get_subscribers_list($db_connect, $user_id)
+{
+    $sql = 'SELECT u.name, u.email FROM subscriptions AS s
+            JOIN users AS u 
+                ON u.id = s.author_id
+            WHERE s.subscribe_user_id = ?';
+
+    return db_fetch_data($db_connect, $sql, [$user_id]);
 }

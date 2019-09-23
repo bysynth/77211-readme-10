@@ -13,6 +13,8 @@ $type = $_GET['type'] ?? null;
 $content_types = get_content_types($db_connect);
 $errors = [];
 
+$subscribers_list = get_subscribers_list($db_connect, $author_id);
+
 if (!isset($type) || is_type_exist($content_types, $type) === false) {
     $url = 'Location: /add.php?type=1';
     header($url);
@@ -136,8 +138,9 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
         if ($post_type === 'text') {
             $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, ?, 1)';
+            $post_name = $post['text-heading'];
             $data = [
-                $post['text-heading'],
+                $post_name,
                 $post['text-content'],
                 $author_id
             ];
@@ -145,8 +148,9 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
         if ($post_type === 'quote') {
             $sql = 'INSERT INTO posts (title, content, cite_author, author_id, content_type) VALUES (?, ?, ?, ?, 2)';
+            $post_name = $post['quote-heading'];
             $data = [
-                $post['quote-heading'],
+                $post_name,
                 $post['quote-content'],
                 $post['quote-author'],
                 $author_id
@@ -177,8 +181,9 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
             }
 
             $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, ?, 3)';
+            $post_name = $post['photo-heading'];
             $data = [
-                $post['photo-heading'],
+                $post_name,
                 $post['path'],
                 $author_id
             ];
@@ -186,8 +191,9 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
         if ($post_type === 'video') {
             $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, ?, 4)';
+            $post_name = $post['video-heading'];
             $data = [
-                $post['video-heading'],
+                $post_name,
                 $post['video-url'],
                 $author_id
             ];
@@ -195,8 +201,9 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
         if ($post_type === 'link') {
             $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, ?, 5)';
+            $post_name = $post['link-heading'];
             $data = [
-                $post['link-heading'],
+                $post_name,
                 $post['link-url'],
                 $author_id
             ];
@@ -207,6 +214,20 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         if ($post['tags'] !== '') {
             db_insert_uniq_hashtags($db_connect, $post['tags']);
             db_insert_hashtag_posts_connection($db_connect, $post['tags'], $post_id);
+        }
+
+        $message = new Swift_Message();
+        $message->setFrom(['keks@phpdemo.ru' => 'README']);
+        $message_subject = 'Новая публикация от пользователя ' . $_SESSION['user']['name'];
+        $message->setSubject($message_subject);
+
+        foreach ($subscribers_list as $subscriber){
+            $message_content = '«Здравствуйте, ' . $subscriber['name'] . '. Пользователь ' . $_SESSION['user']['name'] .
+            ' только что опубликовал новую запись «' . $post_name .'». Посмотрите её на странице пользователя: ' .
+            'http://readme/profile.php?user=' . $_SESSION['user']['id'];
+            $message->setBody($message_content, 'text/plain');
+            $message->setTo([$subscriber['email'] => $subscriber['name']]);
+            $mailer->send($message);
         }
 
         header('Location: post.php?id=' . $post_id);
