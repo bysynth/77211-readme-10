@@ -16,3 +16,8 @@ if (!$db_connect) {
     $connect_error = 'Ошибка №' . mysqli_connect_errno() . ' -- ' . mysqli_connect_error();
     exit($connect_error);
 }
+
+$transport = new Swift_SmtpTransport('phpdemo.ru', 25);
+$transport->setUsername('keks@phpdemo.ru');
+$transport->setPassword('htmlacademy');
+$mailer = new Swift_Mailer($transport);

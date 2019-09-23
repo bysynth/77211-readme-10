@@ -16,9 +16,22 @@ if (!isset($subscribe_user_info['id']) || $subscribe_user_info['id'] !== $subscr
     exit('Ошибка -- Что-то пошло не так');
 }
 
+$recipient = [$subscribe_user_info['email'] => $subscribe_user_info['name']];
+$message_content = 'Здравствуйте, '. $subscribe_user_info['name'] . '. На вас подписался новый пользователь ' . $_SESSION['user']['name'] .
+    '. Вот ссылка на его профиль: ' . 'http://readme/profile.php?user=' . $_SESSION['user']['id'];
+
+$message = new Swift_Message();
+$message->setSubject('У вас новый подписчик');
+$message->setFrom(['keks@phpdemo.ru' => 'README']);
+$message->setTo($recipient);
+$message->setBody($message_content, 'text/plain');
+
+
 if (is_subscribed($db_connect, $author_id, $subscribe_user_id) === false) {
     $sql = 'INSERT INTO subscriptions (author_id, subscribe_user_id) VALUES (?, ?)';
     db_insert_data($db_connect, $sql, [$author_id, $subscribe_user_id]);
+
+    $mailer->send($message);
 
     header('Location: /profile.php?user=' . $subscribe_user_id);
 

@@ -723,7 +723,7 @@ function login($db_connect)
 
 function get_user_info($db_connect, $user_id)
 {
-    $sql = 'SELECT id, created_at, name, avatar FROM users WHERE id = ?';
+    $sql = 'SELECT id, created_at, name, avatar, email FROM users WHERE id = ?';
 
     return db_fetch_data($db_connect, $sql, [$user_id], true);
 }
