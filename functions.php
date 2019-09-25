@@ -172,7 +172,7 @@ function is_type_exist($arrays, $type)
  */
 function common_get_posts_sql()
 {
-    return 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, p.is_repost, p.was_reposted, 
+    return 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, p.is_repost, p.reposts_counter, 
             p.original_author_id, ct.type_name, ct.type_icon, u.id as user_id, u.name, u.avatar, 
             us.name AS original_author_name, 
             us.avatar AS original_author_avatar,
@@ -359,7 +359,7 @@ function append_hashtags_to_post($db_connect, $posts)
  */
 function get_post($db_connect, $id)
 {
-    $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, p.views_counter, p.was_reposted, 
+    $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, p.views_counter, p.reposts_counter, 
             p.content_type, p.author_id, u.name, u.avatar, u.created_at as user_created_at,
             (SELECT COUNT(l.id) as COUNT FROM likes AS l WHERE post_id = p.id) AS likes_count,
             (SELECT COUNT(c.id) as COUNT FROM comments AS c WHERE post_id = p.id) AS comments_count

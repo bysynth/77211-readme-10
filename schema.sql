@@ -31,7 +31,7 @@ CREATE TABLE posts
     cite_author        VARCHAR(255)                         NULL,
     views_counter      INT(12)    DEFAULT 0                 NOT NULL,
     is_repost          TINYINT(1) DEFAULT 0                 NOT NULL,
-    was_reposted       INT(12)    DEFAULT 0                 NOT NULL,
+    reposts_counter    INT(12)    DEFAULT 0                 NOT NULL,
     author_id          INT(10)                              NOT NULL,
     original_author_id INT(10)                              NULL,
     content_type       INT(10)                              NOT NULL,

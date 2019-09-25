@@ -24,7 +24,7 @@ if (is_post_exists($db_connect, $post_id)) {
             (created_at, title, content, cite_author, is_repost, author_id, original_author_id, content_type)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
 
-    $sql_update_repost_cnt = "UPDATE posts SET was_reposted = was_reposted + 1 WHERE id = $post_id";
+    $sql_update_repost_cnt = "UPDATE posts SET reposts_counter = reposts_counter + 1 WHERE id = $post_id";
 
     mysqli_query($db_connect, 'START TRANSACTION');
 

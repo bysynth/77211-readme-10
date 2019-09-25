@@ -115,8 +115,8 @@
                                     <svg class="post__indicator-icon" width="19" height="17">
                                         <use xlink:href="#icon-repost"></use>
                                     </svg>
-                                    <?php if (isset($post['was_reposted'])): ?>
-                                        <span><?= $post['was_reposted'] ?></span>
+                                    <?php if (isset($post['reposts_counter'])): ?>
+                                        <span><?= $post['reposts_counter'] ?></span>
                                         <span class="visually-hidden">количество репостов</span>
                                     <?php endif ?>
                                 </a>
