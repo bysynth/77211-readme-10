@@ -216,18 +216,8 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
             db_insert_hashtag_posts_connection($db_connect, $post['tags'], $post_id);
         }
 
-        $message = new Swift_Message();
-        $message->setFrom(['keks@phpdemo.ru' => 'README']);
-        $message_subject = 'Новая публикация от пользователя ' . $_SESSION['user']['name'];
-        $message->setSubject($message_subject);
-
         foreach ($subscribers_list as $subscriber){
-            $message_content = '«Здравствуйте, ' . $subscriber['name'] . '. Пользователь ' . $_SESSION['user']['name'] .
-            ' только что опубликовал новую запись «' . $post_name .'». Посмотрите её на странице пользователя: ' .
-            'http://readme/profile.php?user=' . $_SESSION['user']['id'];
-            $message->setBody($message_content, 'text/plain');
-            $message->setTo([$subscriber['email'] => $subscriber['name']]);
-            $mailer->send($message);
+            post_notification($mailer, $_SESSION['user'], $subscriber, $post_name);
         }
 
         header('Location: post.php?id=' . $post_id);

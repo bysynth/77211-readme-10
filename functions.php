@@ -1174,3 +1174,70 @@ function get_subscribers_list($db_connect, $user_id)
 
     return db_fetch_data($db_connect, $sql, [$user_id]);
 }
+
+/**
+ * @param $mailer
+ * @param $recipient
+ * @param $subject
+ * @param $content
+ * @return mixed
+ */
+function send_email($mailer, $recipient, $subject, $content)
+{
+    $message = new Swift_Message();
+    $message->setSubject($subject);
+    $message->setBody($content, 'text/html');
+    $message->setFrom(['keks@phpdemo.ru' => 'README']);
+    $message->setTo($recipient);
+
+    return $mailer->send($message);
+}
+
+/**
+ * @param $mailer
+ * @param $sender
+ * @param $receiver
+ * @return mixed
+ */
+function subscribe_notification($mailer, $sender, $receiver)
+{
+    if (!isset($sender['name'], $sender['id'], $receiver['email'], $receiver['name'])) {
+        exit('Невозможность отправить письмо');
+    }
+
+    $recipient = [$receiver['email'] => $receiver['name']];
+    $subject = 'У вас новый подписчик';
+
+    $content = <<<TXT
+        Здравствуйте, {$receiver['name']}.<br>
+        На вас подписался новый пользователь {$sender['name']}.<br>
+        Вот ссылка на его профиль: <a href="http://readme/profile.php?user={$sender['id']}">http://readme/profile.php?user={$sender['id']}</a>
+TXT;
+
+    return send_email($mailer, $recipient, $subject, $content);
+}
+
+/**
+ * @param $mailer
+ * @param $sender
+ * @param $receiver
+ * @param $post_name
+ * @return mixed
+ */
+function post_notification($mailer, $sender, $receiver, $post_name)
+{
+    if (!isset($sender['name'], $sender['id'], $receiver['email'], $receiver['name'])) {
+        exit('Невозможность отправить письмо');
+    }
+
+    $recipient = [$receiver['email'] => $receiver['name']];
+    $subject = 'Новая публикация от пользователя ' . $sender['name'];
+
+    $content = <<<TXT
+        Здравствуйте, {$receiver['name']}.<br>
+        Пользователь {$sender['name']} только что опубликовал новую запись «{$post_name}».<br>
+        Посмотрите её на странице пользователя: <a href="http://readme/profile.php?user={$sender['id']}">http://readme/profile.php?user={$sender['id']}</a>
+TXT;
+
+    return send_email($mailer, $recipient, $subject, $content);
+}
