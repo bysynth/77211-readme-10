@@ -24,7 +24,7 @@
                 </ul>
             </div>
             <div class="adding-post__tab-content">
-                <?php if (isset($type) && $type === '1'): ?>
+                <?php if (isset($type) && $type === POST_TYPE_TEXT): ?>
                     <section class="adding-post__text tabs__content tabs__content--active">
                         <h2 class="visually-hidden">Форма добавления текста</h2>
                         <form class="adding-post__form form" method="post">
@@ -64,7 +64,7 @@
                     </section>
                 <?php endif ?>
 
-                <?php if (isset($type) && $type === '2'): ?>
+                <?php if (isset($type) && $type === POST_TYPE_QUOTE): ?>
                     <section class="adding-post__quote tabs__content tabs__content--active">
                         <h2 class="visually-hidden">Форма добавления цитаты</h2>
                         <form class="adding-post__form form" method="post">
@@ -109,7 +109,7 @@
                     </section>
                 <?php endif ?>
 
-                <?php if (isset($type) && $type === '3'): ?>
+                <?php if (isset($type) && $type === POST_TYPE_PHOTO): ?>
                     <section class="adding-post__photo tabs__content tabs__content--active">
                         <h2 class="visually-hidden">Форма добавления фото</h2>
                         <form class="adding-post__form form" method="post"
@@ -154,7 +154,7 @@
                     </section>
                 <?php endif ?>
 
-                <?php if (isset($type) && $type === '4'): ?>
+                <?php if (isset($type) && $type === POST_TYPE_VIDEO): ?>
                     <section class="adding-post__video tabs__content tabs__content--active">
                         <h2 class="visually-hidden">Форма добавления видео</h2>
                         <form class="adding-post__form form" method="post"
@@ -195,7 +195,7 @@
                     </section>
                 <?php endif ?>
 
-                <?php if (isset($type) && $type === '5'): ?>
+                <?php if (isset($type) && $type === POST_TYPE_LINK): ?>
                     <section class="adding-post__link tabs__content tabs__content--active">
                         <h2 class="visually-hidden">Форма добавления ссылки</h2>
                         <form class="adding-post__form form" method="post">

@@ -16,8 +16,7 @@ $errors = [];
 $subscribers_list = get_subscribers_list($db_connect, $author_id);
 
 if (!isset($type) || is_type_exist($content_types, $type) === false) {
-    $url = 'Location: /add.php?type=1';
-    header($url);
+    $type = POST_TYPE_TEXT;
 }
 
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -236,8 +235,7 @@ $layout_content = include_template('layout.php',
     [
         'content' => $page_content,
         'main_class' => 'page__main--adding-post',
-        'title' => 'readme: добавление публикации',
-        'user_name' => $user_name
+        'title' => 'readme: добавление публикации'
     ]);
 
 print($layout_content);
