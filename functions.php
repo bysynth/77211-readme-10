@@ -1,8 +1,7 @@
 <?php
-
 /**
- * @param $link
- * @param $sql
+ * @param mysqli $link
+ * @param string $sql
  * @param array $data
  * @param bool $is_single
  * @return array|null
@@ -26,8 +25,8 @@ function db_fetch_data($link, $sql, $data = [], $is_single = false)
 }
 
 /**
- * @param $link
- * @param $sql
+ * @param mysqli $link
+ * @param string $sql
  * @param array $data
  * @return bool|int|string
  */
@@ -47,8 +46,8 @@ function db_insert_data($link, $sql, $data = [])
 }
 
 /**
- * @param $db_connect
- * @param $sql
+ * @param mysqli $db_connect
+ * @param string $sql
  * @return bool|mysqli_result
  */
 function get_mysqli_result($db_connect, $sql)
@@ -63,7 +62,7 @@ function get_mysqli_result($db_connect, $sql)
 }
 
 /**
- * @param $text
+ * @param string $text
  * @param int $length
  * @return string
  */
@@ -87,7 +86,7 @@ function cut_text($text, $length = 300)
 }
 
 /**
- * @param $input
+ * @param string $input
  * @return string
  */
 function clear_input($input)
@@ -96,8 +95,8 @@ function clear_input($input)
 }
 
 /**
- * @param $time_data
- * @param $word
+ * @param string $time_data
+ * @param string $word
  * @return string
  */
 function get_relative_time_format($time_data, $word)
@@ -135,7 +134,7 @@ function get_relative_time_format($time_data, $word)
 }
 
 /**
- * @param $time_data
+ * @param string $time_data
  * @return false|string
  */
 function get_custom_time_format($time_data)
@@ -146,7 +145,7 @@ function get_custom_time_format($time_data)
 }
 
 /**
- * @param $db_connect
+ * @param mysqli $db_connect
  * @return array|null
  */
 function get_content_types($db_connect)
@@ -158,8 +157,8 @@ function get_content_types($db_connect)
 }
 
 /**
- * @param $arrays
- * @param $type
+ * @param array $arrays
+ * @param string $type
  * @return bool
  */
 function is_type_exist($arrays, $type)
@@ -188,10 +187,10 @@ function common_get_posts_sql()
 }
 
 /**
- * @param $db_connect
- * @param null $type
+ * @param mysqli $db_connect
+ * @param string|null $type
  * @param int $offset
- * @param null $sort
+ * @param string|null $sort
  * @return array|null
  */
 function get_popular_posts($db_connect, $type = null, $offset = 0, $sort = null)
@@ -231,9 +230,9 @@ function get_popular_posts($db_connect, $type = null, $offset = 0, $sort = null)
 }
 
 /**
- * @param $db_connect
- * @param $author_id
- * @param null $type
+ * @param mysqli $db_connect
+ * @param string $author_id
+ * @param string|null $type
  * @return array|null
  */
 function get_feed_posts($db_connect, $author_id, $type = null)
@@ -253,8 +252,8 @@ function get_feed_posts($db_connect, $author_id, $type = null)
 }
 
 /**
- * @param $db_connect
- * @param $author_id
+ * @param mysqli $db_connect
+ * @param string $author_id
  * @return array|null
  */
 function get_profile_posts($db_connect, $author_id)
@@ -270,8 +269,8 @@ function get_profile_posts($db_connect, $author_id)
 }
 
 /**
- * @param $db_connect
- * @param $search_query
+ * @param mysqli $db_connect
+ * @param string $search_query
  * @return array|null
  */
 function get_fulltext_search_posts($db_connect, $search_query)
@@ -286,8 +285,8 @@ function get_fulltext_search_posts($db_connect, $search_query)
 }
 
 /**
- * @param $db_connect
- * @param $search_query
+ * @param mysqli $db_connect
+ * @param string $search_query
  * @return array|null
  */
 function get_tag_search_posts($db_connect, $search_query)
@@ -306,8 +305,8 @@ function get_tag_search_posts($db_connect, $search_query)
 }
 
 /**
- * @param $db_connect
- * @param $post_id
+ * @param mysqli $db_connect
+ * @param string $post_id
  * @return array|null
  */
 function get_post_hashtags($db_connect, $post_id)
@@ -334,8 +333,8 @@ function get_post_hashtags($db_connect, $post_id)
 }
 
 /**
- * @param $db_connect
- * @param $posts
+ * @param mysqli $db_connect
+ * @param array $posts
  * @return array
  */
 function append_hashtags_to_post($db_connect, $posts)
@@ -353,8 +352,8 @@ function append_hashtags_to_post($db_connect, $posts)
 }
 
 /**
- * @param $db_connect
- * @param $id
+ * @param mysqli $db_connect
+ * @param int $id
  * @return array|null
  */
 function get_post($db_connect, $id)
@@ -372,8 +371,8 @@ function get_post($db_connect, $id)
 }
 
 /**
- * @param $db_connect
- * @param $post_id
+ * @param mysqli $db_connect
+ * @param int $post_id
  * @return array|null
  */
 function get_comments($db_connect, $post_id)
@@ -389,8 +388,8 @@ function get_comments($db_connect, $post_id)
 }
 
 /**
- * @param $db_connect
- * @param $user_id
+ * @param mysqli $db_connect
+ * @param string $user_id
  * @return int|mixed
  */
 function get_publications_count($db_connect, $user_id)
@@ -403,8 +402,8 @@ function get_publications_count($db_connect, $user_id)
 }
 
 /**
- * @param $db_connect
- * @param $user_id
+ * @param mysqli $db_connect
+ * @param string $user_id
  * @return int|mixed
  */
 function get_subscriptions_count($db_connect, $user_id)
@@ -417,7 +416,7 @@ function get_subscriptions_count($db_connect, $user_id)
 }
 
 /**
- * @param $db_connect
+ * @param mysqli $db_connect
  * @return array
  */
 function get_hashtags_from_db($db_connect)
@@ -430,8 +429,8 @@ function get_hashtags_from_db($db_connect)
 }
 
 /**
- * @param $db_connect
- * @param $string_tags
+ * @param mysqli $db_connect
+ * @param string $string_tags
  */
 function db_insert_uniq_hashtags($db_connect, $string_tags)
 {
@@ -454,9 +453,9 @@ function db_insert_uniq_hashtags($db_connect, $string_tags)
 }
 
 /**
- * @param $db_connect
- * @param $string_tags
- * @param $post_id
+ * @param mysqli $db_connect
+ * @param string $string_tags
+ * @param mixed $post_id
  */
 function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id)
 {
@@ -469,7 +468,7 @@ function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id)
 }
 
 /**
- * @param $name
+ * @param string $name
  * @return mixed|string
  */
 function get_post_val($name)
@@ -478,8 +477,8 @@ function get_post_val($name)
 }
 
 /**
- * @param $name
- * @param $input_name
+ * @param string $name
+ * @param string $input_name
  * @return array|null
  */
 function validate_filled($name, $input_name)
@@ -495,7 +494,7 @@ function validate_filled($name, $input_name)
 }
 
 /**
- * @param $url
+ * @param string $url
  * @return bool
  */
 function is_url_exists($url)
@@ -512,8 +511,8 @@ function is_url_exists($url)
 }
 
 /**
- * @param $url
- * @param $input_name
+ * @param string $url
+ * @param string $input_name
  * @return array|null
  */
 function check_link_mime_type($url, $input_name)
@@ -533,8 +532,8 @@ function check_link_mime_type($url, $input_name)
 }
 
 /**
- * @param $url
- * @param $input_name
+ * @param string $url
+ * @param string $input_name
  * @return array|null
  */
 function validate_photo_url($url, $input_name)
@@ -574,8 +573,8 @@ function validate_photo_url($url, $input_name)
 }
 
 /**
- * @param $file_data
- * @param $input_name
+ * @param array|null $file_data
+ * @param string $input_name
  * @return array|null
  */
 function validate_uploaded_file($file_data, $input_name)
@@ -619,7 +618,7 @@ function validate_uploaded_file($file_data, $input_name)
 }
 
 /**
- * @param $url
+ * @param string $url
  * @return string|null
  */
 function get_link_file_ext($url)
@@ -641,8 +640,8 @@ function get_link_file_ext($url)
 }
 
 /**
- * @param $url
- * @param $input_name
+ * @param string $url
+ * @param string $input_name
  * @return array|null
  */
 function validate_video_url($url, $input_name)
@@ -672,8 +671,8 @@ function validate_video_url($url, $input_name)
 }
 
 /**
- * @param $url
- * @param $input_name
+ * @param string $url
+ * @param string $input_name
  * @return array|null
  */
 function validate_link($url, $input_name)
@@ -696,8 +695,8 @@ function validate_link($url, $input_name)
 }
 
 /**
- * @param $db_connect
- * @param $email
+ * @param mysqli $db_connect
+ * @param string $email
  * @return bool
  */
 function is_email_exists($db_connect, $email)
@@ -710,8 +709,8 @@ function is_email_exists($db_connect, $email)
 }
 
 /**
- * @param $db_connect
- * @param $login
+ * @param mysqli $db_connect
+ * @param string $login
  * @return bool
  */
 function is_login_exists($db_connect, $login)
@@ -724,9 +723,9 @@ function is_login_exists($db_connect, $login)
 }
 
 /**
- * @param $db_connect
- * @param $email
- * @param $input_name
+ * @param mysqli $db_connect
+ * @param string $email
+ * @param string $input_name
  * @return array|null
  */
 function validate_email($db_connect, $email, $input_name)
@@ -755,6 +754,12 @@ function validate_email($db_connect, $email, $input_name)
     return null;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $login
+ * @param string $input_name
+ * @return array|null
+ */
 function validate_login($db_connect, $login, $input_name)
 {
     if (empty($login)) {
@@ -775,9 +780,9 @@ function validate_login($db_connect, $login, $input_name)
 }
 
 /**
- * @param $pass
- * @param $pass_repeat
- * @param $input_name
+ * @param string $pass
+ * @param string $pass_repeat
+ * @param string $input_name
  * @return array|null
  */
 function validate_password_repeat($pass, $pass_repeat, $input_name)
@@ -800,8 +805,8 @@ function validate_password_repeat($pass, $pass_repeat, $input_name)
 }
 
 /**
- * @param $file_data
- * @param $input_name
+ * @param array|null $file_data
+ * @param string $input_name
  * @return array|null
  */
 function validate_avatar($file_data, $input_name)
@@ -838,9 +843,9 @@ function validate_avatar($file_data, $input_name)
 }
 
 /**
- * @param $db_connect
- * @param $email
- * @param $password
+ * @param mysqli $db_connect
+ * @param string $email
+ * @param string $password
  * @return bool
  */
 function check_user_password($db_connect, $email, $password)
@@ -853,9 +858,9 @@ function check_user_password($db_connect, $email, $password)
 }
 
 /**
- * @param $db_connect
- * @param $email
- * @param $input_name
+ * @param mysqli $db_connect
+ * @param string $email
+ * @param string $input_name
  * @return array|null
  */
 function validate_login_email($db_connect, $email, $input_name)
@@ -885,10 +890,10 @@ function validate_login_email($db_connect, $email, $input_name)
 }
 
 /**
- * @param $db_connect
- * @param $email
- * @param $password
- * @param $input_name
+ * @param mysqli $db_connect
+ * @param string $email
+ * @param string $password
+ * @param string $input_name
  * @return array|null
  */
 function validate_login_password($db_connect, $email, $password, $input_name)
@@ -911,7 +916,7 @@ function validate_login_password($db_connect, $email, $password, $input_name)
 }
 
 /**
- * @param $db_connect
+ * @param mysqli $db_connect
  * @return array
  */
 function login($db_connect)
@@ -963,8 +968,8 @@ function login($db_connect)
 }
 
 /**
- * @param $db_connect
- * @param $user_id
+ * @param mysqli $db_connect
+ * @param string $user_id
  * @return array|null
  */
 function get_user_info($db_connect, $user_id)
@@ -975,8 +980,8 @@ function get_user_info($db_connect, $user_id)
 }
 
 /**
- * @param $db_connect
- * @param $post_id
+ * @param mysqli $db_connect
+ * @param int $post_id
  */
 function change_post_views_count($db_connect, $post_id)
 {
@@ -985,9 +990,9 @@ function change_post_views_count($db_connect, $post_id)
 }
 
 /**
- * @param $db_connect
- * @param $author_id
- * @param $subscribe_user_id
+ * @param mysqli $db_connect
+ * @param string $author_id
+ * @param string $subscribe_user_id
  * @return bool
  */
 function is_subscribed($db_connect, $author_id, $subscribe_user_id)
@@ -998,8 +1003,8 @@ function is_subscribed($db_connect, $author_id, $subscribe_user_id)
 }
 
 /**
- * @param $db_connect
- * @param $post_id
+ * @param mysqli $db_connect
+ * @param int $post_id
  * @return bool
  */
 function is_post_exists($db_connect, $post_id)
@@ -1010,9 +1015,9 @@ function is_post_exists($db_connect, $post_id)
 }
 
 /**
- * @param $db_connect
- * @param $user_id
- * @param $post_id
+ * @param mysqli $db_connect
+ * @param string $user_id
+ * @param int $post_id
  * @return bool
  */
 function is_like_exists($db_connect, $user_id, $post_id)
@@ -1023,9 +1028,9 @@ function is_like_exists($db_connect, $user_id, $post_id)
 }
 
 /**
- * @param $db_connect
- * @param $comment
- * @param $post_id
+ * @param mysqli $db_connect
+ * @param string $comment
+ * @param int $post_id
  * @return array|null
  */
 function validate_comment($db_connect, $comment, $post_id)
@@ -1055,7 +1060,7 @@ function validate_comment($db_connect, $comment, $post_id)
 }
 
 /**
- * @param $youtube_link
+ * @param string $youtube_link
  * @return string|null
  */
 function get_youtube_cover_url($youtube_link)
@@ -1070,8 +1075,8 @@ function get_youtube_cover_url($youtube_link)
 }
 
 /**
- * @param $db_connect
- * @param $profile_id
+ * @param mysqli $db_connect
+ * @param string $profile_id
  * @return array|null
  */
 function get_profile_likes_list($db_connect, $profile_id)
@@ -1088,8 +1093,8 @@ function get_profile_likes_list($db_connect, $profile_id)
 }
 
 /**
- * @param $db_connect
- * @param $profile_id
+ * @param mysqli $db_connect
+ * @param string $profile_id
  * @return array|null
  */
 function get_user_subscriptions($db_connect, $profile_id)
@@ -1105,8 +1110,8 @@ function get_user_subscriptions($db_connect, $profile_id)
 }
 
 /**
- * @param $db_connect
- * @param null $content_type
+ * @param mysqli $db_connect
+ * @param string|null $content_type
  * @return mixed
  */
 function get_items_count($db_connect, $content_type = null)
@@ -1122,15 +1127,23 @@ function get_items_count($db_connect, $content_type = null)
 }
 
 /**
- * @param $db_connect
- * @param $message
- * @param $receiver_id
- * @param $sender_id
+ * @param mysqli $db_connect
+ * @param string $message
+ * @param int|null $receiver_id
+ * @param string $sender_id
  * @return array|null
  */
 function validate_message($db_connect, $message, $receiver_id, $sender_id)
 {
-    if (get_user_info($db_connect, $receiver_id)['id'] === $sender_id) {
+    if (!isset($receiver_id)) {
+        return [
+            'input_name' => 'Комментарий',
+            'input_error_desc' => 'Не могу отправить сообщение.'
+        ];
+    }
+
+    $user_info = get_user_info($db_connect, $receiver_id);
+    if (isset($user_info['id']) && $user_info['id'] === $sender_id) {
         return [
             'input_name' => 'Комментарий',
             'input_error_desc' => 'Не могу отправить сообщение.'
@@ -1148,21 +1161,22 @@ function validate_message($db_connect, $message, $receiver_id, $sender_id)
 }
 
 /**
- * @param $db_connect
- * @param $sender_id
- * @param $receiver_id
+ * @param mysqli $db_connect
+ * @param string $sender_id
+ * @param string $receiver_id
  * @return mixed
  */
 function get_contact_id($db_connect, $sender_id, $receiver_id)
 {
     $sql = 'SELECT id FROM contacts WHERE sender_id = ? AND receiver_id = ?';
+    $contact = db_fetch_data($db_connect, $sql, [$sender_id, $receiver_id], true);
 
-    return db_fetch_data($db_connect, $sql, [$sender_id, $receiver_id], true)['id'];
+    return $contact['id'] ?? null;
 }
 
 /**
- * @param $db_connect
- * @param $user_id
+ * @param mysqli $db_connect
+ * @param string $user_id
  * @return array|null
  */
 function get_subscribers_list($db_connect, $user_id)
@@ -1176,10 +1190,10 @@ function get_subscribers_list($db_connect, $user_id)
 }
 
 /**
- * @param $mailer
- * @param $recipient
- * @param $subject
- * @param $content
+ * @param object $mailer
+ * @param array $recipient
+ * @param string $subject
+ * @param string $content
  * @return mixed
  */
 function send_email($mailer, $recipient, $subject, $content)
@@ -1194,9 +1208,9 @@ function send_email($mailer, $recipient, $subject, $content)
 }
 
 /**
- * @param $mailer
- * @param $sender
- * @param $receiver
+ * @param object $mailer
+ * @param array $sender
+ * @param array $receiver
  * @return mixed
  */
 function subscribe_notification($mailer, $sender, $receiver)
@@ -1218,10 +1232,10 @@ TXT;
 }
 
 /**
- * @param $mailer
- * @param $sender
- * @param $receiver
- * @param $post_name
+ * @param object $mailer
+ * @param array $sender
+ * @param array $receiver
+ * @param string $post_name
  * @return mixed
  */
 function post_notification($mailer, $sender, $receiver, $post_name)
