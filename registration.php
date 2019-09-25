@@ -27,8 +27,8 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         'email' => function () use ($form, $db_connect) {
             return validate_email($db_connect, $form['email'], 'Электронная почта');
         },
-        'login' => function () use ($form) {
-            return validate_filled($form['login'], 'Логин');
+        'login' => function () use ($form, $db_connect) {
+            return validate_login($db_connect, $form['login'], 'Логин');
         },
         'password' => function () use ($form) {
             return validate_filled($form['password'], 'Пароль');

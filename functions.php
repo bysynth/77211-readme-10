@@ -711,6 +711,20 @@ function is_email_exists($db_connect, $email)
 
 /**
  * @param $db_connect
+ * @param $login
+ * @return bool
+ */
+function is_login_exists($db_connect, $login)
+{
+    $login = mysqli_real_escape_string($db_connect, $login);
+    $sql = "SELECT name FROM users WHERE name = '$login'";
+    $result = mysqli_num_rows(get_mysqli_result($db_connect, $sql));
+
+    return $result > 0;
+}
+
+/**
+ * @param $db_connect
  * @param $email
  * @param $input_name
  * @return array|null
@@ -735,6 +749,25 @@ function validate_email($db_connect, $email, $input_name)
         return [
             'input_name' => $input_name,
             'input_error_desc' => 'Пользователь с этим email уже зарегистрирован.'
+        ];
+    }
+
+    return null;
+}
+
+function validate_login($db_connect, $login, $input_name)
+{
+    if (empty($login)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (is_login_exists($db_connect, $login)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Пользователь с этим логином уже зарегистрирован.'
         ];
     }
 
