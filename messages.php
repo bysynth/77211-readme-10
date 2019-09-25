@@ -61,6 +61,9 @@ $error = [];
 
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    $message_input = '';
+    $receiver_id = null;
+
     if (isset($_POST['message'], $_POST['receiver-id'])) {
         $message_input = trim($_POST['message']);
         $receiver_id = (int)$_POST['receiver-id'];
@@ -73,6 +76,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
         $sql_insert_message = 'INSERT INTO messages (message, contact_id) VALUES (?, ?)';
         db_insert_data($db_connect, $sql_insert_message, [$message_input, $contact_id]);
         header('Location:' . $referer_link);
+        exit();
     }
 }
 
