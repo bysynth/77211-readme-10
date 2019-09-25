@@ -36,14 +36,16 @@
                 </p>
             </div>
             <div class="profile__user-buttons user__buttons">
-                <a class="profile__user-button user__button user__button--subscription button button--main"
-                   href="/subscribe.php?subscribe_user_id=<?= isset($user_info['id']) ? clear_input($user_info['id']) : '' ?>">
-                    <?= $is_subscribed ? 'Отписаться' : 'Подписаться'?>
-                </a>
-                <?php if ($is_subscribed): ?>
-                    <a class="profile__user-button user__button user__button--writing button button--green"
-                       href="/messages.php?user_id=<?= $user_info['id']?>">Сообщение</a>
-                <?php endif; ?>
+                <?php if (isset($user_info['id']) && ($session_user_id !== $user_info['id'])): ?>
+                    <a class="profile__user-button user__button user__button--subscription button button--main"
+                       href="/subscribe.php?subscribe_user_id=<?= clear_input($user_info['id']) ?>">
+                        <?= $is_subscribed ? 'Отписаться' : 'Подписаться' ?>
+                    </a>
+                    <?php if ($is_subscribed): ?>
+                        <a class="profile__user-button user__button user__button--writing button button--green"
+                           href="/messages.php?user_id=<?= $user_info['id'] ?>">Сообщение</a>
+                    <?php endif; ?>
+                <?php endif ?>
             </div>
         </div>
     </div>

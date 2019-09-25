@@ -11,6 +11,7 @@ if (!isset($_GET['user']) || $_GET['user'] === '') {
     exit('Ошибка 404 -- Запрашиваемая страница не найдена');
 }
 
+$session_user_id = (int)$_SESSION['user']['id'];
 $author_id = $_GET['user'] ?? null;
 $type = $_GET['type'] ?? null;
 
@@ -37,7 +38,8 @@ $template_data = [
     'user_info' => $user_info,
     'user_publications_count' => get_publications_count($db_connect, $author_id),
     'user_subscriptions_count' => get_subscriptions_count($db_connect, $author_id),
-    'is_subscribed' => is_subscribed($db_connect, $_SESSION['user']['id'], $author_id)
+    'is_subscribed' => is_subscribed($db_connect, $_SESSION['user']['id'], $author_id),
+    'session_user_id' => $session_user_id
 ];
 
 $page_content = '';
