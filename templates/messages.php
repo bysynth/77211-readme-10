@@ -1,8 +1,3 @@
-<?php
-//var_dump($interlocutors);
-//var_dump($messages);
-?>
-
 <h1 class="visually-hidden">Личные сообщения</h1>
 <section class="messages tabs">
     <h2 class="visually-hidden">Сообщения</h2>
@@ -42,13 +37,13 @@
                 </ul>
             <?php endif ?>
         </div>
-        <div class="messages__chat" style="min-height: 300px;">
+        <div class="messages__chat" style="min-height: 210px;">
             <?php if (!empty($messages)): ?>
                 <div class="messages__chat-wrapper">
                     <ul class="messages__list">
                         <?php foreach ($messages as $message): ?>
                             <?php if (isset($message['id'])): ?>
-                                <li class="messages__item <?= $message['id'] === $_SESSION['user']['id'] ? 'messages__item--my' : '' ?>">
+                                <li class="messages__item <?= $message['id'] === $session_user_id ? 'messages__item--my' : '' ?>">
                                     <div class="messages__info-wrapper">
                                         <div class="messages__item-avatar">
                                             <?php if (isset($message['id'], $message['avatar'])): ?>
@@ -84,6 +79,8 @@
                         <?php endforeach; ?>
                     </ul>
                 </div>
+            <?php endif ?>
+            <?php if ($interlocutor_id !== ''): ?>
                 <div class="comments">
                     <form class="comments__form form" method="post">
                         <?php if (isset($_SESSION['user']['avatar'])): ?>
@@ -93,8 +90,8 @@
                             </div>
                         <?php endif ?>
                         <div class="form__input-section <?= !empty($error) ? 'form__input-section--error' : '' ?>">
-                        <textarea class="comments__textarea form__textarea form__input" name="message" id="message"
-                                  placeholder="Ваше сообщение"><?= get_post_val('message') ?></textarea>
+                    <textarea class="comments__textarea form__textarea form__input" name="message" id="message"
+                              placeholder="Ваше сообщение"><?= get_post_val('message') ?></textarea>
                             <label for="message" class="visually-hidden">Ваше сообщение</label>
                             <input type="hidden" name="receiver-id" value="<?= $interlocutor_id ?>">
                             <button class="form__error-button button" type="button">!</button>
