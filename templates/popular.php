@@ -149,7 +149,6 @@
                             </a>
                         </div>
                     <?php endif; ?>
-
                 </div>
                 <footer class="post__footer">
                     <div class="post__author">

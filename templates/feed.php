@@ -1,11 +1,3 @@
-<?php
-/**
- * @var array $content_types
- * @var array $posts
- * @var string $type
- */
-?>
-
 <div class="container">
     <h1 class="page__title page__title--feed">Моя лента</h1>
 </div>

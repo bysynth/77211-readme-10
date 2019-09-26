@@ -1,9 +1,3 @@
-<?php
-/**
- * @var array $post
- */
-?>
-
 <div class="container">
     <h1 class="page__title page__title--publication"><?= isset($post['title']) ? clear_input($post['title']) : '' ?></h1>
     <section class="post-details">

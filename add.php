@@ -1,5 +1,4 @@
 <?php
-
 require_once 'init.php';
 
 if (!isset($_SESSION['user']['id'])) {
@@ -83,7 +82,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
                 return validate_photo_url($post['photo-url'], 'Ссылка из интернета');
             },
             'file' => function () use ($post) {
-                        return validate_uploaded_file($post['file'], 'Загруженный файл');
+                return validate_uploaded_file($post['file'], 'Загруженный файл');
             }
         ];
     }
@@ -215,7 +214,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
             db_insert_hashtag_posts_connection($db_connect, $post['tags'], $post_id);
         }
 
-        foreach ($subscribers_list as $subscriber){
+        foreach ($subscribers_list as $subscriber) {
             post_notification($mailer, $_SESSION['user'], $subscriber, $post_name);
         }
 

@@ -49,11 +49,11 @@ $offset = ($cur_page - 1) * $page_items;
 if ($cur_page === 1) {
     $prev_url = '';
 } else {
-    $prev_url = 'href="/popular.php?' . build_link_query($cur_page - 1, $type, $sort). '"';
+    $prev_url = 'href="/popular.php?' . build_link_query($cur_page - 1, $type, $sort) . '"';
 }
 
 if ($cur_page <= $pages_count - 1) {
-    $next_url = 'href="/popular.php?' . build_link_query($cur_page + 1, $type, $sort). '"';
+    $next_url = 'href="/popular.php?' . build_link_query($cur_page + 1, $type, $sort) . '"';
 } else {
     $next_url = '';
 }

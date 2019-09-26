@@ -1,5 +1,4 @@
 <?php
-
 require_once 'init.php';
 
 if (!isset($_SESSION['user']['id'], $_GET['subscribe_user_id']) || $_GET['subscribe_user_id'] === '') {
