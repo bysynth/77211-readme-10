@@ -104,7 +104,7 @@
                     <?php if (isset($post['type_name']) && $post['type_name'] === 'Картинка'): ?>
                         <div class="post-photo__image-wrapper">
                             <?php if (isset($post['content'])): ?>
-                                <img src="img/<?= clear_input($post['content']) ?>" alt="Фото от пользователя"
+                                <img src="/uploads/<?= clear_input($post['content']) ?>" alt="Фото от пользователя"
                                      width="360" height="240">
                             <?php endif; ?>
                         </div>
