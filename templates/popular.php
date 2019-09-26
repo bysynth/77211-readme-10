@@ -1,7 +1,3 @@
-<?php
-
-?>
-
 <div class="container">
     <h1 class="page__title page__title--popular">Популярное</h1>
 </div>
@@ -14,7 +10,8 @@
                     <a class="sorting__link
                     <?= ($sort === null || $sort === 'popular-desc') ? 'sorting__link--active' : '' ?>
                     <?= ($sort === 'popular-asc') ? 'sorting__link--active sorting__link--reverse' : '' ?>"
-                       href="<?= ($sort === null || $sort === 'popular-desc') ? $sort_url['popular-asc'] : $sort_url['popular-desc'] ?>">
+                       href="/popular.php?<?= ($sort === null || $sort === 'popular-desc') ? build_link_query($cur_page, $type,
+                           'popular-asc') : build_link_query($cur_page, $type, 'popular-desc') ?>">
                         <span>Популярность</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -25,7 +22,8 @@
                     <a class="sorting__link
                     <?= ($sort === 'likes-desc') ? 'sorting__link--active' : '' ?>
                     <?= ($sort === 'likes-asc') ? 'sorting__link--active sorting__link--reverse' : '' ?>"
-                       href="<?= ($sort === 'likes-desc') ? $sort_url['likes-asc'] : $sort_url['likes-desc'] ?>">
+                       href="/popular.php?<?= ($sort === 'likes-desc') ? build_link_query($cur_page, $type,
+                           'likes-asc') : build_link_query($cur_page, $type, 'likes-desc') ?>">
                         <span>Лайки</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -36,7 +34,8 @@
                     <a class="sorting__link
                     <?= ($sort === 'date-desc') ? 'sorting__link--active' : '' ?>
                     <?= ($sort === 'date-asc') ? 'sorting__link--active sorting__link--reverse' : '' ?>"
-                       href="<?= ($sort === 'date-desc') ? $sort_url['date-asc'] : $sort_url['date-desc'] ?>">
+                       href="/popular.php?<?= ($sort === 'likes-desc') ? build_link_query($cur_page, $type,
+                           'date-asc') : build_link_query($cur_page, $type, 'date-desc') ?>">
                         <span>Дата</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>

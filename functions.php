@@ -1255,3 +1255,30 @@ TXT;
 
     return send_email($mailer, $recipient, $subject, $content);
 }
+
+/**
+ * @param int null $page
+ * @param string null $type
+ * @param string null $sort
+ * @return string
+ */
+function build_link_query($page = null, $type = null, $sort = null)
+{
+    $query_string = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+    $data = [];
+    parse_str($query_string, $data);
+
+    if (isset($page)) {
+        $data['page'] = $page;
+    }
+
+    if (isset($type)) {
+        $data['type'] = $type;
+    }
+
+    if (isset($sort)) {
+        $data['sort'] = $sort;
+    }
+
+    return http_build_query($data);
+}
