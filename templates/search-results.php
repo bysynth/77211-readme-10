@@ -110,45 +110,35 @@
                         <footer class="post__footer">
                             <div class="post__indicators">
                                 <div class="post__buttons">
-                                    <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
-                                        <svg class="post__indicator-icon" width="20" height="17">
-                                            <use xlink:href="#icon-heart"></use>
-                                        </svg>
-                                        <svg class="post__indicator-icon post__indicator-icon--like-active" width="20"
-                                             height="17">
-                                            <use xlink:href="#icon-heart-active"></use>
-                                        </svg>
-                                        <?php if (isset($post['likes_count'])): ?>
-                                            <span><?= $post['likes_count'] ?></span>
-                                            <span class="visually-hidden">количество лайков</span>
-                                        <?php endif; ?>
-                                    </a>
-                                    <a class="post__indicator post__indicator--comments button" href="#"
-                                       title="Комментарии">
-                                        <svg class="post__indicator-icon" width="19" height="17">
-                                            <use xlink:href="#icon-comment"></use>
-                                        </svg>
-                                        <?php if (isset($post['comments_count'])): ?>
-                                            <span><?= $post['comments_count'] ?></span>
-                                            <span class="visually-hidden">количество комментариев</span>
-                                        <?php endif; ?>
-                                    </a>
-                                    <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
-                                        <svg class="post__indicator-icon" width="19" height="17">
-                                            <use xlink:href="#icon-repost"></use>
-                                        </svg>
-                                        <span>5</span>
-                                        <span class="visually-hidden">количество репостов</span>
-                                    </a>
+                                    <?php if (isset($post['post_id'])): ?>
+                                        <a class="post__indicator post__indicator--likes button"
+                                           href="/like.php?post_id=<?= $post['post_id'] ?>" title="Лайк">
+                                            <svg class="post__indicator-icon" width="20" height="17">
+                                                <use xlink:href="#icon-heart"></use>
+                                            </svg>
+                                            <svg class="post__indicator-icon post__indicator-icon--like-active" width="20"
+                                                 height="17">
+                                                <use xlink:href="#icon-heart-active"></use>
+                                            </svg>
+                                            <?php if (isset($post['likes_count'])): ?>
+                                                <span><?= $post['likes_count'] ?></span>
+                                                <span class="visually-hidden">количество лайков</span>
+                                            <?php endif; ?>
+                                        </a>
+                                        <a class="post__indicator post__indicator--comments button"
+                                           href="<?= '/post.php?id=' . $post['post_id'] . '#comments-block'?>"
+                                           title="Комментарии">
+                                            <svg class="post__indicator-icon" width="19" height="17">
+                                                <use xlink:href="#icon-comment"></use>
+                                            </svg>
+                                            <?php if (isset($post['comments_count'])): ?>
+                                                <span><?= $post['comments_count'] ?></span>
+                                                <span class="visually-hidden">количество комментариев</span>
+                                            <?php endif; ?>
+                                        </a>
+                                    <?php endif; ?>
                                 </div>
                             </div>
-                            <?php if (isset($post['hashtags'])): ?>
-                                <ul class="post__tags">
-                                    <?php foreach ($post['hashtags'] as $tag): ?>
-                                        <li><a href="/search.php?q=<?= urlencode($tag) ?>"><?= $tag ?></a></li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            <?php endif; ?>
                         </footer>
                     </article>
                 <?php endforeach; ?>

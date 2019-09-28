@@ -142,7 +142,7 @@
                 </ul>
                 <ul class="header__user-nav">
                     <li class="header__profile">
-                        <a class="header__profile-link" href="#">
+                        <a class="header__profile-link" href="<?= '/profile.php?user=' . $_SESSION['user']['id'] ?>">
                             <div class="header__avatar-wrapper">
                                 <?php if (isset($_SESSION['user']['avatar'])): ?>
                                     <img class="header__profile-avatar" src="/uploads/<?= $_SESSION['user']['avatar'] ?>"
@@ -169,10 +169,9 @@
                                         </a>
                                     </li>
                                     <li class="header__profile-nav-item">
-                                        <a class="header__profile-nav-link" href="#">
+                                        <a class="header__profile-nav-link" href="/messages.php">
                                                 <span class="header__profile-nav-text">
                                                     Сообщения
-                                                    <i class="header__profile-indicator">2</i>
                                                 </span>
                                         </a>
                                     </li>
@@ -189,7 +188,6 @@
                     </li>
                     <li>
                         <a class="header__post-button button button--transparent" href="/add.php">Пост</a>
-                        <!-- TODO: На странице add.php "Пост заменяется на "Закрыть", добавляется класс header__post-button--active, меняется значение атрибута href -->
                     </li>
                 </ul>
             </nav>
@@ -257,8 +255,5 @@
         </div>
     </div>
 </footer>
-<script src="/libs/dropzone.js"></script>
-<script src="/js/dropzone-settings.js"></script>
-<script src="/js/main-edited.js"></script>
 </body>
 </html>

@@ -1,11 +1,3 @@
-<?php
-/**
- * @var array $content_types
- * @var array $posts
- * @var string $type
- */
-?>
-
 <div class="container">
     <h1 class="page__title page__title--feed">Моя лента</h1>
 </div>
@@ -130,25 +122,28 @@
                                                 <span class="visually-hidden">количество лайков</span>
                                             <?php endif; ?>
                                         </a>
+                                        <a class="post__indicator post__indicator--comments button"
+                                           href="<?= '/post.php?id=' . $post['post_id'] . '#comments-block'?>"
+                                           title="Комментарии">
+                                            <svg class="post__indicator-icon" width="19" height="17">
+                                                <use xlink:href="#icon-comment"></use>
+                                            </svg>
+                                            <?php if (isset($post['comments_count'])): ?>
+                                                <span><?= $post['comments_count'] ?></span>
+                                                <span class="visually-hidden">количество комментариев</span>
+                                            <?php endif; ?>
+                                        </a>
+                                        <a class="post__indicator post__indicator--repost button"
+                                           href="/repost.php?post_id=<?= $post['post_id'] ?>" title="Репост">
+                                            <svg class="post__indicator-icon" width="19" height="17">
+                                                <use xlink:href="#icon-repost"></use>
+                                            </svg>
+                                            <?php if (isset($post['reposts_counter'])): ?>
+                                                <span><?= $post['reposts_counter'] ?></span>
+                                                <span class="visually-hidden">количество репостов</span>
+                                            <?php endif ?>
+                                        </a>
                                     <?php endif; ?>
-                                    <a class="post__indicator post__indicator--comments button"
-                                       href="<?= '/post.php?id=' . $post['post_id'] . '#comments-block'?>"
-                                       title="Комментарии">
-                                        <svg class="post__indicator-icon" width="19" height="17">
-                                            <use xlink:href="#icon-comment"></use>
-                                        </svg>
-                                        <?php if (isset($post['comments_count'])): ?>
-                                            <span><?= $post['comments_count'] ?></span>
-                                            <span class="visually-hidden">количество комментариев</span>
-                                        <?php endif; ?>
-                                    </a>
-                                    <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
-                                        <svg class="post__indicator-icon" width="19" height="17">
-                                            <use xlink:href="#icon-repost"></use>
-                                        </svg>
-                                        <span>5</span>
-                                        <span class="visually-hidden">количество репостов</span>
-                                    </a>
                                 </div>
                             </div>
                             <?php if (isset($post['hashtags'])): ?>

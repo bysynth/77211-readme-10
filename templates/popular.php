@@ -1,7 +1,3 @@
-<?php
-
-?>
-
 <div class="container">
     <h1 class="page__title page__title--popular">Популярное</h1>
 </div>
@@ -11,7 +7,11 @@
             <b class="popular__sorting-caption sorting__caption">Сортировка:</b>
             <ul class="popular__sorting-list sorting__list">
                 <li class="sorting__item sorting__item--popular">
-                    <a class="sorting__link sorting__link--active" href="#">
+                    <a class="sorting__link
+                    <?= ($sort === null || $sort === 'popular-desc') ? 'sorting__link--active' : '' ?>
+                    <?= ($sort === 'popular-asc') ? 'sorting__link--active sorting__link--reverse' : '' ?>"
+                       href="/popular.php?<?= ($sort === null || $sort === 'popular-desc') ? build_link_query($cur_page, $type,
+                           'popular-asc') : build_link_query($cur_page, $type, 'popular-desc') ?>">
                         <span>Популярность</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -19,7 +19,11 @@
                     </a>
                 </li>
                 <li class="sorting__item">
-                    <a class="sorting__link" href="#">
+                    <a class="sorting__link
+                    <?= ($sort === 'likes-desc') ? 'sorting__link--active' : '' ?>
+                    <?= ($sort === 'likes-asc') ? 'sorting__link--active sorting__link--reverse' : '' ?>"
+                       href="/popular.php?<?= ($sort === 'likes-desc') ? build_link_query($cur_page, $type,
+                           'likes-asc') : build_link_query($cur_page, $type, 'likes-desc') ?>">
                         <span>Лайки</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -27,7 +31,11 @@
                     </a>
                 </li>
                 <li class="sorting__item">
-                    <a class="sorting__link" href="#">
+                    <a class="sorting__link
+                    <?= ($sort === 'date-desc') ? 'sorting__link--active' : '' ?>
+                    <?= ($sort === 'date-asc') ? 'sorting__link--active sorting__link--reverse' : '' ?>"
+                       href="/popular.php?<?= ($sort === 'likes-desc') ? build_link_query($cur_page, $type,
+                           'date-asc') : build_link_query($cur_page, $type, 'date-desc') ?>">
                         <span>Дата</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -96,7 +104,7 @@
                     <?php if (isset($post['type_name']) && $post['type_name'] === 'Картинка'): ?>
                         <div class="post-photo__image-wrapper">
                             <?php if (isset($post['content'])): ?>
-                                <img src="img/<?= clear_input($post['content']) ?>" alt="Фото от пользователя"
+                                <img src="/uploads/<?= clear_input($post['content']) ?>" alt="Фото от пользователя"
                                      width="360" height="240">
                             <?php endif; ?>
                         </div>
@@ -141,7 +149,6 @@
                             </a>
                         </div>
                     <?php endif; ?>
-
                 </div>
                 <footer class="post__footer">
                     <div class="post__author">
@@ -150,7 +157,7 @@
                                title="Автор">
                                 <div class="post__avatar-wrapper">
                                     <?php if (isset($post['avatar'])): ?>
-                                        <img class="post__author-avatar" src="img/<?= clear_input($post['avatar']) ?>"
+                                        <img class="post__author-avatar" src="/uploads/<?= clear_input($post['avatar']) ?>"
                                              alt="Аватар пользователя">
                                     <?php endif; ?>
                                 </div>

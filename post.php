@@ -1,5 +1,4 @@
 <?php
-
 require_once 'init.php';
 
 if (!isset($_SESSION['user']['id'])) {
@@ -12,6 +11,7 @@ if (!isset($_GET['id']) || $_GET['id'] === '') {
     exit('Ошибка 404 -- Запрашиваемая страница не найдена');
 }
 
+$session_user_id = (int)$_SESSION['user']['id'];
 $id = (int)$_GET['id'];
 $post = get_post($db_connect, $id);
 
@@ -51,6 +51,7 @@ $page_content = include_template('post.php',
         'comments' => get_comments($db_connect, $id),
         'user_subscriptions_count' => $user_subscriptions_count,
         'user_publications_count' => $user_publications_count,
+        'session_user_id' => $session_user_id,
         'is_subscribed' => is_subscribed($db_connect, $_SESSION['user']['id'], $post['author_id']),
         'error' => $error
     ]);

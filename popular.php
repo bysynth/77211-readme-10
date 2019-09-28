@@ -7,11 +7,26 @@ if (!isset($_SESSION['user'])) {
 }
 
 $cur_page = $_GET['page'] ?? null;
-
 $type = $_GET['type'] ?? null;
+$sort = $_GET['sort'] ?? null;
+
+$sort_types = [
+    'popular-desc',
+    'popular-asc',
+    'likes-desc',
+    'likes-asc',
+    'date-desc',
+    'date-asc'
+];
+
 $content_types = get_content_types($db_connect);
 
 if ($type === '' || ($type !== null && is_type_exist($content_types, $type) === false)) {
+    http_response_code(404);
+    exit('Ошибка 404 -- Запрашиваемая страница не найдена');
+}
+
+if ($sort === '' || ($sort !== null && in_array($sort, $sort_types, true) === false)) {
     http_response_code(404);
     exit('Ошибка 404 -- Запрашиваемая страница не найдена');
 }
@@ -26,60 +41,38 @@ if ($cur_page === null || $cur_page === 0 || $cur_page === '') {
 
 $page_items = 6;
 
-$items_count = get_items_count($db_connect);
-
-if (isset($type)) {
-    $items_count = get_items_count($db_connect, $type);
-}
+$items_count = get_items_count($db_connect, $type);
 
 $pages_count = ceil($items_count / $page_items);
 $offset = ($cur_page - 1) * $page_items;
 
-if ($cur_page > $pages_count && !isset($type)) {
-    $url = 'Location: /popular.php?page=' . $pages_count;
-    $cur_page = $pages_count;
-    header($url);
-}
-
-if ($cur_page > $pages_count && isset($type)) {
-    $url = 'Location: /popular.php?page=' . $pages_count . '&type=' . $type;
-    $cur_page = $pages_count;
-    header($url);
-}
-
-if (!isset($type)) {
-    if ($cur_page === 1) {
-        $prev_url = '';
-    } else {
-        $prev_url = 'href="/popular.php?page=' . ($cur_page - 1) . '"';
-    }
-
-    if ($cur_page <= $pages_count - 1) {
-        $next_url = 'href="/popular.php?page=' . ($cur_page + 1) . '"';
-    } else {
-        $next_url = '';
-    }
+if ($cur_page === 1) {
+    $prev_url = '';
 } else {
-    if ($cur_page === 1) {
-        $prev_url = '';
-    } else {
-        $prev_url = 'href="/popular.php?page=' . ($cur_page - 1) . '&type=' . $type . '"';
-    }
-
-    if ($cur_page <= $pages_count - 1) {
-        $next_url = 'href="/popular.php?page=' . ($cur_page + 1) . '&type=' . $type . '"';
-    } else {
-        $next_url = '';
-    }
+    $prev_url = 'href="/popular.php?' . build_link_query($cur_page - 1, $type, $sort) . '"';
 }
 
-$posts = get_popular_posts($db_connect, $type, $offset);
+if ($cur_page <= $pages_count - 1) {
+    $next_url = 'href="/popular.php?' . build_link_query($cur_page + 1, $type, $sort) . '"';
+} else {
+    $next_url = '';
+}
+
+if ($cur_page > $pages_count) {
+    $url = 'Location: /popular.php?' . build_link_query($pages_count, $type, $sort);
+    $cur_page = $pages_count;
+    header($url);
+}
+
+$posts = get_popular_posts($db_connect, $type, $offset, $sort);
 
 $page_content = include_template('popular.php',
     [
         'content_types' => $content_types,
         'posts' => $posts,
+        'cur_page' => $cur_page,
         'type' => $type,
+        'sort' => $sort,
         'pages_count' => $pages_count,
         'prev_url' => $prev_url,
         'next_url' => $next_url

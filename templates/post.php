@@ -1,9 +1,3 @@
-<?php
-/**
- * @var array $post
- */
-?>
-
 <div class="container">
     <h1 class="page__title page__title--publication"><?= isset($post['title']) ? clear_input($post['title']) : '' ?></h1>
     <section class="post-details">
@@ -69,13 +63,18 @@
                                 <span class="visually-hidden">количество комментариев</span>
                             <?php endif; ?>
                         </a>
-                        <a class="post__indicator post__indicator--repost button" href="#" title="Репост">
-                            <svg class="post__indicator-icon" width="19" height="17">
-                                <use xlink:href="#icon-repost"></use>
-                            </svg>
-                            <span>5</span>
-                            <span class="visually-hidden">количество репостов</span>
-                        </a>
+                        <?php if (isset($post['id'])): ?>
+                            <a class="post__indicator post__indicator--repost button"
+                               href="/repost.php?post_id=<?= $post['id'] ?>" title="Репост">
+                                <svg class="post__indicator-icon" width="19" height="17">
+                                    <use xlink:href="#icon-repost"></use>
+                                </svg>
+                                <?php if (isset($post['reposts_counter'])): ?>
+                                    <span><?= $post['reposts_counter'] ?></span>
+                                    <span class="visually-hidden">количество репостов</span>
+                                <?php endif ?>
+                            </a>
+                        <?php endif ?>
                     </div>
                     <?php if (isset($post['views_counter'])): ?>
                         <span class="post__view"><?= $views = (int) clear_input($post['views_counter'])?>
@@ -141,10 +140,6 @@
                             <?php endforeach; ?>
                         </ul>
                         <?php endif; ?>
-<!--                        <a class="comments__more-link" href="#">-->
-<!--                            <span>Показать все комментарии</span>-->
-<!--                            <sup class="comments__amount">45</sup>-->
-<!--                        </a>-->
                     </div>
                 </div>
             </div>
@@ -154,7 +149,7 @@
                         <?php if (isset($post['author_id'])): ?>
                             <a class="post-details__avatar-link user__avatar-link" href="<?= '/profile.php?user=' . $post['author_id'] ?>">
                                 <img class="post-details__picture user__picture"
-                                     src="img/<?= isset($post['avatar']) ? clear_input($post['avatar']) : '' ?>"
+                                     src="/uploads/<?= isset($post['avatar']) ? clear_input($post['avatar']) : '' ?>"
                                      alt="Аватар пользователя">
                             </a>
                         <?php endif; ?>
@@ -192,14 +187,17 @@
                         </span>
                     </p>
                 </div>
-                <div class="post-details__user-buttons user__buttons">
-                    <a class="user__button user__button--subscription button button--main"
-                       href="/subscribe.php?subscribe_user_id=<?= $post['author_id'] ?? '' ?>">
-                        <?= $is_subscribed ? 'Отписаться' : 'Подписаться'?></a>
-                    <?php if ($is_subscribed): ?>
-                        <a class="user__button user__button--writing button button--green" href="/messages.php">Сообщение</a>
-                    <?php endif; ?>
-                </div>
+                <?php if ($session_user_id !== $post['author_id']): ?>
+                    <div class="post-details__user-buttons user__buttons">
+                        <a class="user__button user__button--subscription button button--main"
+                           href="/subscribe.php?subscribe_user_id=<?= $post['author_id'] ?? '' ?>">
+                            <?= $is_subscribed ? 'Отписаться' : 'Подписаться' ?></a>
+                        <?php if ($is_subscribed): ?>
+                            <a class="user__button user__button--writing button button--green"
+                               href="/messages.php?user_id=<?= $post['author_id'] ?>">Сообщение</a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif ?>
             </div>
         </div>
     </section>

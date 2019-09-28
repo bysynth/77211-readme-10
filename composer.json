@@ -1,0 +1,8 @@
+{
+    "name": "vladimir/readme",
+    "description": "README",
+    "type": "project",
+    "require": {
+        "swiftmailer/swiftmailer": "^6.2"
+    }
+}

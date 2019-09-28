@@ -1,4 +1,11 @@
 <?php
+/**
+ * @param mysqli $link
+ * @param string $sql
+ * @param array $data
+ * @param bool $is_single
+ * @return array|null
+ */
 function db_fetch_data($link, $sql, $data = [], $is_single = false)
 {
     $stmt = db_get_prepare_stmt($link, $sql, $data);
@@ -17,6 +24,12 @@ function db_fetch_data($link, $sql, $data = [], $is_single = false)
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+/**
+ * @param mysqli $link
+ * @param string $sql
+ * @param array $data
+ * @return bool|int|string
+ */
 function db_insert_data($link, $sql, $data = [])
 {
     $stmt = db_get_prepare_stmt($link, $sql, $data);
@@ -32,6 +45,11 @@ function db_insert_data($link, $sql, $data = [])
     return $result;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $sql
+ * @return bool|mysqli_result
+ */
 function get_mysqli_result($db_connect, $sql)
 {
     $result = mysqli_query($db_connect, $sql);
@@ -43,6 +61,11 @@ function get_mysqli_result($db_connect, $sql)
     return $result;
 }
 
+/**
+ * @param string $text
+ * @param int $length
+ * @return string
+ */
 function cut_text($text, $length = 300)
 {
     if (mb_strlen($text) > $length) {
@@ -62,11 +85,20 @@ function cut_text($text, $length = 300)
     return '<p>' . $text . '</p>';
 }
 
+/**
+ * @param string $input
+ * @return string
+ */
 function clear_input($input)
 {
     return htmlspecialchars($input);
 }
 
+/**
+ * @param string $time_data
+ * @param string $word
+ * @return string
+ */
 function get_relative_time_format($time_data, $word)
 {
     $dt_past = date_create($time_data);
@@ -101,6 +133,10 @@ function get_relative_time_format($time_data, $word)
             'минут') . ' ' . $word;
 }
 
+/**
+ * @param string $time_data
+ * @return false|string
+ */
 function get_custom_time_format($time_data)
 {
     $date_and_time = date_create($time_data);
@@ -108,6 +144,10 @@ function get_custom_time_format($time_data)
     return date_format($date_and_time, 'd.m.Y H:i');
 }
 
+/**
+ * @param mysqli $db_connect
+ * @return array|null
+ */
 function get_content_types($db_connect)
 {
     $sql = 'SELECT id, type_name, type_icon FROM content_types';
@@ -116,25 +156,44 @@ function get_content_types($db_connect)
     return mysqli_fetch_all($result, MYSQLI_ASSOC);
 }
 
+/**
+ * @param array $arrays
+ * @param string $type
+ * @return bool
+ */
 function is_type_exist($arrays, $type)
 {
     return in_array($type, array_column($arrays, 'id'), true);
 }
 
+/**
+ * @return string
+ */
 function common_get_posts_sql()
 {
-    return 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, ct.type_name, ct.type_icon,
-            u.id as user_id, u.name, u.avatar,
-            (SELECT COUNT(l.id) as COUNT FROM likes AS l WHERE post_id = p.id) AS likes_count,
-            (SELECT COUNT(c.id) as COUNT FROM comments AS c WHERE post_id = p.id) AS comments_count
+    return 'SELECT p.id as post_id, p.created_at, p.title, p.content, p.cite_author, p.is_repost, p.reposts_counter, 
+            p.original_author_id, ct.type_name, ct.type_icon, u.id as user_id, u.name, u.avatar, 
+            us.name AS original_author_name, 
+            us.avatar AS original_author_avatar,
+            (SELECT COUNT(l.id) FROM likes AS l WHERE post_id = p.id) AS likes_count,
+            (SELECT COUNT(c.id) FROM comments AS c WHERE post_id = p.id) AS comments_count
             FROM posts AS p
 	        JOIN content_types AS ct
    	            ON ct.id = p.content_type
             JOIN users as u
-                ON u.id = p.author_id ';
+                ON u.id = p.author_id
+            LEFT JOIN users AS us
+	            ON	us.id = p.original_author_id ';
 }
 
-function get_popular_posts($db_connect, $type = null, $offset = 0)
+/**
+ * @param mysqli $db_connect
+ * @param string|null $type
+ * @param int $offset
+ * @param string|null $sort
+ * @return array|null
+ */
+function get_popular_posts($db_connect, $type = null, $offset = 0, $sort = null)
 {
     $data = [];
     $sql = common_get_posts_sql();
@@ -142,7 +201,25 @@ function get_popular_posts($db_connect, $type = null, $offset = 0)
         $sql .= 'WHERE p.content_type = ? ';
         $data[] = $type;
     }
-    $sql .= 'ORDER BY p.views_counter DESC LIMIT 6 OFFSET ?;';
+    if (!isset($sort) || (isset($sort) && $sort === 'popular-desc')) {
+        $sql .= 'ORDER BY p.views_counter DESC LIMIT 6 OFFSET ?;';
+    }
+    if (isset($sort) && $sort === 'popular-asc') {
+        $sql .= 'ORDER BY p.views_counter ASC LIMIT 6 OFFSET ?;';
+    }
+    if (isset($sort) && $sort === 'likes-desc') {
+        $sql .= 'ORDER BY likes_count DESC LIMIT 6 OFFSET ?;';
+    }
+    if (isset($sort) && $sort === 'likes-asc') {
+        $sql .= 'ORDER BY likes_count ASC LIMIT 6 OFFSET ?;';
+    }
+    if (isset($sort) && $sort === 'date-desc') {
+        $sql .= 'ORDER BY p.created_at DESC LIMIT 6 OFFSET ?;';
+    }
+    if (isset($sort) && $sort === 'date-asc') {
+        $sql .= 'ORDER BY p.created_at ASC LIMIT 6 OFFSET ?;';
+    }
+
     $data[] = $offset;
 
     $popular_posts = db_fetch_data($db_connect, $sql, $data);
@@ -152,6 +229,12 @@ function get_popular_posts($db_connect, $type = null, $offset = 0)
 
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $author_id
+ * @param string|null $type
+ * @return array|null
+ */
 function get_feed_posts($db_connect, $author_id, $type = null)
 {
     $data = [$author_id];
@@ -168,6 +251,11 @@ function get_feed_posts($db_connect, $author_id, $type = null)
     return $feed_posts;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $author_id
+ * @return array|null
+ */
 function get_profile_posts($db_connect, $author_id)
 {
     $data = [$author_id];
@@ -180,6 +268,11 @@ function get_profile_posts($db_connect, $author_id)
     return $profile_posts;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $search_query
+ * @return array|null
+ */
 function get_fulltext_search_posts($db_connect, $search_query)
 {
     $data = [$search_query];
@@ -191,6 +284,11 @@ function get_fulltext_search_posts($db_connect, $search_query)
     return $search_results;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $search_query
+ * @return array|null
+ */
 function get_tag_search_posts($db_connect, $search_query)
 {
     $tag = substr($search_query, 1);
@@ -206,6 +304,11 @@ function get_tag_search_posts($db_connect, $search_query)
     return db_fetch_data($db_connect, $sql, $data);
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $post_id
+ * @return array|null
+ */
 function get_post_hashtags($db_connect, $post_id)
 {
     $sql = "SELECT h.hashtag
@@ -229,6 +332,11 @@ function get_post_hashtags($db_connect, $post_id)
     return null;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param array $posts
+ * @return array
+ */
 function append_hashtags_to_post($db_connect, $posts)
 {
     $result = [];
@@ -243,10 +351,15 @@ function append_hashtags_to_post($db_connect, $posts)
     return $result;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param int $id
+ * @return array|null
+ */
 function get_post($db_connect, $id)
 {
-    $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, p.views_counter, p.is_repost, p.content_type, 
-            p.author_id, u.name, u.avatar, u.created_at as user_created_at,
+    $sql = 'SELECT p.id, p.created_at, p.title, p.content, p.cite_author, p.views_counter, p.reposts_counter, 
+            p.content_type, p.author_id, u.name, u.avatar, u.created_at as user_created_at,
             (SELECT COUNT(l.id) as COUNT FROM likes AS l WHERE post_id = p.id) AS likes_count,
             (SELECT COUNT(c.id) as COUNT FROM comments AS c WHERE post_id = p.id) AS comments_count
             FROM posts as p
@@ -257,6 +370,11 @@ function get_post($db_connect, $id)
     return db_fetch_data($db_connect, $sql, [$id], true);
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param int $post_id
+ * @return array|null
+ */
 function get_comments($db_connect, $post_id)
 {
     $sql = 'SELECT c.created_at, c.comment, u.id as author_id, u.name, u.avatar  
@@ -269,6 +387,11 @@ function get_comments($db_connect, $post_id)
     return db_fetch_data($db_connect, $sql, [$post_id]);
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $user_id
+ * @return int|mixed
+ */
 function get_publications_count($db_connect, $user_id)
 {
     $sql = 'SELECT COUNT(id) as count
@@ -278,6 +401,11 @@ function get_publications_count($db_connect, $user_id)
     return db_fetch_data($db_connect, $sql, [$user_id], true)['count'] ?? 0;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $user_id
+ * @return int|mixed
+ */
 function get_subscriptions_count($db_connect, $user_id)
 {
     $sql = 'SELECT COUNT(id) as count
@@ -287,6 +415,10 @@ function get_subscriptions_count($db_connect, $user_id)
     return db_fetch_data($db_connect, $sql, [$user_id], true)['count'] ?? 0;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @return array
+ */
 function get_hashtags_from_db($db_connect)
 {
     $sql = 'SELECT hashtag FROM hashtags';
@@ -296,6 +428,10 @@ function get_hashtags_from_db($db_connect)
     return array_column($assoc_array, 'hashtag');
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $string_tags
+ */
 function db_insert_uniq_hashtags($db_connect, $string_tags)
 {
     $post_hashtags_array = explode(' ', $string_tags);
@@ -316,6 +452,11 @@ function db_insert_uniq_hashtags($db_connect, $string_tags)
     }
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $string_tags
+ * @param mixed $post_id
+ */
 function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id)
 {
     $string_tags = mysqli_real_escape_string($db_connect, $string_tags);
@@ -326,11 +467,20 @@ function db_insert_hashtag_posts_connection($db_connect, $string_tags, $post_id)
     get_mysqli_result($db_connect, $sql);
 }
 
+/**
+ * @param string $name
+ * @return mixed|string
+ */
 function get_post_val($name)
 {
     return $_POST[$name] ?? '';
 }
 
+/**
+ * @param string $name
+ * @param string $input_name
+ * @return array|null
+ */
 function validate_filled($name, $input_name)
 {
     if (empty($name)) {
@@ -343,14 +493,28 @@ function validate_filled($name, $input_name)
     return null;
 }
 
-// TODO: Переделать функцию is_url_exists
-
+/**
+ * @param string $url
+ * @return bool
+ */
 function is_url_exists($url)
 {
-    $response_code_header = @get_headers($url)[0] ?? '';
-    return stripos($response_code_header, '200 OK') !== false;
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_NOBODY, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+    curl_exec($ch);
+    $returnedStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    return $returnedStatusCode === 200;
 }
 
+/**
+ * @param string $url
+ * @param string $input_name
+ * @return array|null
+ */
 function check_link_mime_type($url, $input_name)
 {
     $file = file_get_contents($url);
@@ -367,6 +531,11 @@ function check_link_mime_type($url, $input_name)
     return null;
 }
 
+/**
+ * @param string $url
+ * @param string $input_name
+ * @return array|null
+ */
 function validate_photo_url($url, $input_name)
 {
 
@@ -403,6 +572,11 @@ function validate_photo_url($url, $input_name)
     return null;
 }
 
+/**
+ * @param array|null $file_data
+ * @param string $input_name
+ * @return array|null
+ */
 function validate_uploaded_file($file_data, $input_name)
 {
     if ($_POST['photo-url'] !== '' && $file_data['error'] === UPLOAD_ERR_NO_FILE) {
@@ -443,6 +617,10 @@ function validate_uploaded_file($file_data, $input_name)
     return null;
 }
 
+/**
+ * @param string $url
+ * @return string|null
+ */
 function get_link_file_ext($url)
 {
     $file = file_get_contents($url);
@@ -461,6 +639,11 @@ function get_link_file_ext($url)
     return null;
 }
 
+/**
+ * @param string $url
+ * @param string $input_name
+ * @return array|null
+ */
 function validate_video_url($url, $input_name)
 {
     if (empty($url)) {
@@ -487,6 +670,11 @@ function validate_video_url($url, $input_name)
     return null;
 }
 
+/**
+ * @param string $url
+ * @param string $input_name
+ * @return array|null
+ */
 function validate_link($url, $input_name)
 {
     if (empty($url)) {
@@ -506,6 +694,11 @@ function validate_link($url, $input_name)
     return null;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $email
+ * @return bool
+ */
 function is_email_exists($db_connect, $email)
 {
     $email = mysqli_real_escape_string($db_connect, $email);
@@ -515,6 +708,26 @@ function is_email_exists($db_connect, $email)
     return $result > 0;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $login
+ * @return bool
+ */
+function is_login_exists($db_connect, $login)
+{
+    $login = mysqli_real_escape_string($db_connect, $login);
+    $sql = "SELECT name FROM users WHERE name = '$login'";
+    $result = mysqli_num_rows(get_mysqli_result($db_connect, $sql));
+
+    return $result > 0;
+}
+
+/**
+ * @param mysqli $db_connect
+ * @param string $email
+ * @param string $input_name
+ * @return array|null
+ */
 function validate_email($db_connect, $email, $input_name)
 {
     if (empty($email)) {
@@ -541,6 +754,37 @@ function validate_email($db_connect, $email, $input_name)
     return null;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $login
+ * @param string $input_name
+ * @return array|null
+ */
+function validate_login($db_connect, $login, $input_name)
+{
+    if (empty($login)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (is_login_exists($db_connect, $login)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Пользователь с этим логином уже зарегистрирован.'
+        ];
+    }
+
+    return null;
+}
+
+/**
+ * @param string $pass
+ * @param string $pass_repeat
+ * @param string $input_name
+ * @return array|null
+ */
 function validate_password_repeat($pass, $pass_repeat, $input_name)
 {
     if (empty($pass_repeat)) {
@@ -560,6 +804,11 @@ function validate_password_repeat($pass, $pass_repeat, $input_name)
     return null;
 }
 
+/**
+ * @param array|null $file_data
+ * @param string $input_name
+ * @return array|null
+ */
 function validate_avatar($file_data, $input_name)
 {
     if ($file_data['name'] === '') {
@@ -593,6 +842,12 @@ function validate_avatar($file_data, $input_name)
     return null;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $email
+ * @param string $password
+ * @return bool
+ */
 function check_user_password($db_connect, $email, $password)
 {
     $email = mysqli_real_escape_string($db_connect, $email);
@@ -602,6 +857,12 @@ function check_user_password($db_connect, $email, $password)
     return password_verify($password, $result_password);
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $email
+ * @param string $input_name
+ * @return array|null
+ */
 function validate_login_email($db_connect, $email, $input_name)
 {
     if (empty($email)) {
@@ -628,6 +889,13 @@ function validate_login_email($db_connect, $email, $input_name)
     return null;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $email
+ * @param string $password
+ * @param string $input_name
+ * @return array|null
+ */
 function validate_login_password($db_connect, $email, $password, $input_name)
 {
     if (empty($password)) {
@@ -647,6 +915,10 @@ function validate_login_password($db_connect, $email, $password, $input_name)
     return null;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @return array
+ */
 function login($db_connect)
 {
     $errors = [];
@@ -695,19 +967,34 @@ function login($db_connect)
     return $errors;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $user_id
+ * @return array|null
+ */
 function get_user_info($db_connect, $user_id)
 {
-    $sql = 'SELECT id, created_at, name, avatar FROM users WHERE id = ?';
+    $sql = 'SELECT id, created_at, name, avatar, email FROM users WHERE id = ?';
 
     return db_fetch_data($db_connect, $sql, [$user_id], true);
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param int $post_id
+ */
 function change_post_views_count($db_connect, $post_id)
 {
     $sql = "UPDATE posts SET views_counter = views_counter + 1 WHERE id = $post_id";
     get_mysqli_result($db_connect, $sql);
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $author_id
+ * @param string $subscribe_user_id
+ * @return bool
+ */
 function is_subscribed($db_connect, $author_id, $subscribe_user_id)
 {
     $sql = 'SELECT * FROM subscriptions WHERE author_id = ? AND subscribe_user_id = ?';
@@ -715,6 +1002,11 @@ function is_subscribed($db_connect, $author_id, $subscribe_user_id)
     return db_fetch_data($db_connect, $sql, [$author_id, $subscribe_user_id], true) !== null;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param int $post_id
+ * @return bool
+ */
 function is_post_exists($db_connect, $post_id)
 {
     $sql = 'SELECT id FROM posts WHERE id = ?';
@@ -722,6 +1014,12 @@ function is_post_exists($db_connect, $post_id)
     return db_fetch_data($db_connect, $sql, [$post_id], true) !== null;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $user_id
+ * @param int $post_id
+ * @return bool
+ */
 function is_like_exists($db_connect, $user_id, $post_id)
 {
     $sql = 'SELECT id FROM likes WHERE user_id = ? AND post_id = ?';
@@ -729,6 +1027,12 @@ function is_like_exists($db_connect, $user_id, $post_id)
     return db_fetch_data($db_connect, $sql, [$user_id, $post_id], true) !== null;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $comment
+ * @param int $post_id
+ * @return array|null
+ */
 function validate_comment($db_connect, $comment, $post_id)
 {
     if (!is_post_exists($db_connect, $post_id)) {
@@ -755,6 +1059,10 @@ function validate_comment($db_connect, $comment, $post_id)
     return null;
 }
 
+/**
+ * @param string $youtube_link
+ * @return string|null
+ */
 function get_youtube_cover_url($youtube_link)
 {
     $id = extract_youtube_id($youtube_link);
@@ -766,6 +1074,11 @@ function get_youtube_cover_url($youtube_link)
     return null;
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $profile_id
+ * @return array|null
+ */
 function get_profile_likes_list($db_connect, $profile_id)
 {
     $sql = 'SELECT l.created_at, l.post_id, u.id as user_id, u.name, u.avatar, p.content, p.content_type
@@ -779,6 +1092,11 @@ function get_profile_likes_list($db_connect, $profile_id)
     return db_fetch_data($db_connect, $sql, [$profile_id]);
 }
 
+/**
+ * @param mysqli $db_connect
+ * @param string $profile_id
+ * @return array|null
+ */
 function get_user_subscriptions($db_connect, $profile_id)
 {
     $sql = 'SELECT s.subscribe_user_id as user_id, u.name, u.avatar, u.created_at,
@@ -791,7 +1109,13 @@ function get_user_subscriptions($db_connect, $profile_id)
     return db_fetch_data($db_connect, $sql, [$profile_id]);
 }
 
-function get_items_count($db_connect, $content_type = null) {
+/**
+ * @param mysqli $db_connect
+ * @param string|null $content_type
+ * @return mixed
+ */
+function get_items_count($db_connect, $content_type = null)
+{
     $data = [];
     $sql = 'SELECT COUNT(*) AS count FROM posts ';
     if (isset($content_type)) {
@@ -800,4 +1124,161 @@ function get_items_count($db_connect, $content_type = null) {
     }
 
     return db_fetch_data($db_connect, $sql, $data, true)['count'];
+}
+
+/**
+ * @param mysqli $db_connect
+ * @param string $message
+ * @param int|null $receiver_id
+ * @param string $sender_id
+ * @return array|null
+ */
+function validate_message($db_connect, $message, $receiver_id, $sender_id)
+{
+    if (!isset($receiver_id)) {
+        return [
+            'input_name' => 'Комментарий',
+            'input_error_desc' => 'Не могу отправить сообщение.'
+        ];
+    }
+
+    $user_info = get_user_info($db_connect, $receiver_id);
+    if (isset($user_info['id']) && $user_info['id'] === $sender_id) {
+        return [
+            'input_name' => 'Комментарий',
+            'input_error_desc' => 'Не могу отправить сообщение.'
+        ];
+    }
+
+    if ($message === '') {
+        return [
+            'input_name' => 'Комментарий',
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    return null;
+}
+
+/**
+ * @param mysqli $db_connect
+ * @param string $sender_id
+ * @param string $receiver_id
+ * @return mixed
+ */
+function get_contact_id($db_connect, $sender_id, $receiver_id)
+{
+    $sql = 'SELECT id FROM contacts WHERE sender_id = ? AND receiver_id = ?';
+    $contact = db_fetch_data($db_connect, $sql, [$sender_id, $receiver_id], true);
+
+    return $contact['id'] ?? null;
+}
+
+/**
+ * @param mysqli $db_connect
+ * @param string $user_id
+ * @return array|null
+ */
+function get_subscribers_list($db_connect, $user_id)
+{
+    $sql = 'SELECT u.name, u.email FROM subscriptions AS s
+            JOIN users AS u 
+                ON u.id = s.author_id
+            WHERE s.subscribe_user_id = ?';
+
+    return db_fetch_data($db_connect, $sql, [$user_id]);
+}
+
+/**
+ * @param object $mailer
+ * @param array $recipient
+ * @param string $subject
+ * @param string $content
+ * @return mixed
+ */
+function send_email($mailer, $recipient, $subject, $content)
+{
+    $message = new Swift_Message();
+    $message->setSubject($subject);
+    $message->setBody($content, 'text/html');
+    $message->setFrom(['keks@phpdemo.ru' => 'README']);
+    $message->setTo($recipient);
+
+    return $mailer->send($message);
+}
+
+/**
+ * @param object $mailer
+ * @param array $sender
+ * @param array $receiver
+ * @return mixed
+ */
+function subscribe_notification($mailer, $sender, $receiver)
+{
+    if (!isset($sender['name'], $sender['id'], $receiver['email'], $receiver['name'])) {
+        exit('Невозможность отправить письмо');
+    }
+
+    $recipient = [$receiver['email'] => $receiver['name']];
+    $subject = 'У вас новый подписчик';
+
+    $content = <<<TXT
+        Здравствуйте, {$receiver['name']}.<br>
+        На вас подписался новый пользователь {$sender['name']}.<br>
+        Вот ссылка на его профиль: <a href="http://readme/profile.php?user={$sender['id']}">http://readme/profile.php?user={$sender['id']}</a>
+TXT;
+
+    return send_email($mailer, $recipient, $subject, $content);
+}
+
+/**
+ * @param object $mailer
+ * @param array $sender
+ * @param array $receiver
+ * @param string $post_name
+ * @return mixed
+ */
+function post_notification($mailer, $sender, $receiver, $post_name)
+{
+    if (!isset($sender['name'], $sender['id'], $receiver['email'], $receiver['name'])) {
+        exit('Невозможность отправить письмо');
+    }
+
+    $recipient = [$receiver['email'] => $receiver['name']];
+    $subject = 'Новая публикация от пользователя ' . $sender['name'];
+
+    $content = <<<TXT
+        Здравствуйте, {$receiver['name']}.<br>
+        Пользователь {$sender['name']} только что опубликовал новую запись «{$post_name}».<br>
+        Посмотрите её на странице пользователя: <a href="http://readme/profile.php?user={$sender['id']}">http://readme/profile.php?user={$sender['id']}</a>
+TXT;
+
+    return send_email($mailer, $recipient, $subject, $content);
+}
+
+/**
+ * @param int null $page
+ * @param string null $type
+ * @param string null $sort
+ * @return string
+ */
+function build_link_query($page = null, $type = null, $sort = null)
+{
+    $query_string = parse_url($_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+    $data = [];
+    parse_str($query_string, $data);
+
+    if (isset($page)) {
+        $data['page'] = $page;
+    }
+
+    if (isset($type)) {
+        $data['type'] = $type;
+    }
+
+    if (isset($sort)) {
+        $data['sort'] = $sort;
+    }
+
+    return http_build_query($data);
 }

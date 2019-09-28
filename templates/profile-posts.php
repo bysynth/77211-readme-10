@@ -4,7 +4,7 @@
         <?php foreach ($content as $post): ?>
             <article class="profile__post post post-<?= $post['type_icon'] ?? '' ?>">
                 <header class="post__header">
-                    <?php if (isset($post['is_repost'])) : ?>
+                    <?php if (isset($post['is_repost']) && $post['is_repost'] === 1) : ?>
                         <div class="post__author">
                             <?php if (isset($post['original_author_id'])) : ?>
                                 <a class="post__author-link"
@@ -20,13 +20,6 @@
                                     <div class="post__info">
                                         <?php if (isset($post['original_author_name'])) : ?>
                                             <b class="post__author-name">Репост: <?= $post['original_author_name'] ?></b>
-                                        <?php endif; ?>
-                                        <?php if (isset($post['original_post_created_at'])) : ?>
-                                            <time class="post__time"
-                                                  datetime="<?= clear_input($post['original_post_created_at']) ?>">
-                                                <?= get_relative_time_format(clear_input($post['original_post_created_at']),
-                                                    'назад') ?>
-                                            </time>
                                         <?php endif; ?>
                                     </div>
                                 </a>
@@ -116,15 +109,18 @@
                                         <span class="visually-hidden">количество лайков</span>
                                     <?php endif; ?>
                                 </a>
+                                <a class="post__indicator post__indicator--repost button"
+                                   href="/repost.php?post_id=<?= $post['post_id'] ?>"
+                                   title="Репост">
+                                    <svg class="post__indicator-icon" width="19" height="17">
+                                        <use xlink:href="#icon-repost"></use>
+                                    </svg>
+                                    <?php if (isset($post['reposts_counter'])): ?>
+                                        <span><?= $post['reposts_counter'] ?></span>
+                                        <span class="visually-hidden">количество репостов</span>
+                                    <?php endif ?>
+                                </a>
                             <?php endif; ?>
-                            <a class="post__indicator post__indicator--repost button" href="#"
-                               title="Репост">
-                                <svg class="post__indicator-icon" width="19" height="17">
-                                    <use xlink:href="#icon-repost"></use>
-                                </svg>
-                                <span>5</span>
-                                <span class="visually-hidden">количество репостов</span>
-                            </a>
                         </div>
                         <?php if (isset($post['created_at'])): ?>
                             <time class="post__time" datetime="<?= clear_input($post['created_at']) ?>">

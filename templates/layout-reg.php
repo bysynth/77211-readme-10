@@ -183,8 +183,5 @@
         </div>
     </div>
 </footer>
-<script src="/libs/dropzone.js"></script>
-<script src="/js/dropzone-settings.js"></script>
-<script src="/js/main-edited.js"></script>
 </body>
 </html>

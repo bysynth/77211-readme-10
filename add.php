@@ -1,9 +1,22 @@
 <?php
-
 require_once 'init.php';
+
+if (!isset($_SESSION['user']['id'])) {
+    header('Location: /index.php');
+    exit();
+}
+
+$author_id = $_SESSION['user']['id'];
+$type = $_GET['type'] ?? null;
 
 $content_types = get_content_types($db_connect);
 $errors = [];
+
+$subscribers_list = get_subscribers_list($db_connect, $author_id);
+
+if (!isset($type) || is_type_exist($content_types, $type) === false) {
+    $type = POST_TYPE_TEXT;
+}
 
 if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -69,7 +82,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
                 return validate_photo_url($post['photo-url'], 'Ссылка из интернета');
             },
             'file' => function () use ($post) {
-                        return validate_uploaded_file($post['file'], 'Загруженный файл');
+                return validate_uploaded_file($post['file'], 'Загруженный файл');
             }
         ];
     }
@@ -122,19 +135,23 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
     if (count($errors) === 0) {
 
         if ($post_type === 'text') {
-            $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, 1, 1)';
+            $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, ?, 1)';
+            $post_name = $post['text-heading'];
             $data = [
-                $post['text-heading'],
-                $post['text-content']
+                $post_name,
+                $post['text-content'],
+                $author_id
             ];
         }
 
         if ($post_type === 'quote') {
-            $sql = 'INSERT INTO posts (title, content, cite_author, author_id, content_type) VALUES (?, ?, ?, 2, 2)';
+            $sql = 'INSERT INTO posts (title, content, cite_author, author_id, content_type) VALUES (?, ?, ?, ?, 2)';
+            $post_name = $post['quote-heading'];
             $data = [
-                $post['quote-heading'],
+                $post_name,
                 $post['quote-content'],
-                $post['quote-author']
+                $post['quote-author'],
+                $author_id
             ];
         }
 
@@ -161,26 +178,32 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
                 $post['path'] = $filename;
             }
 
-            $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, 3, 3)';
+            $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, ?, 3)';
+            $post_name = $post['photo-heading'];
             $data = [
-                $post['photo-heading'],
-                $post['path']
+                $post_name,
+                $post['path'],
+                $author_id
             ];
         }
 
         if ($post_type === 'video') {
-            $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, 4, 4)';
+            $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, ?, 4)';
+            $post_name = $post['video-heading'];
             $data = [
-                $post['video-heading'],
-                $post['video-url']
+                $post_name,
+                $post['video-url'],
+                $author_id
             ];
         }
 
         if ($post_type === 'link') {
-            $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, 5, 5)';
+            $sql = 'INSERT INTO posts (title, content, author_id, content_type) VALUES (?, ?, ?, 5)';
+            $post_name = $post['link-heading'];
             $data = [
-                $post['link-heading'],
-                $post['link-url']
+                $post_name,
+                $post['link-url'],
+                $author_id
             ];
         }
 
@@ -191,6 +214,10 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
             db_insert_hashtag_posts_connection($db_connect, $post['tags'], $post_id);
         }
 
+        foreach ($subscribers_list as $subscriber) {
+            post_notification($mailer, $_SESSION['user'], $subscriber, $post_name);
+        }
+
         header('Location: post.php?id=' . $post_id);
         exit();
     }
@@ -198,6 +225,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
 $page_content = include_template('add-post.php',
     [
+        'type' => $type,
         'content_types' => $content_types,
         'errors' => $errors
     ]);
@@ -206,8 +234,7 @@ $layout_content = include_template('layout.php',
     [
         'content' => $page_content,
         'main_class' => 'page__main--adding-post',
-        'title' => 'readme: добавление публикации',
-        'user_name' => $user_name
+        'title' => 'readme: добавление публикации'
     ]);
 
 print($layout_content);
