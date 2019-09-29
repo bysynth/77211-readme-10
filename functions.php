@@ -744,6 +744,13 @@ function validate_email($db_connect, $email, $input_name)
         ];
     }
 
+    if (mb_strlen($email, 'UTF-8') > 255) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Email должен быть меньше 255 символов.'
+        ];
+    }
+
     if (is_email_exists($db_connect, $email)) {
         return [
             'input_name' => $input_name,
@@ -769,10 +776,41 @@ function validate_login($db_connect, $login, $input_name)
         ];
     }
 
+    if (mb_strlen($login, 'UTF-8') > 255) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Логин должен быть меньше 255 символов.'
+        ];
+    }
+
     if (is_login_exists($db_connect, $login)) {
         return [
             'input_name' => $input_name,
             'input_error_desc' => 'Пользователь с этим логином уже зарегистрирован.'
+        ];
+    }
+
+    return null;
+}
+
+/**
+ * @param string $pass
+ * @param string $input_name
+ * @return array|null
+ */
+function validate_password($pass, $input_name)
+{
+    if (empty($pass)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (mb_strlen($pass, 'UTF-8') > 255) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Пароль должен быть меньше 255 символов.'
         ];
     }
 
@@ -791,6 +829,13 @@ function validate_password_repeat($pass, $pass_repeat, $input_name)
         return [
             'input_name' => $input_name,
             'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (mb_strlen($pass_repeat, 'UTF-8') > 255) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Пароль должен быть меньше 255 символов.'
         ];
     }
 
@@ -879,6 +924,13 @@ function validate_login_email($db_connect, $email, $input_name)
         ];
     }
 
+    if (mb_strlen($email, 'UTF-8') > 255) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Email должен быть меньше 255 символов.'
+        ];
+    }
+
     if (!is_email_exists($db_connect, $email)) {
         return [
             'input_name' => $input_name,
@@ -902,6 +954,13 @@ function validate_login_password($db_connect, $email, $password, $input_name)
         return [
             'input_name' => $input_name,
             'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (mb_strlen($password, 'UTF-8') > 255) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Пароль должен быть меньше 255 символов.'
         ];
     }
 

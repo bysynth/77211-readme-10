@@ -30,7 +30,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
             return validate_login($db_connect, $form['login'], 'Логин');
         },
         'password' => function () use ($form) {
-            return validate_filled($form['password'], 'Пароль');
+            return validate_password($form['password'], 'Пароль');
         },
         'password-repeat' => function () use ($form) {
             return validate_password_repeat($form['password'], $form['password-repeat'], 'Повтор пароля');
