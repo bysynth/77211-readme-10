@@ -20,7 +20,7 @@
                                 </a>
                             <?php endif ?>
                             <div class="post-mini__action">
-                                <span class="post-mini__activity user__additional">Лайкнул вашу публикацию</span>
+                                <span class="post-mini__activity user__additional">Лайкнул публикацию</span>
                                 <?php if (isset($like['created_at'])): ?>
                                     <time class="post-mini__time user__additional" datetime="<?= $like['created_at'] ?>">
                                         <?= get_relative_time_format(clear_input($like['created_at']),
