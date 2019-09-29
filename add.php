@@ -34,7 +34,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
         $rules = [
             'text-heading' => function () use ($post) {
-                return validate_filled($post['text-heading'], 'Заголовок');
+                return validate_title($post['text-heading'], 'Заголовок');
             },
             'text-content' => function () use ($post) {
                 return validate_filled($post['text-content'], 'Текст поста');
@@ -53,13 +53,13 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
         $rules = [
             'quote-heading' => function () use ($post) {
-                return validate_filled($post['quote-heading'], 'Заголовок');
+                return validate_title($post['quote-heading'], 'Заголовок');
             },
             'quote-content' => function () use ($post) {
                 return validate_filled($post['quote-content'], 'Текст цитаты');
             },
             'quote-author' => function () use ($post) {
-                return validate_filled($post['quote-author'], 'Автор цитаты');
+                return validate_cite_author($post['quote-author'], 'Автор цитаты');
             }
         ];
     }
@@ -76,7 +76,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
         $rules = [
             'photo-heading' => function () use ($post) {
-                return validate_filled($post['photo-heading'], 'Заголовок');
+                return validate_title($post['photo-heading'], 'Заголовок');
             },
             'photo-url' => function () use ($post) {
                 return validate_photo_url($post['photo-url'], 'Ссылка из интернета');
@@ -97,7 +97,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
         $rules = [
             'video-heading' => function () use ($post) {
-                return validate_filled($post['video-heading'], 'Заголовок');
+                return validate_title($post['video-heading'], 'Заголовок');
             },
             'video-url' => function () use ($post) {
                 return validate_video_url($post['video-url'], 'Ссылка Youtube');
@@ -115,7 +115,7 @@ if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'POST') 
 
         $rules = [
             'link-heading' => function () use ($post) {
-                return validate_filled($post['link-heading'], 'Заголовок');
+                return validate_title($post['link-heading'], 'Заголовок');
             },
             'link-url' => function () use ($post) {
                 return validate_link($post['link-url'], 'Ссылка');

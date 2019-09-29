@@ -494,6 +494,54 @@ function validate_filled($name, $input_name)
 }
 
 /**
+ * @param string $title
+ * @param string $input_name
+ * @return array|null
+ */
+function validate_title($title, $input_name)
+{
+    if (empty($title)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (mb_strlen($title, 'UTF-8') > 255) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Заголовок должен быть меньше 255 символов.'
+        ];
+    }
+
+    return null;
+}
+
+/**
+ * @param string $cite_author
+ * @param string $input_name
+ * @return array|null
+ */
+function validate_cite_author($cite_author, $input_name)
+{
+    if (empty($cite_author)) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Это поле должно быть заполнено.'
+        ];
+    }
+
+    if (mb_strlen($cite_author, 'UTF-8') > 255) {
+        return [
+            'input_name' => $input_name,
+            'input_error_desc' => 'Имя автора цитаты должно быть меньше 255 символов.'
+        ];
+    }
+
+    return null;
+}
+
+/**
  * @param string $url
  * @return bool
  */
@@ -776,10 +824,10 @@ function validate_login($db_connect, $login, $input_name)
         ];
     }
 
-    if (mb_strlen($login, 'UTF-8') > 255) {
+    if (mb_strlen($login, 'UTF-8') > 128) {
         return [
             'input_name' => $input_name,
-            'input_error_desc' => 'Логин должен быть меньше 255 символов.'
+            'input_error_desc' => 'Логин должен быть меньше 128 символов.'
         ];
     }
 
