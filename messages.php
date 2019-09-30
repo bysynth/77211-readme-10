@@ -6,7 +6,7 @@ if (!isset($_SESSION['user']['id'])) {
     exit();
 }
 
-$session_user_id = $_SESSION['user']['id'];
+$session_user_id = mysqli_real_escape_string($db_connect, $_SESSION['user']['id']);
 $interlocutor_id = $_GET['user_id'] ?? null;
 
 $contact_id = get_contact_id($db_connect, $session_user_id, $interlocutor_id);
