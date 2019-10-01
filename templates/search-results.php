@@ -14,7 +14,7 @@
                     <article class="search__post post post-<?= clear_input($post['type_icon']) ?? '' ?>">
                         <header class="post__header post__author">
                             <?php if (isset($post['user_id'], $post['avatar'])): ?>
-                                <a class="post__author-link" href="<?= '/profile.php?id=' . clear_input($post['user_id']) ?>"
+                                <a class="post__author-link" href="<?= '/profile.php?user=' . clear_input($post['user_id']) ?>"
                                    title="Автор">
                                     <div class="post__avatar-wrapper">
                                         <?php if (isset($post['avatar'])): ?>
