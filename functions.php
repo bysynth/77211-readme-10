@@ -1242,15 +1242,17 @@ function get_items_count($db_connect, $content_type = null)
  */
 function validate_message($db_connect, $message, $receiver_id, $sender_id)
 {
-    if (!isset($receiver_id)) {
+    $user_info = get_user_info($db_connect, $receiver_id);
+
+    if (!isset($receiver_id, $user_info['id'])) {
         return [
             'input_name' => 'Комментарий',
             'input_error_desc' => 'Не могу отправить сообщение.'
         ];
     }
 
-    $user_info = get_user_info($db_connect, $receiver_id);
-    if (isset($user_info['id']) && $user_info['id'] === $sender_id) {
+
+    if ($user_info['id'] === (int)$sender_id) {
         return [
             'input_name' => 'Комментарий',
             'input_error_desc' => 'Не могу отправить сообщение.'
