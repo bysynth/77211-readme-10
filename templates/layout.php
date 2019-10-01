@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?></title>
+    <title><?= clear_input($title) ?></title>
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body class="page">
@@ -102,7 +102,7 @@
     <div class="header__wrapper container">
         <div class="header__logo-wrapper">
             <a class="header__logo-link" href="/index.php">
-                <img class="header__logo" src="img/logo.svg" alt="Логотип readme" width="128" height="24">
+                <img class="header__logo" src="/img/logo.svg" alt="Логотип readme" width="128" height="24">
             </a>
             <p class="header__topic">
                 micro blogging
@@ -111,7 +111,7 @@
         <form class="header__search-form form" action="/search.php" method="get">
             <div class="header__search">
                 <label class="visually-hidden">Поиск</label>
-                <input class="header__search-input form__input" type="search" name="q" value="<?= $_GET['q'] ?? '' ?>">
+                <input class="header__search-input form__input" type="search" name="q" value="<?= isset($_GET['q']) ? clear_input($_GET['q']) : '' ?>">
                 <button class="header__search-button button" type="submit">
                     <svg class="header__search-icon" width="18" height="18">
                         <use xlink:href="#icon-search"></use>
@@ -142,16 +142,16 @@
                 </ul>
                 <ul class="header__user-nav">
                     <li class="header__profile">
-                        <a class="header__profile-link" href="<?= '/profile.php?user=' . $_SESSION['user']['id'] ?>">
+                        <a class="header__profile-link" href="<?= '/profile.php?user=' . clear_input($_SESSION['user']['id']) ?>">
                             <div class="header__avatar-wrapper">
                                 <?php if (isset($_SESSION['user']['avatar'])): ?>
-                                    <img class="header__profile-avatar" src="/uploads/<?= $_SESSION['user']['avatar'] ?>"
+                                    <img class="header__profile-avatar" src="/uploads/<?= clear_input($_SESSION['user']['avatar']) ?>"
                                          alt="Аватар профиля">
                                 <?php endif; ?>
                             </div>
                             <div class="header__profile-name">
                                     <span>
-                                        <?= $_SESSION['user']['name'] ?>
+                                        <?= clear_input($_SESSION['user']['name']) ?>
                                     </span>
                                 <svg class="header__link-arrow" width="10" height="6">
                                     <use xlink:href="#icon-arrow-right-ad"></use>
@@ -162,7 +162,7 @@
                             <div class="header__profile-tooltip">
                                 <ul class="header__profile-nav">
                                     <li class="header__profile-nav-item">
-                                        <a class="header__profile-nav-link" href="<?= '/profile.php?user=' . $_SESSION['user']['id'] ?>">
+                                        <a class="header__profile-nav-link" href="<?= '/profile.php?user=' . clear_input($_SESSION['user']['id']) ?>">
                                                 <span class="header__profile-nav-text">
                                                     Мой профиль
                                                 </span>
@@ -195,7 +195,7 @@
     </div>
 </header>
 
-<main class="page__main <?= $main_class ?>">
+<main class="page__main <?= clear_input($main_class) ?>">
     <?= $content ?>
 </main>
 

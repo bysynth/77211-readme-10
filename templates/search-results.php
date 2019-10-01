@@ -4,17 +4,17 @@
     <div class="search__query-wrapper">
         <div class="search__query container">
             <span>Вы искали:</span>
-            <span class="search__query-text"><?= $search_query ?></span>
+            <span class="search__query-text"><?= clear_input($search_query) ?></span>
         </div>
     </div>
     <div class="search__results-wrapper">
         <div class="container">
             <div class="search__content">
                 <?php foreach ($posts as $post): ?>
-                    <article class="search__post post post-<?= $post['type_icon'] ?? '' ?>">
+                    <article class="search__post post post-<?= clear_input($post['type_icon']) ?? '' ?>">
                         <header class="post__header post__author">
                             <?php if (isset($post['user_id'], $post['avatar'])): ?>
-                                <a class="post__author-link" href="<?= '/profile.php?id=' . $post['user_id'] ?>"
+                                <a class="post__author-link" href="<?= '/profile.php?id=' . clear_input($post['user_id']) ?>"
                                    title="Автор">
                                     <div class="post__avatar-wrapper">
                                         <?php if (isset($post['avatar'])): ?>
@@ -47,7 +47,7 @@
                                             <?= clear_input($post['content']) ?>
                                         </p>
                                         <cite>
-                                            <?= $post['cite_author'] ?>
+                                            <?= clear_input($post['cite_author']) ?>
                                         </cite>
                                     <?php endif; ?>
                                 </blockquote>
@@ -56,7 +56,7 @@
                             <?php if (isset($post['type_name']) && $post['type_name'] === 'Текст'): ?>
                                 <?php if (isset($post['title'], $post['post_id'])): ?>
                                     <h2>
-                                        <a href="<?= '/post.php?id=' . $post['post_id'] ?>"><?= clear_input($post['title']) ?></a>
+                                        <a href="<?= '/post.php?id=' . clear_input($post['post_id']) ?>"><?= clear_input($post['title']) ?></a>
                                     </h2>
                                 <?php endif; ?>
                                 <?php if (isset($post['content'])): ?>
@@ -67,7 +67,7 @@
                             <?php if (isset($post['type_name']) && $post['type_name'] === 'Картинка'): ?>
                                 <?php if (isset($post['title'], $post['post_id'])): ?>
                                     <h2>
-                                        <a href="<?= '/post.php?id=' . $post['post_id'] ?>"><?= clear_input($post['title']) ?></a>
+                                        <a href="<?= '/post.php?id=' . clear_input($post['post_id']) ?>"><?= clear_input($post['title']) ?></a>
                                     </h2>
                                 <?php endif; ?>
                                 <div class="post-photo__image-wrapper">
@@ -112,7 +112,7 @@
                                 <div class="post__buttons">
                                     <?php if (isset($post['post_id'])): ?>
                                         <a class="post__indicator post__indicator--likes button"
-                                           href="/like.php?post_id=<?= $post['post_id'] ?>" title="Лайк">
+                                           href="/like.php?post_id=<?= clear_input($post['post_id']) ?>" title="Лайк">
                                             <svg class="post__indicator-icon" width="20" height="17">
                                                 <use xlink:href="#icon-heart"></use>
                                             </svg>
@@ -121,18 +121,18 @@
                                                 <use xlink:href="#icon-heart-active"></use>
                                             </svg>
                                             <?php if (isset($post['likes_count'])): ?>
-                                                <span><?= $post['likes_count'] ?></span>
+                                                <span><?= clear_input($post['likes_count']) ?></span>
                                                 <span class="visually-hidden">количество лайков</span>
                                             <?php endif; ?>
                                         </a>
                                         <a class="post__indicator post__indicator--comments button"
-                                           href="<?= '/post.php?id=' . $post['post_id'] . '#comments-block'?>"
+                                           href="<?= '/post.php?id=' . clear_input($post['post_id']) . '#comments-block'?>"
                                            title="Комментарии">
                                             <svg class="post__indicator-icon" width="19" height="17">
                                                 <use xlink:href="#icon-comment"></use>
                                             </svg>
                                             <?php if (isset($post['comments_count'])): ?>
-                                                <span><?= $post['comments_count'] ?></span>
+                                                <span><?= clear_input($post['comments_count']) ?></span>
                                                 <span class="visually-hidden">количество комментариев</span>
                                             <?php endif; ?>
                                         </a>

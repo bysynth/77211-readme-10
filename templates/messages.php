@@ -9,22 +9,22 @@
                         <li class="messages__contacts-item">
                             <?php if (isset($interlocutor['id'])): ?>
                                 <a class="messages__contacts-tab <?= $interlocutor['id'] === $interlocutor_id ? 'messages__contacts-tab--active' : '' ?>"
-                                   href="/messages.php?user_id=<?= $interlocutor['id'] ?>">
+                                   href="/messages.php?user_id=<?= clear_input($interlocutor['id']) ?>">
                                     <div class="messages__avatar-wrapper">
                                         <?php if (isset($interlocutor['avatar'])): ?>
-                                            <img class="messages__avatar" src="/uploads/<?= $interlocutor['avatar'] ?>"
+                                            <img class="messages__avatar" src="/uploads/<?= clear_input($interlocutor['avatar']) ?>"
                                                  alt="Аватар пользователя">
                                         <?php endif ?>
                                     </div>
                                     <div class="messages__info">
                                         <?php if (isset($interlocutor['name'])): ?>
-                                            <span class="messages__contact-name"><?= $interlocutor['name'] ?></span>
+                                            <span class="messages__contact-name"><?= clear_input($interlocutor['name']) ?></span>
                                         <?php endif ?>
                                         <?php if (isset($interlocutor['last_message_date'])): ?>
                                             <div class="messages__preview">
                                                 <time style="max-width: none;" class="messages__preview-time"
-                                                      datetime="<?= $interlocutor['last_message_date'] ?>">
-                                                    <?= get_relative_time_format($interlocutor['last_message_date'],
+                                                      datetime="<?= clear_input($interlocutor['last_message_date']) ?>">
+                                                    <?= get_relative_time_format(clear_input($interlocutor['last_message_date']),
                                                         'назад') ?>
                                                 </time>
                                             </div>
@@ -48,9 +48,9 @@
                                         <div class="messages__item-avatar">
                                             <?php if (isset($message['id'], $message['avatar'])): ?>
                                                 <a class="messages__author-link"
-                                                   href="/profile.php?user=<?= $message['id'] ?>">
+                                                   href="/profile.php?user=<?= clear_input($message['id']) ?>">
                                                     <img class="messages__avatar"
-                                                         src="/uploads/<?= $message['avatar'] ?>"
+                                                         src="/uploads/<?= clear_input($message['avatar']) ?>"
                                                          alt="Аватар пользователя">
                                                 </a>
                                             <?php endif ?>
@@ -58,20 +58,20 @@
                                         <div class="messages__item-info">
                                             <?php if (isset($message['id'], $message['name'])): ?>
                                                 <a class="messages__author"
-                                                   href="/profile.php?user=<?= $message['id'] ?>">
-                                                    <?= $message['name'] ?>
+                                                   href="/profile.php?user=<?= clear_input($message['id']) ?>">
+                                                    <?= clear_input($message['name']) ?>
                                                 </a>
                                             <?php endif ?>
                                             <?php if (isset($message['created_at'])): ?>
-                                                <time class="messages__time" datetime="<?= $message['created_at'] ?>">
-                                                    <?= get_relative_time_format($message['created_at'], 'назад') ?>
+                                                <time class="messages__time" datetime="<?= clear_input($message['created_at']) ?>">
+                                                    <?= get_relative_time_format(clear_input($message['created_at']), 'назад') ?>
                                                 </time>
                                             <?php endif ?>
                                         </div>
                                     </div>
                                     <?php if (isset($message['message'])): ?>
                                         <p class="messages__text">
-                                            <?= $message['message'] ?>
+                                            <?= clear_input($message['message']) ?>
                                         </p>
                                     <?php endif ?>
                                 </li>
@@ -85,15 +85,15 @@
                     <form class="comments__form form" method="post">
                         <?php if (isset($_SESSION['user']['avatar'])): ?>
                             <div class="comments__my-avatar">
-                                <img class="comments__picture" src="/uploads/<?= $_SESSION['user']['avatar'] ?>"
+                                <img class="comments__picture" src="/uploads/<?= clear_input($_SESSION['user']['avatar']) ?>"
                                      alt="Аватар пользователя">
                             </div>
                         <?php endif ?>
                         <div class="form__input-section <?= !empty($error) ? 'form__input-section--error' : '' ?>">
                     <textarea class="comments__textarea form__textarea form__input" name="message" id="message"
-                              placeholder="Ваше сообщение"><?= get_post_val('message') ?></textarea>
+                              placeholder="Ваше сообщение"><?= clear_input(get_post_val('message')) ?></textarea>
                             <label for="message" class="visually-hidden">Ваше сообщение</label>
-                            <input type="hidden" name="receiver-id" value="<?= $interlocutor_id ?>">
+                            <input type="hidden" name="receiver-id" value="<?= clear_input($interlocutor_id) ?>">
                             <button class="form__error-button button" type="button">!</button>
                             <?php if (isset($error)): ?>
                                 <?= include_template('input-error.php', [

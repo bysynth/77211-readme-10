@@ -7,10 +7,10 @@
         <div class="feed__main-wrapper">
             <div class="feed__wrapper">
                 <?php foreach ($posts as $post): ?>
-                    <article class="feed__post post post-<?= $post['type_icon'] ?? '' ?>">
+                    <article class="feed__post post post-<?= clear_input($post['type_icon']) ?? '' ?>">
                         <header class="post__header post__author">
                             <?php if (isset($post['user_id'], $post['avatar'])): ?>
-                                <a class="post__author-link" href="<?= '/profile.php?user=' . $post['user_id'] ?>"
+                                <a class="post__author-link" href="<?= '/profile.php?user=' . clear_input($post['user_id']) ?>"
                                    title="Автор">
                                     <div class="post__avatar-wrapper">
                                         <?php if (isset($post['avatar'])): ?>
@@ -43,7 +43,7 @@
                                             <?= clear_input($post['content']) ?>
                                         </p>
                                         <cite>
-                                            <?= $post['cite_author'] ?>
+                                            <?= clear_input($post['cite_author']) ?>
                                         </cite>
                                     <?php endif; ?>
                                 </blockquote>
@@ -52,7 +52,7 @@
                             <?php if (isset($post['type_name']) && $post['type_name'] === 'Текст'): ?>
                                 <?php if (isset($post['title'], $post['post_id'])): ?>
                                     <h2>
-                                        <a href="<?= '/post.php?id=' . $post['post_id'] ?>"><?= clear_input($post['title']) ?></a>
+                                        <a href="<?= '/post.php?id=' . clear_input($post['post_id']) ?>"><?= clear_input($post['title']) ?></a>
                                     </h2>
                                 <?php endif; ?>
                                 <?php if (isset($post['content'])): ?>
@@ -63,7 +63,7 @@
                             <?php if (isset($post['type_name']) && $post['type_name'] === 'Картинка'): ?>
                                 <?php if (isset($post['title'], $post['post_id'])): ?>
                                     <h2>
-                                        <a href="<?= '/post.php?id=' . $post['post_id'] ?>"><?= clear_input($post['title']) ?></a>
+                                        <a href="<?= '/post.php?id=' . clear_input($post['post_id']) ?>"><?= clear_input($post['title']) ?></a>
                                     </h2>
                                 <?php endif; ?>
                                 <div class="post-photo__image-wrapper">
@@ -108,7 +108,7 @@
                                 <div class="post__buttons">
                                     <?php if (isset($post['post_id'])): ?>
                                         <a class="post__indicator post__indicator--likes button"
-                                           href="/like.php?post_id=<?= $post['post_id'] ?>" title="Лайк">
+                                           href="/like.php?post_id=<?= clear_input($post['post_id']) ?>" title="Лайк">
                                             <svg class="post__indicator-icon" width="20" height="17">
                                                 <use xlink:href="#icon-heart"></use>
                                             </svg>
@@ -118,28 +118,28 @@
                                                 <use xlink:href="#icon-heart-active"></use>
                                             </svg>
                                             <?php if (isset($post['likes_count'])): ?>
-                                                <span><?= $post['likes_count'] ?></span>
+                                                <span><?= clear_input($post['likes_count']) ?></span>
                                                 <span class="visually-hidden">количество лайков</span>
                                             <?php endif; ?>
                                         </a>
                                         <a class="post__indicator post__indicator--comments button"
-                                           href="<?= '/post.php?id=' . $post['post_id'] . '#comments-block'?>"
+                                           href="<?= '/post.php?id=' . clear_input($post['post_id']) . '#comments-block'?>"
                                            title="Комментарии">
                                             <svg class="post__indicator-icon" width="19" height="17">
                                                 <use xlink:href="#icon-comment"></use>
                                             </svg>
                                             <?php if (isset($post['comments_count'])): ?>
-                                                <span><?= $post['comments_count'] ?></span>
+                                                <span><?= clear_input($post['comments_count']) ?></span>
                                                 <span class="visually-hidden">количество комментариев</span>
                                             <?php endif; ?>
                                         </a>
                                         <a class="post__indicator post__indicator--repost button"
-                                           href="/repost.php?post_id=<?= $post['post_id'] ?>" title="Репост">
+                                           href="/repost.php?post_id=<?= clear_input($post['post_id']) ?>" title="Репост">
                                             <svg class="post__indicator-icon" width="19" height="17">
                                                 <use xlink:href="#icon-repost"></use>
                                             </svg>
                                             <?php if (isset($post['reposts_counter'])): ?>
-                                                <span><?= $post['reposts_counter'] ?></span>
+                                                <span><?= clear_input($post['reposts_counter']) ?></span>
                                                 <span class="visually-hidden">количество репостов</span>
                                             <?php endif ?>
                                         </a>
@@ -149,7 +149,7 @@
                             <?php if (isset($post['hashtags'])): ?>
                                 <ul class="post__tags">
                                     <?php foreach ($post['hashtags'] as $tag): ?>
-                                        <li><a href="/search.php?q=<?= urlencode($tag) ?>"><?= $tag ?></a></li>
+                                        <li><a href="/search.php?q=<?= urlencode(clear_input($tag)) ?>"><?= clear_input($tag) ?></a></li>
                                     <?php endforeach; ?>
                                 </ul>
                             <?php endif; ?>
@@ -166,12 +166,12 @@
             </li>
             <?php foreach ($content_types as $content_type): ?>
                 <li class="feed__filters-item filters__item">
-                    <a class="filters__button filters__button--<?= $content_type['type_icon'] ?? '' ?> button
+                    <a class="filters__button filters__button--<?= clear_input($content_type['type_icon']) ?? '' ?> button
                     <?php if (isset($content_type['id']) && $type === $content_type['id']): ?>filters__button--active<?php endif; ?>"
-                       href="<?= '/feed.php?type=' . $content_type['id'] ?>">
-                        <span class="visually-hidden"><?= $content_type['type_name'] ?? '' ?></span>
+                       href="<?= '/feed.php?type=' . clear_input($content_type['id']) ?>">
+                        <span class="visually-hidden"><?= clear_input($content_type['type_name']) ?? '' ?></span>
                         <svg class="filters__icon" width="22" height="18">
-                            <use xlink:href="#icon-filter-<?= $content_type['type_icon'] ?? '' ?>"></use>
+                            <use xlink:href="#icon-filter-<?= clear_input($content_type['type_icon']) ?? '' ?>"></use>
                         </svg>
                     </a>
                 </li>

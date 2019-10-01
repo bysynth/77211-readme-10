@@ -3,7 +3,7 @@
     <ul class="form__invalid-list">
         <?php foreach ($errors as $error) : ?>
             <?php if (isset($error['input_name'], $error['input_error_desc'])): ?>
-                <?= '<li class="form__invalid-item">' . $error['input_name'] . '. ' . $error['input_error_desc'] . '</li>' ?>
+                <?= '<li class="form__invalid-item">' . clear_input($error['input_name']) . '. ' . clear_input($error['input_error_desc']) . '</li>' ?>
             <?php endif; ?>
         <?php endforeach; ?>
     </ul>

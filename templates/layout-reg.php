@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $title ?></title>
+    <title><?= clear_input($title) ?></title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body class="page">
@@ -112,10 +112,10 @@
             <nav class="header__nav">
                 <ul class="header__user-nav">
                     <li class="header__authorization">
-                        <a class="header__user-button <?= isset($is_login_active) ? 'header__user-button--active' : '' ?> header__authorization-button button" <?= isset($login_url) ? 'href="' . $login_url . '"' : '' ?>>Вход</a>
+                        <a class="header__user-button <?= isset($is_login_active) ? 'header__user-button--active' : '' ?> header__authorization-button button" <?= isset($login_url) ? 'href="' . clear_input($login_url) . '"' : '' ?>>Вход</a>
                     </li>
                     <li>
-                        <a class="header__user-button <?= isset($is_reg_active) ? 'header__user-button--active' : '' ?> header__register-button button" <?= isset($reg_url) ? 'href="' . $reg_url . '"' : '' ?>>Регистрация</a>
+                        <a class="header__user-button <?= isset($is_reg_active) ? 'header__user-button--active' : '' ?> header__register-button button" <?= isset($reg_url) ? 'href="' . clear_input($reg_url) . '"' : '' ?>>Регистрация</a>
                     </li>
                 </ul>
             </nav>
@@ -123,7 +123,7 @@
     </div>
 </header>
 
-<main class="page__main <?= $main_class ?>">
+<main class="page__main <?= clear_input($main_class) ?>">
     <?= $content ?>
 </main>
 

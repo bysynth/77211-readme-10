@@ -4,7 +4,7 @@
     <div class="search__query-wrapper">
         <div class="search__query container">
             <span>Вы искали:</span>
-            <span class="search__query-text"><?= $search_query ?></span>
+            <span class="search__query-text"><?= clear_input($search_query) ?></span>
         </div>
     </div>
     <div class="search__results-wrapper">

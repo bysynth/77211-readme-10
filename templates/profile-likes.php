@@ -3,11 +3,11 @@
     <?php if (!empty($content)): ?>
         <ul class="profile__likes-list">
             <?php foreach ($content as $like): ?>
-                <li class="post-mini post-mini--<?= $like['content_type'] ?? '' ?> post user">
+                <li class="post-mini post-mini--<?= clear_input($like['content_type']) ?? '' ?> post user">
                     <div class="post-mini__user-info user__info">
                         <?php if (isset($like['user_id'], $like['avatar'])): ?>
                             <div class="post-mini__avatar user__avatar">
-                                <a class="user__avatar-link" href="/profile.php?user=<?= $like['user_id'] ?>">
+                                <a class="user__avatar-link" href="/profile.php?user=<?= clear_input($like['user_id']) ?>">
                                     <img class="post-mini__picture user__picture" src="/uploads/<?= clear_input($like['avatar']) ?>"
                                          alt="Аватар пользователя">
                                 </a>
@@ -15,14 +15,14 @@
                         <?php endif ?>
                         <div class="post-mini__name-wrapper user__name-wrapper">
                             <?php if (isset($like['user_id'], $like['name'])): ?>
-                                <a class="post-mini__name user__name" href="/profile.php?user=<?= $like['user_id'] ?>">
+                                <a class="post-mini__name user__name" href="/profile.php?user=<?= clear_input($like['user_id']) ?>">
                                     <span><?= clear_input($like['name']) ?></span>
                                 </a>
                             <?php endif ?>
                             <div class="post-mini__action">
                                 <span class="post-mini__activity user__additional">Лайкнул публикацию</span>
                                 <?php if (isset($like['created_at'])): ?>
-                                    <time class="post-mini__time user__additional" datetime="<?= $like['created_at'] ?>">
+                                    <time class="post-mini__time user__additional" datetime="<?= clear_input($like['created_at']) ?>">
                                         <?= get_relative_time_format(clear_input($like['created_at']),
                                             'назад') ?>
                                     </time>
@@ -32,7 +32,7 @@
                     </div>
                     <div class="post-mini__preview">
                         <?php if (isset($like['post_id'])): ?>
-                            <a class="post-mini__link" href="/post.php?id=<?= $like['post_id']?>" title="Перейти на публикацию">
+                            <a class="post-mini__link" href="/post.php?id=<?= clear_input($like['post_id'])?>" title="Перейти на публикацию">
                             <?php if ($like['content_type'] === 1): ?>
                                 <span class="visually-hidden">Текст</span>
                                 <svg class="post-mini__preview-icon" width="20" height="21">
@@ -48,7 +48,7 @@
                             <?php if ($like['content_type'] === 3): ?>
                                 <div class="post-mini__image-wrapper">
                                     <?php if (isset($like['content'])): ?>
-                                        <img class="post-mini__image" src="/uploads/<?= $like['content'] ?>" width="109"
+                                        <img class="post-mini__image" src="/uploads/<?= clear_input($like['content']) ?>" width="109"
                                              height="109"
                                              alt="Превью публикации">
                                     <?php endif ?>
@@ -58,7 +58,7 @@
                             <?php if ($like['content_type'] === 4): ?>
                                 <div class="post-mini__image-wrapper">
                                     <?php if (isset($like['content'])): ?>
-                                        <img class="post-mini__image" src="<?= get_youtube_cover_url($like['content']) ?>" width="109" height="109"
+                                        <img class="post-mini__image" src="<?= get_youtube_cover_url(clear_input($like['content'])) ?>" width="109" height="109"
                                              alt="Превью публикации">
                                         <span class="post-mini__play-big">
                                             <svg class="post-mini__play-big-icon" width="12" height="13">

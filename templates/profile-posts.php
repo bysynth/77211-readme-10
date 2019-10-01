@@ -2,13 +2,13 @@
     <h2 class="visually-hidden">Публикации</h2>
     <?php if (!empty($content)): ?>
         <?php foreach ($content as $post): ?>
-            <article class="profile__post post post-<?= $post['type_icon'] ?? '' ?>">
+            <article class="profile__post post post-<?= clear_input($post['type_icon']) ?? '' ?>">
                 <header class="post__header">
                     <?php if (isset($post['is_repost']) && $post['is_repost'] === 1) : ?>
                         <div class="post__author">
                             <?php if (isset($post['original_author_id'])) : ?>
                                 <a class="post__author-link"
-                                   href="<?= '/profile.php?user=' . $post['original_author_id'] ?>"
+                                   href="<?= '/profile.php?user=' . clear_input($post['original_author_id']) ?>"
                                    title="Автор">
                                     <div class="post__avatar-wrapper post__avatar-wrapper--repost">
                                         <?php if (isset($post['original_author_avatar'])) : ?>
@@ -19,7 +19,7 @@
                                     </div>
                                     <div class="post__info">
                                         <?php if (isset($post['original_author_name'])) : ?>
-                                            <b class="post__author-name">Репост: <?= $post['original_author_name'] ?></b>
+                                            <b class="post__author-name">Репост: <?= clear_input($post['original_author_name']) ?></b>
                                         <?php endif; ?>
                                     </div>
                                 </a>
@@ -28,7 +28,7 @@
                     <?php endif; ?>
                     <?php if (isset($post['title'], $post['post_id'])): ?>
                         <h2>
-                            <a href="<?= '/post.php?id=' . $post['post_id'] ?>"><?= clear_input($post['title']) ?></a>
+                            <a href="<?= '/post.php?id=' . clear_input($post['post_id']) ?>"><?= clear_input($post['title']) ?></a>
                         </h2>
                     <?php endif; ?>
                 </header>
@@ -40,7 +40,7 @@
                                     <?= clear_input($post['content']) ?>
                                 </p>
                                 <cite>
-                                    <?= $post['cite_author'] ?>
+                                    <?= clear_input($post['cite_author']) ?>
                                 </cite>
                             <?php endif; ?>
                         </blockquote>
@@ -95,7 +95,7 @@
                         <div class="post__buttons">
                             <?php if (isset($post['post_id'])): ?>
                                 <a class="post__indicator post__indicator--likes button"
-                                   href="/like.php?post_id=<?= $post['post_id'] ?>" title="Лайк">
+                                   href="/like.php?post_id=<?= clear_input($post['post_id']) ?>" title="Лайк">
                                     <svg class="post__indicator-icon" width="20" height="17">
                                         <use xlink:href="#icon-heart"></use>
                                     </svg>
@@ -105,18 +105,18 @@
                                         <use xlink:href="#icon-heart-active"></use>
                                     </svg>
                                     <?php if (isset($post['likes_count'])): ?>
-                                        <span><?= $post['likes_count'] ?></span>
+                                        <span><?= clear_input($post['likes_count']) ?></span>
                                         <span class="visually-hidden">количество лайков</span>
                                     <?php endif; ?>
                                 </a>
                                 <a class="post__indicator post__indicator--repost button"
-                                   href="/repost.php?post_id=<?= $post['post_id'] ?>"
+                                   href="/repost.php?post_id=<?= clear_input($post['post_id']) ?>"
                                    title="Репост">
                                     <svg class="post__indicator-icon" width="19" height="17">
                                         <use xlink:href="#icon-repost"></use>
                                     </svg>
                                     <?php if (isset($post['reposts_counter'])): ?>
-                                        <span><?= $post['reposts_counter'] ?></span>
+                                        <span><?= clear_input($post['reposts_counter']) ?></span>
                                         <span class="visually-hidden">количество репостов</span>
                                     <?php endif ?>
                                 </a>
@@ -131,7 +131,7 @@
                     <?php if (isset($post['hashtags'])): ?>
                         <ul class="post__tags">
                             <?php foreach ($post['hashtags'] as $tag): ?>
-                                <li><a href="/search.php?q=<?= urlencode($tag) ?>"><?= $tag ?></a></li>
+                                <li><a href="/search.php?q=<?= urlencode(clear_input($tag)) ?>"><?= clear_input($tag) ?></a></li>
                             <?php endforeach; ?>
                         </ul>
                     <?php endif; ?>
@@ -139,7 +139,7 @@
                 <div class="comments">
                     <?php if (isset($post['post_id'])) : ?>
                         <a class="comments__button button"
-                           href="<?= '/post.php?id=' . $post['post_id'] . '#comments-block' ?>">
+                           href="<?= '/post.php?id=' . clear_input($post['post_id']) . '#comments-block' ?>">
                             Показать комментарии
                         </a>
                     <?php endif; ?>

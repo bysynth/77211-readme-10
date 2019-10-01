@@ -2,9 +2,9 @@
     <div class="post__main">
         <blockquote>
             <p>
-                <?= $text ?>
+                <?= clear_input($text) ?>
             </p>
-            <cite><?= $author ?></cite>
+            <cite><?= clear_input($author) ?></cite>
         </blockquote>
     </div>
 </div>

@@ -9,14 +9,14 @@
                     <?php foreach ($content_types as $key => $content_type): ?>
                         <li class="adding-post__tabs-item filters__item">
                             <?php if (isset($type)): ?>
-                                <a class="adding-post__tabs-link filters__button filters__button--<?= $content_type['type_icon'] ?? '' ?> tabs__item button
+                                <a class="adding-post__tabs-link filters__button filters__button--<?= clear_input($content_type['type_icon']) ?? '' ?> tabs__item button
                                 <?= ($type === $content_type['id']) || array_key_exists($content_type['type_icon'],
                                     $_POST) ? 'filters__button--active tabs__item--active' : '' ?>"
-                                   href="/add.php?type=<?= $content_type['id'] ?>">
+                                   href="/add.php?type=<?= clear_input($content_type['id']) ?>">
                                     <svg class="filters__icon" width="22" height="18">
-                                        <use xlink:href="#icon-filter-<?= $content_type['type_icon'] ?? '' ?>"></use>
+                                        <use xlink:href="#icon-filter-<?= clear_input($content_type['type_icon']) ?? '' ?>"></use>
                                     </svg>
-                                    <span><?= $content_type['type_name'] ?? '' ?></span>
+                                    <span><?= clear_input($content_type['type_name']) ?? '' ?></span>
                                 </a>
                             <?php endif ?>
                         </li>

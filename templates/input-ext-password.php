@@ -8,7 +8,7 @@
         <label class="visually-hidden">Пароль</label>
     </div>
     <?php if (!empty($error)) : ?>
-        <span class="form__error-label"><?= $error['input_error_desc'] ?></span>
+        <span class="form__error-label"><?= clear_input($error['input_error_desc']) ?></span>
     <?php endif; ?>
 </div>
 

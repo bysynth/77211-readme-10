@@ -20,18 +20,18 @@
             <div class="profile__rating user__rating">
                 <p class="profile__rating-item user__rating-item user__rating-item--publications">
                     <span class="user__rating-amount">
-                        <?= $user_publications_count ?>
+                        <?= clear_input($user_publications_count) ?>
                     </span>
                     <span class="profile__rating-text user__rating-text">
-                        <?= get_noun_plural_form($user_publications_count, 'публикация', 'публикации', 'публикаций')?>
+                        <?= get_noun_plural_form(clear_input($user_publications_count), 'публикация', 'публикации', 'публикаций')?>
                     </span>
                 </p>
                 <p class="profile__rating-item user__rating-item user__rating-item--subscribers">
                     <span class="user__rating-amount">
-                        <?= $user_subscriptions_count ?>
+                        <?= clear_input($user_subscriptions_count) ?>
                     </span>
                     <span class="profile__rating-text user__rating-text">
-                        <?= get_noun_plural_form($user_subscriptions_count, 'подписчик', 'подписчика', 'подписчиков') ?>
+                        <?= get_noun_plural_form(clear_input($user_subscriptions_count), 'подписчик', 'подписчика', 'подписчиков') ?>
                     </span>
                 </p>
             </div>
@@ -43,7 +43,7 @@
                     </a>
                     <?php if ($is_subscribed): ?>
                         <a class="profile__user-button user__button user__button--writing button button--green"
-                           href="/messages.php?user_id=<?= $user_info['id'] ?>">Сообщение</a>
+                           href="/messages.php?user_id=<?= clear_input($user_info['id']) ?>">Сообщение</a>
                     <?php endif; ?>
                 <?php endif ?>
             </div>
@@ -56,15 +56,15 @@
                 <ul class="profile__tabs-list filters__list">
                     <li class="profile__tabs-item filters__item">
                         <a class="profile__tabs-link filters__button <?= isset($is_posts) ? 'filters__button--active' : '' ?> button"
-                            <?= isset($is_posts) ? '' : 'href="'. $urls['posts'] .'"'?>>Посты</a>
+                            <?= isset($is_posts) ? '' : 'href="'. clear_input($urls['posts']) .'"'?>>Посты</a>
                     </li>
                     <li class="profile__tabs-item filters__item">
                         <a class="profile__tabs-link filters__button <?= isset($is_likes) ? 'filters__button--active' : '' ?> button"
-                            <?= isset($is_likes) ? '' : 'href="'. $urls['likes'] .'"'?>>Лайки</a>
+                            <?= isset($is_likes) ? '' : 'href="'. clear_input($urls['likes']) .'"'?>>Лайки</a>
                     </li>
                     <li class="profile__tabs-item filters__item">
                         <a class="profile__tabs-link filters__button <?= isset($is_subscriptions) ? 'filters__button--active' : '' ?> button"
-                            <?= isset($is_subscriptions) ? '' : 'href="'. $urls['subscriptions'] .'"'?>>Подписки</a>
+                            <?= isset($is_subscriptions) ? '' : 'href="'. clear_input($urls['subscriptions']) .'"'?>>Подписки</a>
                     </li>
                 </ul>
             </div>

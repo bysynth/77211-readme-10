@@ -10,8 +10,8 @@
                     <a class="sorting__link
                     <?= ($sort === null || $sort === 'popular-desc') ? 'sorting__link--active' : '' ?>
                     <?= ($sort === 'popular-asc') ? 'sorting__link--active sorting__link--reverse' : '' ?>"
-                       href="/popular.php?<?= ($sort === null || $sort === 'popular-desc') ? build_link_query($cur_page, $type,
-                           'popular-asc') : build_link_query($cur_page, $type, 'popular-desc') ?>">
+                       href="/popular.php?<?= ($sort === null || $sort === 'popular-desc') ? clear_input(build_link_query($cur_page, $type,
+                           'popular-asc')) : clear_input(build_link_query($cur_page, $type, 'popular-desc')) ?>">
                         <span>Популярность</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -22,8 +22,8 @@
                     <a class="sorting__link
                     <?= ($sort === 'likes-desc') ? 'sorting__link--active' : '' ?>
                     <?= ($sort === 'likes-asc') ? 'sorting__link--active sorting__link--reverse' : '' ?>"
-                       href="/popular.php?<?= ($sort === 'likes-desc') ? build_link_query($cur_page, $type,
-                           'likes-asc') : build_link_query($cur_page, $type, 'likes-desc') ?>">
+                       href="/popular.php?<?= ($sort === 'likes-desc') ? clear_input(build_link_query($cur_page, $type,
+                           'likes-asc')) : clear_input(build_link_query($cur_page, $type, 'likes-desc')) ?>">
                         <span>Лайки</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -34,8 +34,8 @@
                     <a class="sorting__link
                     <?= ($sort === 'date-desc') ? 'sorting__link--active' : '' ?>
                     <?= ($sort === 'date-asc') ? 'sorting__link--active sorting__link--reverse' : '' ?>"
-                       href="/popular.php?<?= ($sort === 'likes-desc') ? build_link_query($cur_page, $type,
-                           'date-asc') : build_link_query($cur_page, $type, 'date-desc') ?>">
+                       href="/popular.php?<?= ($sort === 'likes-desc') ? clear_input(build_link_query($cur_page, $type,
+                           'date-asc')) : clear_input(build_link_query($cur_page, $type, 'date-desc')) ?>">
                         <span>Дата</span>
                         <svg class="sorting__icon" width="10" height="12">
                             <use xlink:href="#icon-sort"></use>
@@ -55,14 +55,14 @@
                 </li>
                 <?php foreach ($content_types as $content_type): ?>
                     <li class="popular__filters-item filters__item">
-                        <a class="filters__button filters__button--<?= $content_type['type_icon'] ?? '' ?> button
+                        <a class="filters__button filters__button--<?= clear_input($content_type['type_icon']) ?? '' ?> button
                             <?php if (isset($content_type['id']) && $type === $content_type['id']): ?>filters__button--active<?php endif; ?>"
-                           href="<?= '/popular.php?page=1&type=' . $content_type['id'] ?>">
+                           href="<?= '/popular.php?page=1&type=' . clear_input($content_type['id']) ?>">
                             <span class="visually-hidden">
-                                <?= $content_type['type_name'] ?? '' ?>
+                                <?= clear_input($content_type['type_name']) ?? '' ?>
                             </span>
                             <svg class="filters__icon" width="22" height="18">
-                                <use xlink:href="#icon-filter-<?= $content_type['type_icon'] ?? '' ?>"></use>
+                                <use xlink:href="#icon-filter-<?= clear_input($content_type['type_icon']) ?? '' ?>"></use>
                             </svg>
                         </a>
                     </li>
@@ -72,11 +72,11 @@
     </div>
     <div class="popular__posts">
         <?php foreach ($posts as $post): ?>
-            <article class="popular__post post post-<?= $post['type_icon'] ?? '' ?>">
+            <article class="popular__post post post-<?= clear_input($post['type_icon']) ?? '' ?>">
                 <header class="post__header">
                     <?php if (isset($post['title'], $post['post_id'])): ?>
                         <h2>
-                            <a href="<?= '/post.php?id=' . $post['post_id'] ?>"><?= clear_input($post['title']) ?></a>
+                            <a href="<?= '/post.php?id=' . clear_input($post['post_id']) ?>"><?= clear_input($post['title']) ?></a>
                         </h2>
                     <?php endif; ?>
                 </header>
@@ -89,7 +89,7 @@
                                     <?= clear_input($post['content']) ?>
                                 </p>
                                 <cite>
-                                    <?= $post['cite_author'] ?>
+                                    <?= clear_input($post['cite_author']) ?>
                                 </cite>
                             <?php endif; ?>
                         </blockquote>
@@ -117,7 +117,7 @@
                                     <?= embed_youtube_cover(clear_input($post['content'])) ?>
                                 <?php endif; ?>
                             </div>
-                            <a href="<?= '/post.php?id=' . $post['post_id'] ?>" class="post-video__play-big button">
+                            <a href="<?= '/post.php?id=' . clear_input($post['post_id']) ?>" class="post-video__play-big button">
                                 <svg class="post-video__play-big-icon" width="14" height="14">
                                     <use xlink:href="#icon-video-play-big"></use>
                                 </svg>
@@ -153,7 +153,7 @@
                 <footer class="post__footer">
                     <div class="post__author">
                         <?php if (isset($post['user_id'])): ?>
-                            <a class="post__author-link" href="<?= '/profile.php?user=' . $post['user_id'] ?>"
+                            <a class="post__author-link" href="<?= '/profile.php?user=' . clear_input($post['user_id']) ?>"
                                title="Автор">
                                 <div class="post__avatar-wrapper">
                                     <?php if (isset($post['avatar'])): ?>
@@ -180,7 +180,7 @@
                         <div class="post__buttons">
                             <?php if (isset($post['post_id'])): ?>
                                 <a class="post__indicator post__indicator--likes button"
-                                   href="/like.php?post_id=<?= $post['post_id'] ?>" title="Лайк">
+                                   href="/like.php?post_id=<?= clear_input($post['post_id']) ?>" title="Лайк">
                                     <svg class="post__indicator-icon" width="20" height="17">
                                         <use xlink:href="#icon-heart"></use>
                                     </svg>
@@ -189,18 +189,18 @@
                                         <use xlink:href="#icon-heart-active"></use>
                                     </svg>
                                     <?php if (isset($post['likes_count'])): ?>
-                                        <span><?= $post['likes_count'] ?></span>
+                                        <span><?= clear_input($post['likes_count']) ?></span>
                                         <span class="visually-hidden">количество лайков</span>
                                     <?php endif; ?>
                                 </a>
                                 <a class="post__indicator post__indicator--comments button"
-                                   href="<?= '/post.php?id=' . $post['post_id'] . '#comments-block'?>"
+                                   href="<?= '/post.php?id=' . clear_input($post['post_id']) . '#comments-block'?>"
                                    title="Комментарии">
                                     <svg class="post__indicator-icon" width="19" height="17">
                                         <use xlink:href="#icon-comment"></use>
                                     </svg>
                                     <?php if (isset($post['comments_count'])): ?>
-                                        <span><?= $post['comments_count'] ?></span>
+                                        <span><?= clear_input($post['comments_count']) ?></span>
                                         <span class="visually-hidden">количество комментариев</span>
                                     <?php endif; ?>
                                 </a>
