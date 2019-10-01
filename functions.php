@@ -311,6 +311,7 @@ function get_tag_search_posts($db_connect, $search_query)
  */
 function get_post_hashtags($db_connect, $post_id)
 {
+    $post_id = mysqli_real_escape_string($db_connect, $post_id);
     $sql = "SELECT h.hashtag
             FROM hashtags AS h
             JOIN hashtags_posts AS hp
@@ -1092,6 +1093,7 @@ function get_user_info($db_connect, $user_id)
  */
 function change_post_views_count($db_connect, $post_id)
 {
+    $post_id = mysqli_real_escape_string($db_connect, $post_id);
     $sql = "UPDATE posts SET views_counter = views_counter + 1 WHERE id = $post_id";
     get_mysqli_result($db_connect, $sql);
 }
